@@ -1,2 +1,2 @@
-backend/node_mudules/*.*
-web/node_mudules/*.*
+backend/node_mudules/**/*
+web/node_mudules/**/*
