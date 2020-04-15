@@ -25,4 +25,4 @@ app.use(express.json());
 
 app.use(Rotas);
 
-app.listen(3333);
+app.listen(process.envPORT || 3333);
