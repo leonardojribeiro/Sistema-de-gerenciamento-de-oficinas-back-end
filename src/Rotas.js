@@ -18,6 +18,10 @@ const rotas = Router();
 
 const multerConfig = require("./multer");
 
+rotas.get("/", (req,res)=>{
+    res.json({message: "olá mundo!"})
+});
+
 rotas.get('/funcionario',funcionarioController.index);
 
 rotas.post('/funcionario',funcionarioController.salvar);
