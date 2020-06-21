@@ -13,14 +13,14 @@ module.exports = {
       crypto.randomBytes(16, (err, hash) => {
         if (err) cb(err);
 
-        file.key = `${hash.toString("hex")}-${file.originalname}`;
+        file.key = `${hash.toString("hex")}${path.extname(file.originalname)}`;
 
         cb(null, file.key);
       });
     }
   }),
   limits: {
-    fileSize: 2 * 1024 * 1024
+    fileSize: 5 * 1024 * 1024
   },
   fileFilter: (req, file, cb) => {
     const allowedMimes = [

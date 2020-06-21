@@ -11,15 +11,15 @@ app.use(morgan('dev'));
 mongoose.set('useCreateIndex', true);
 
 mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 app.use(cors({}));
 app.use(
-    "/files",
-    express.static(path.resolve(__dirname, "tmp", "uploads"))
-  );
+  "/files",
+  express.static(path.resolve(__dirname, "tmp", "uploads"))
+);
 
 app.use(express.json());
 

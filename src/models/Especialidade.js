@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
 
-const Especialidade = new mongoose.Schema({
-    descricao: {
-        type: String,
-        unique: true,
-    } 
+const especialidade = new mongoose.Schema({
+  descricao: {
+    type: String,
+    required: true,
+  },
+  idOficina: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Oficina",
+    required: true,
+  }
 });
 
-module.exports = mongoose.model('Especialidade', Especialidade);
+module.exports = mongoose.model('Especialidade', especialidade);

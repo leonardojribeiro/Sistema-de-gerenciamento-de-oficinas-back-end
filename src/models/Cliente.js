@@ -1,8 +1,7 @@
-const mongoose = require('mongoose');
-const Especialidade = require('./Especialidade');
-const Endereco = require('./Endereco');
+const mongoose = require("mongoose");
+const Endereco = require("./Endereco");
 
-const funcionario = new mongoose.Schema({
+const cliente = new mongoose.Schema({
   nome: {
     type: String,
     required: true,
@@ -11,10 +10,10 @@ const funcionario = new mongoose.Schema({
     type: Date,
     required: true
   },
-  sexo: {
+  sexo:{
     type: String,
   },
-  cpfCnpj: {
+  cpfCnpj:{
     type: String,
     required: true,
   },
@@ -23,25 +22,18 @@ const funcionario = new mongoose.Schema({
     type: String,
     required: true,
   },
-  email: {
+  email:{
     type: String,
-    unique: true,
   },
   endereco: {
     type: Endereco,
     required: true,
   },
-  idOficina: {
+  idOficina:{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Oficina",
     required: true,
-  },
-  especialidade: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Especialidade'
-    }
-  ],
+  }
 });
 
-module.exports = mongoose.model('Funcionario', funcionario);
+module.exports = mongoose.model("Cliente", cliente);
