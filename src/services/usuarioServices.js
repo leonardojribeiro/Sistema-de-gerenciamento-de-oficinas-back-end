@@ -18,7 +18,6 @@ module.exports = {
     const mensagens = [];
     !validacao.validarTexto(usuarioLogin.usuario) && mensagens.push("Usuário é obrigatório.");
     !validacao.validarTexto(usuarioLogin.senha) && mensagens.push("Senha é obrigatória.")
-      || !validacao.validarSenha(usuarioLogin.senha) && mensagens.push("Senha inválida.");
     return mensagens;
   },
 
@@ -39,6 +38,16 @@ module.exports = {
       .catch(erro => {
         console.log(erro)
       })
+  },
+
+  async ContarPorUsuario(usuario){
+    return await Usuario
+    .countDocuments({
+      usuario: usuario.usuario
+    })
+    .catch(erro => {
+      console.log(erro)
+    });
   },
 
   async login(usuario) {

@@ -53,7 +53,7 @@ module.exports = class UsuarioController {
   async efetuarLogin(requisicao, resposta) {
     const { usuario, senha, } = requisicao.body;
 
-    let usuarioLogin = {
+    const usuarioLogin = {
       usuario,
       senha,
     }
@@ -69,23 +69,29 @@ module.exports = class UsuarioController {
 
     usuarioLogin.senha = criptografia.criptografar(senha);
 
-    usuarioLogin = await usuarioServices.login(usuarioLogin);
+    let usuarioLogado = await usuarioServices.login(usuarioLogin);
 
-    if (!usuarioLogin) {
+    if (!usuarioLogado) {
+      const usuarioExistente = await usuarioServices.ContarPorUsuario(usuarioLogin);
+      if(usuarioExistente){
+        return resposta.status(401).json({
+          mensagem: "Senha incorreta."
+        });
+      }
       return resposta.status(401)
         .json({
-          mensagem: "Login não efetuado."
+          mensagem: "Esse usuário não existe."
         });
     }
 
-    const { _id } = usuarioLogin;
+    const { _id } = usuarioLogado;
 
-    usuarioLogin = {
-      ...usuarioLogin._doc,
+    usuarioLogado = {
+      ...usuarioLogado._doc,
       token: jwt.sign({ _id }, process.env.APP_SECRET, { expiresIn: 3000 }),
     }
 
-    return resposta.status(200).json(usuarioLogin);
+    return resposta.status(200).json(usuarioLogado);
   }
 
   async efetuarLoginPorToken(requisicao, resposta) {
