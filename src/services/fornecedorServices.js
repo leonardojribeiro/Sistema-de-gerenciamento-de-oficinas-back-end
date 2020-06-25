@@ -1,4 +1,5 @@
 const { inserir } = require("./funcionarioServices");
+const validacao = require("../util/validacao");
 
 module.exports = {
   validar(fornecedor) {

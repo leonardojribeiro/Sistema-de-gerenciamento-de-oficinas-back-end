@@ -1,4 +1,4 @@
-const Validacao = require("../util/Validacao");
+const validacao = require("../util/validacao");
 const { inserir, contarPorDescricaoEIdOficina } = require("./marcaServices");
 const Especialidade = require("../models/Especialidade");
 
