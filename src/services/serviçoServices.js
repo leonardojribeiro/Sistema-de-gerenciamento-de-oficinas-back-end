@@ -1,4 +1,4 @@
-const Validacao = require("../util/Validacao");
+const validacao = require("../util/validacao");
 
 module.exports = {
 

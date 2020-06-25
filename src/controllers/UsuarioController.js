@@ -1,4 +1,4 @@
-const usuarioServices = require("../services/UsuarioServices");
+const usuarioServices = require("../services/usuarioServices");
 const criptografia = require("../util/Criptografia");
 const jwt = require("jsonwebtoken");
 

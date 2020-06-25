@@ -1,4 +1,4 @@
-const oficinaServicos = require("../services/OficinaServices");
+const oficinaServicos = require("../services/oficinaServices");
 
 module.exports = class OficinaController {
   async cadastroDeOficinaCandidata(requisicao, resposta) {
