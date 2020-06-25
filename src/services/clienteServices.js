@@ -1,5 +1,4 @@
 const validacao = require("../util/validacao");
-const { inserir } = require("./UsuarioServices");
 const Cliente = require("../models/Cliente");
 
 module.exports = {
