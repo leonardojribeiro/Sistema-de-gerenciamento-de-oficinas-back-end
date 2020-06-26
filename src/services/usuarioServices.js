@@ -6,7 +6,7 @@ module.exports = {
 
   validarUsuarioASerInserido(usuarioASerInserido) {
     const mensagens = [];
-    !validacao.validarTexto(usuarioASerInserido.usuario) && mensagens.push("Usuário é obrigatório.");
+    !validacao.validarTexto(usuarioASerInserido.nomeUsuario) && mensagens.push("Usuário é obrigatório.");
     !validacao.validarTexto(usuarioASerInserido.senha) && mensagens.push("Senha é obrigatória.")
       || !validacao.validarSenha(usuarioASerInserido.senha) && mensagens.push("Senha inválida.");
     !validacao.validarNumero(usuarioASerInserido.perfil) && mensagens.push("Perfil de usuário é obrigatório.");
@@ -16,7 +16,7 @@ module.exports = {
 
   validarUsuarioLogin(usuarioLogin) {
     const mensagens = [];
-    !validacao.validarTexto(usuarioLogin.usuario) && mensagens.push("Usuário é obrigatório.");
+    !validacao.validarTexto(usuarioLogin.nomeUsuario) && mensagens.push("Usuário é obrigatório.");
     !validacao.validarTexto(usuarioLogin.senha) && mensagens.push("Senha é obrigatória.")
     return mensagens;
   },
@@ -32,7 +32,7 @@ module.exports = {
   async contarPorOficinaEUsuario(usuario) {
     return await Usuario
       .countDocuments({
-        usuario: usuario.usuario,
+        nomeUsuario: usuario.nomeUsuario,
         idOficina: usuario.idOficina,
       })
       .catch(erro => {
@@ -43,7 +43,7 @@ module.exports = {
   async ContarPorUsuario(usuario){
     return await Usuario
     .countDocuments({
-      usuario: usuario.usuario
+      nomeUsuario: usuario.nomeUsuario,
     })
     .catch(erro => {
       console.log(erro)
@@ -55,9 +55,9 @@ module.exports = {
       .findOne(
         usuario
       )
-      .populate("idOficina")
+      .populate({path: "idOficina" })
       .select({
-        usuario: 1,
+        nomeUsuario: 1,
         perfil: 1,
         idOficina: 1,
       })
@@ -92,7 +92,9 @@ module.exports = {
         path: 'idOficina',
       })
       .select({
+        nomeUsuario: 1,
         perfil: 1,
+        idOficina: 1,
       })
       .catch(erro => {
         console.log(erro)

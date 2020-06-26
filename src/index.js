@@ -25,4 +25,8 @@ app.use(express.json());
 
 app.use(Rotas);
 
+app.use(function (req, res, next) {
+  res.status(404).send({mensagem: "Sorry can't find that!"})
+})
+
 app.listen(process.env.PORT || 3333);

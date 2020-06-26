@@ -6,10 +6,10 @@ const jwt = require("jsonwebtoken");
 module.exports = class UsuarioController {
 
   async incluirDadosDeUsuario(requisicao, resposta) {
-    const { usuario, senha, perfil, idOficina, } = requisicao.body;
+    const { nomeUsuario, senha, perfil, idOficina, } = requisicao.body;
 
     const usuarioASerInserido = {
-      usuario,
+      nomeUsuario,
       senha,
       perfil,
       idOficina,
@@ -51,10 +51,10 @@ module.exports = class UsuarioController {
   }
 
   async efetuarLogin(requisicao, resposta) {
-    const { usuario, senha, } = requisicao.body;
+    const { nomeUsuario, senha, } = requisicao.body;
 
     const usuarioLogin = {
-      usuario,
+      nomeUsuario,
       senha,
     }
 
