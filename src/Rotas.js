@@ -4,15 +4,14 @@ const multer = require("multer");
 
 const FuncionarioController = require('./controllers/FuncionarioController');
 const EspecialidadeController = require('./controllers/EspecialidadeController');
-const MarcaController = require("./controllers/MarcaController");
 const ModeloController = require("./controllers/ModeloController");
 const VeiculoController = require("./controllers/VeiculoController");
 const OficinaController = require("./controllers/OficinaController");
 const UsuarioController = require("./controllers/UsuarioController");
 
+const marcaController = require("./controllers/MarcaController");
 const funcionarioController = new FuncionarioController();
 const especialidadeController = new EspecialidadeController();
-const marcaController = new MarcaController();
 const modeloController = new ModeloController();
 const veiculoController = new VeiculoController();
 const oficinaController = new OficinaController();
@@ -62,7 +61,7 @@ rotas.post('/funcionario', funcionarioController.salvar);
 
 rotas.post("/vinculo", new VinculoController().incluir);
 
-rotas.get('/marca', marcaController.index);
+rotas.get('/marca', marcaController.listarTodos);
 
 rotas.get('/marca/descricao/', marcaController.listarPorDescricao);
 

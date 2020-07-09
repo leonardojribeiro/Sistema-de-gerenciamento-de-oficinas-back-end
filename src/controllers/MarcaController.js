@@ -1,31 +1,23 @@
 const Marca = require('../models/Marca');
 const mongoose = require('mongoose');
 const marcaServices = require('../services/marcaServices');
+const path = require("path");
+const crypto = require("crypto");
+const GoogleStorage = require('../util/GoogleStorage');
 
-
-class MarcaController {
-  async index(requisicao, resposta) {
-
-    const marca = await Marca.find().populate(
-
-    ).then().catch(e => { console.log(e) });
-    resposta.json({ marca: marca });
-  }
+module.exports = {
 
   async incluirDadosDaMarca(requisicao, resposta) {
-    const { descricao, idOficina } = requisicao.body;
-    const uriLogo = requisicao.file.key;
 
+    const { descricao, idOficina } = requisicao.body;
     const marcaASerInserida = {
       descricao,
-      uriLogo,
       idOficina,
     }
 
     const mensagens = marcaServices.validarMarca(marcaASerInserida);
 
     if (mensagens.length) {
-      marcaServices.apagarLogomarca(uriLogo);
       return resposta.status(406)
         .json({
           mensagem: mensagens
@@ -41,6 +33,22 @@ class MarcaController {
         });
     }
 
+    const file = requisicao.file;
+
+    let nome = crypto.randomBytes(16);
+    nome = `${nome.toString("hex")}${path.extname(file.originalname)}`;
+
+    const upload = await GoogleStorage.salvar(nome, file.buffer);
+
+    if(!upload){
+      return resposta.status(500)
+        .json({
+          mensagem: "Marca não cadastrada."
+        });
+    }
+
+    marcaASerInserida.uriLogo = nome;
+
     const marcaInserida = await marcaServices.inserir(marcaASerInserida);
 
     if (!marcaInserida) {
@@ -55,8 +63,20 @@ class MarcaController {
       .json({
         mensagem: "Marca cadastrada com sucesso."
       });
+  },
 
-  }
+  async listarTodos(requisicao, resposta) {
+    const { idOficina } = requisicao.query;
+
+    const marca = {
+      idOficina
+    }
+
+    const marcas = await marcaServices.listarPorOficina(marca);
+
+    return resposta.json(marcas);
+
+  },
 
   async listarPorDescricao(req, res) {
     const { descricao } = req.query;
@@ -68,7 +88,7 @@ class MarcaController {
       }
     });
     return res.json({ marca: marca });
-  }
+  },
 
   async listarPorModelo(req, res) {
     const { _id } = req.query;
@@ -89,7 +109,7 @@ class MarcaController {
       }]
     );
     return res.json({ marca: marca });
-  }
+  },
 
   async listarPorId(req, res) {
     const { _id } = req.query;
@@ -98,7 +118,7 @@ class MarcaController {
       _id: _id
     });
     return res.json({ marca: marca });
-  }
+  },
 
   async alterar(req, res) {
     const { _id, descricao, caminhoLogo } = req.body;
@@ -111,7 +131,5 @@ class MarcaController {
         caminhoLogo,
       }).then().catch(e => { console.log(e) });
     return res.json(marca);
-  }
+  },
 }
-
-module.exports = MarcaController;

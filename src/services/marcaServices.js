@@ -17,6 +17,12 @@ module.exports = {
     return mensagens;
   },
 
+  validarIdDaOficina(marca){
+    const mensagens = [];
+    !validacao.validarTexto(marca.idOficina) && mensagens.push("Id da oficina é obrigatório.");
+    return mensagens;
+  },
+
   async inserir(marca) {
     return await Marca
       .create(marca)
@@ -34,5 +40,15 @@ module.exports = {
       .catch(erro => {
         console.log(erro)
       })
+  },
+
+  async listarPorOficina(marca){
+    return await Marca
+    .find({
+      idOficina: marca.idOficina
+    })
+    .catch(erro => {
+      console.log(erro)
+    });
   }
 }
