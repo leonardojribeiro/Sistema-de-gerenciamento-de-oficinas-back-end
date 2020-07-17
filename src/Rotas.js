@@ -4,7 +4,7 @@ const multer = require("multer");
 
 const FuncionarioController = require('./controllers/FuncionarioController');
 const EspecialidadeController = require('./controllers/EspecialidadeController');
-const ModeloController = require("./controllers/ModeloController");
+const modeloController = require("./controllers/ModeloController");
 const VeiculoController = require("./controllers/VeiculoController");
 const OficinaController = require("./controllers/OficinaController");
 const UsuarioController = require("./controllers/UsuarioController");
@@ -12,7 +12,6 @@ const UsuarioController = require("./controllers/UsuarioController");
 const marcaController = require("./controllers/MarcaController");
 const funcionarioController = new FuncionarioController();
 const especialidadeController = new EspecialidadeController();
-const modeloController = new ModeloController();
 const veiculoController = new VeiculoController();
 const oficinaController = new OficinaController();
 const usuarioController = new UsuarioController();
@@ -35,11 +34,27 @@ rotas.post(
   oficinaController.cadastroDeOficinaCandidata,
 );
 
+
+//marcas 
 rotas.post(
   '/marca',
   multer(multerConfig).single("logomarca"),
   marcaController.incluirDadosDaMarca
 );
+rotas.get('/marca', marcaController.listarTodos);
+rotas.get('/marca/descricao/', marcaController.listarPorDescricaoParcialEIdOficina);
+rotas.get('/marca/id/', marcaController.listarMarcaPorId);
+rotas.put('/marca',
+  multer(multerConfig).single("logomarca"),
+  marcaController.alterarMarca
+);
+
+//modelo
+rotas.get('/modelo', modeloController.listarTodos);
+rotas.post('/modelo', modeloController.incluirDadosDeModelo);
+rotas.get('/modelo/id', modeloController.listarModeloPorId);
+rotas.put('/modelo', modeloController.alterarModelo)
+
 
 rotas.post("/usuario", usuarioController.incluirDadosDeUsuario);
 
@@ -48,8 +63,6 @@ rotas.post("/usuario/login", usuarioController.efetuarLogin);
 rotas.post("/usuario/loginPorToken", usuarioController.efetuarLoginPorToken);
 
 rotas.post("/usuario/auth", usuarioController.autenticar, usuarioController.teste);
-
-rotas.post('/modelo', modeloController.incluirDadosDeModelo);
 
 rotas.post('/veiculo', veiculoController.incluirDadosDeVeiculo);
 
@@ -60,19 +73,6 @@ rotas.get('/funcionario', funcionarioController.index);
 rotas.post('/funcionario', funcionarioController.salvar);
 
 rotas.post("/vinculo", new VinculoController().incluir);
-
-rotas.get('/marca', marcaController.listarTodos);
-
-rotas.get('/marca/descricao/', marcaController.listarPorDescricao);
-
-rotas.get('/marca/id/', marcaController.listarPorId);
-
-rotas.get('/marca/modelo/', marcaController.listarPorModelo)
-
-
-rotas.put('/marca', marcaController.alterar);
-
-rotas.get('/modelo', modeloController.index);
 
 
 rotas.get('/veiculo', veiculoController.index);
@@ -85,8 +85,8 @@ rotas.get('/especialidade', especialidadeController.index);
 rotas.post('/especialidade', especialidadeController.inserirDadosDeEspecialidade);
 
 
-function of(r){
-  return r.status(200).json({aaa: "ass"});
+function of(r) {
+  return r.status(200).json({ aaa: "ass" });
 }
 
 rotas.get('/teste', (req, res, next) => {

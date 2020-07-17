@@ -40,14 +40,14 @@ module.exports = {
       })
   },
 
-  async ContarPorUsuario(usuario){
+  async ContarPorUsuario(usuario) {
     return await Usuario
-    .countDocuments({
-      nomeUsuario: usuario.nomeUsuario,
-    })
-    .catch(erro => {
-      console.log(erro)
-    });
+      .countDocuments({
+        nomeUsuario: usuario.nomeUsuario,
+      })
+      .catch(erro => {
+        console.log(erro)
+      });
   },
 
   async login(usuario) {
@@ -55,7 +55,7 @@ module.exports = {
       .findOne(
         usuario
       )
-      .populate({path: "idOficina" })
+      .populate({ path: "idOficina" })
       .select({
         nomeUsuario: 1,
         perfil: 1,
@@ -103,13 +103,14 @@ module.exports = {
 
   autenticar(token) {
     let erro;
-    let _id;
-    jwt.verify(token, process.env.APP_SECRET, (err, decodificado) => {
+    let decodificado;
+    jwt.verify(token, process.env.APP_SECRET, (err, valorDecodificado) => {
       if (err) {
         erro = err;
+        console.log(err);
       }
       else {
-        _id = decodificado._id;
+        decodificado = valorDecodificado;
       }
     });
 
@@ -117,7 +118,7 @@ module.exports = {
       console.log(erro);
       return null;
     }
-    return _id;
+    return decodificado;
   },
 
 }

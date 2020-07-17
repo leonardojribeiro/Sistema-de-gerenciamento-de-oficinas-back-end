@@ -8,56 +8,43 @@ const GoogleStorage = require('../util/GoogleStorage');
 module.exports = {
 
   async incluirDadosDaMarca(requisicao, resposta) {
-
     const { descricao, idOficina } = requisicao.body;
     const marcaASerInserida = {
       descricao,
       idOficina,
     }
-
-    const mensagens = marcaServices.validarMarca(marcaASerInserida);
-
+    const mensagens = marcaServices.validarMarcaASerInserida(marcaASerInserida);
     if (mensagens.length) {
       return resposta.status(406)
         .json({
           mensagem: mensagens
         });
     }
-
     const marcaExistenteNaOficina = await marcaServices.contarPorDescricaoEIdOficina(marcaASerInserida);
-
     if (marcaExistenteNaOficina) {
       return resposta.status(406)
         .json({
           mensagem: "Essa marca já está cadastrada"
         });
     }
-
-    const file = requisicao.file;
-
-    let nome = crypto.randomBytes(16);
-    nome = `${nome.toString("hex")}${path.extname(file.originalname)}`;
-
-    const upload = await GoogleStorage.salvar(nome, file.buffer);
-
-    if(!upload){
-      return resposta.status(500)
-        .json({
-          mensagem: "Marca não cadastrada."
-        });
+    let uriLogo = null;
+    if (requisicao.file) {
+      uriLogo = await marcaServices.fazerUploadDaLogomarca(requisicao.file)
+      if (!uriLogo) {
+        return resposta.status(500)
+          .json({
+            mensagem: "Marca não cadastrada."
+          });
+      }
     }
-
-    marcaASerInserida.uriLogo = nome;
-
+    marcaASerInserida.uriLogo = uriLogo;
     const marcaInserida = await marcaServices.inserir(marcaASerInserida);
-
     if (!marcaInserida) {
       return resposta.status(500)
         .json({
           mensagem: "Marca não cadastrada."
         });
     }
-
     return resposta
       .status(201)
       .json({
@@ -67,69 +54,92 @@ module.exports = {
 
   async listarTodos(requisicao, resposta) {
     const { idOficina } = requisicao.query;
-
-    const marca = {
-      idOficina
+    const mensagens = marcaServices.validarIdDaOficina({ idOficina });
+    if (mensagens.length) {
+      return resposta.status(406)
+        .json({
+          mensagem: mensagens
+        });
     }
-
-    const marcas = await marcaServices.listarPorOficina(marca);
-
+    const marcas = await marcaServices.listarPorIdOficina(idOficina);
     return resposta.json(marcas);
-
   },
 
-  async listarPorDescricao(req, res) {
-    const { descricao } = req.query;
-    console.log(descricao);
-    const marca = await Marca.find({
-      descricao: {
-        $regex: descricao,
-        $options: "i",
+
+  async listarMarcaPorId(req, resposta) {
+    const { idOficina, _id } = req.query;
+    const informacoesDaMarca = {
+      _id,
+      idOficina,
+    }
+    const mensagens = marcaServices.validarIdDaOficinaEIdDaMarca(informacoesDaMarca);
+    if (mensagens.length) {
+      return resposta.status(406)
+        .json({
+          mensagem: mensagens
+        });
+    }
+    const marcaListada = await marcaServices.listarPorIdMarcaEIdOficina(informacoesDaMarca);
+    if (!marcaListada) {
+      return resposta
+        .status(500)
+        .json({
+          mensagem: "Erro ao listar marca."
+        });
+    }
+    return resposta.json(marcaListada);
+  },
+
+  async listarPorDescricaoParcialEIdOficina(requisicao, resposta) {
+    const { idOficina, descricao } = requisicao.query;
+    const informacoesDaMarca = {
+      descricao,
+      idOficina,
+    }
+    const mensagens = marcaServices.validarIdDaOficina(informacoesDaMarca);
+    if (mensagens.length) {
+      return resposta.status(406)
+        .json({
+          mensagem: mensagens
+        });
+    }
+    const marca = await marcaServices.listarPorDescricaoParcialEIdOficina(informacoesDaMarca);
+    return resposta.json(marca);
+  },
+
+  async alterarMarca(requisicao, resposta) {
+    const { _id, descricao, idOficina, uriLogo, } = requisicao.body;
+    const marcaASerAleterada = {
+      _id,
+      descricao,
+      idOficina,
+    }
+    const mensagens = marcaServices.validarMarcaASerAlterada(marcaASerAleterada);
+    if (mensagens.length) {
+      return resposta.status(406)
+        .json({
+          mensagem: mensagens
+        });
+    }
+    let uriLogoNova = null;
+    if (requisicao.file) {
+      uriLogoNova = await marcaServices.fazerUploadDaLogomarca(requisicao.file)
+      if (!uriLogo) {
+        return resposta.status(500)
+          .json({
+            mensagem: "Marca não alterada."
+          });
       }
-    });
-    return res.json({ marca: marca });
-  },
-
-  async listarPorModelo(req, res) {
-    const { _id } = req.query;
-    console.log(_id);
-    const marca = await Marca.aggregate(
-      [{
-        $lookup: {
-          from: "modelos",
-          localField: "_id",
-          foreignField: "marca",
-          as: "modelo"
-        }
-      },
-      {
-        $match: {
-          "modelo._id": mongoose.Types.ObjectId(_id)
-        }
-      }]
-    );
-    return res.json({ marca: marca });
-  },
-
-  async listarPorId(req, res) {
-    const { _id } = req.query;
-    console.log(req.params);
-    const marca = await Marca.findOne({
-      _id: _id
-    });
-    return res.json({ marca: marca });
-  },
-
-  async alterar(req, res) {
-    const { _id, descricao, caminhoLogo } = req.body;
-    const marca = await Marca.updateOne(
-      {
-        _id
-      },
-      {
-        descricao,
-        caminhoLogo,
-      }).then().catch(e => { console.log(e) });
-    return res.json(marca);
+    }
+    marcaASerAleterada.uriLogo = uriLogoNova;
+    const resultado = await marcaServices.alterarMarca(marcaASerAleterada);
+    if (!resultado) {
+      return resposta.status(500)
+        .json({
+          mensagem: "Marca não editada."
+        });
+    }
+    await marcaServices.apagarLogomarca(uriLogo);
+    return resposta.status(201).json({ mensagem: "Marca alterada com sucesso." });
   },
 }

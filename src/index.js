@@ -25,8 +25,12 @@ app.use(express.json());
 
 app.use(Rotas);
 
-app.use(function (req, res, next) {
-  res.status(404).send({mensagem: "Sorry can't find that!"})
+app.use((requisicao, resposta) => {
+  return resposta
+    .status(404)
+    .send(
+      { mensagem: "Recurso não encontrado." }
+    )
 })
 
 app.listen(process.env.PORT || 3333);

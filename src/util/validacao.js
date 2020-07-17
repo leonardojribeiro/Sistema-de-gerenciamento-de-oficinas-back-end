@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 function validaCpf(cpf) {
   let soma = 0;
   let peso = 10;
@@ -139,6 +141,10 @@ function validarPlaca(placa) {
   return placa && placa.length === 7;
 }
 
+function validarId(id){
+  return mongoose.Types.ObjectId.isValid(id);
+}
+
 module.exports = {
   validarCpfCnpj,
   validarNome,
@@ -149,4 +155,5 @@ module.exports = {
   validarNumero,
   validarSenha,
   validarPlaca,
+  validarId,
 }
