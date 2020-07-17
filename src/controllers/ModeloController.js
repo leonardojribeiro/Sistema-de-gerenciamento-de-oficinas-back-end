@@ -80,6 +80,23 @@ module.exports = {
     return resposta.json(modeloListado);
   },
 
+  async listarPorDescricaoParcialEIdOficina(requisicao, resposta){
+    const { idOficina, descricao } = requisicao.query;
+    const informacoesDoModelo = {
+      descricao,
+      idOficina,
+    }
+    const mensagens = modeloServices.validarIdDaOficina(informacoesDoModelo);
+    if (mensagens.length) {
+      return resposta.status(406)
+        .json({
+          mensagem: mensagens
+        });
+    }
+    const modelo = await modeloServices.listarPorDescricaoParcialEIdOficina(informacoesDoModelo);
+    return resposta.json(modelo);
+  },
+
   async alterarModelo(requisicao, resposta) {
     const { _id, descricao, idOficina, idMarca, } = requisicao.body;
     const modeloASerAlterado = {

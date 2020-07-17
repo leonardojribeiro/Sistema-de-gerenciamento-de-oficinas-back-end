@@ -84,6 +84,23 @@ module.exports = {
       })
   },
 
+  async listarPorDescricaoParcialEIdOficina(modelo) {
+    return await Modelo
+      .find({
+        descricao: {
+          $regex: modelo.descricao,
+          $options: "i",
+        },
+        idOficina: modelo.idOficina,
+      })
+      .populate({
+        path: "idMarca"
+      })
+      .catch(erro => {
+        console.log(erro);
+      });
+  },
+
   async alterarModelo(modelo){
     return await Modelo
     .updateOne(

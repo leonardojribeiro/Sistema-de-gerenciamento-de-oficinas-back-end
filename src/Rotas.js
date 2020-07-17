@@ -52,6 +52,7 @@ rotas.put('/marca',
 //modelo
 rotas.get('/modelo', modeloController.listarTodos);
 rotas.post('/modelo', modeloController.incluirDadosDeModelo);
+rotas.get('/modelo/descricao', modeloController.listarPorDescricaoParcialEIdOficina);
 rotas.get('/modelo/id', modeloController.listarModeloPorId);
 rotas.put('/modelo', modeloController.alterarModelo)
 
