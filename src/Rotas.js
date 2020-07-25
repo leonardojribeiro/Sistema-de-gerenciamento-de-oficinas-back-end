@@ -5,6 +5,7 @@ const multer = require("multer");
 const FuncionarioController = require('./controllers/FuncionarioController');
 const EspecialidadeController = require('./controllers/EspecialidadeController');
 const modeloController = require("./controllers/ModeloController");
+const pecaController = require("./controllers/PecaController");
 const VeiculoController = require("./controllers/VeiculoController");
 const OficinaController = require("./controllers/OficinaController");
 const UsuarioController = require("./controllers/UsuarioController");
@@ -19,7 +20,7 @@ const usuarioController = new UsuarioController();
 const rotas = Router();
 
 const multerConfig = require("./multer");
-const ClienteController = require("./controllers/ClienteController");
+const clienteController = require("./controllers/ClienteController");
 const VinculoController = require("./controllers/VinculoController");
 
 const upload = multer();
@@ -52,9 +53,25 @@ rotas.put('/marca',
 //modelo
 rotas.get('/modelo', modeloController.listarTodos);
 rotas.post('/modelo', modeloController.incluirDadosDeModelo);
-rotas.get('/modelo/descricao', modeloController.listarPorDescricaoParcialEIdOficina);
+rotas.get('/modelo/consulta', modeloController.consultar);
 rotas.get('/modelo/id', modeloController.listarModeloPorId);
-rotas.put('/modelo', modeloController.alterarModelo)
+rotas.put('/modelo', modeloController.alterarModelo);
+
+//peças
+rotas.get('/peca', pecaController.listarTodos);
+rotas.post('/peca', pecaController.incluirDadosDePeca);
+rotas.get('/peca/consulta', pecaController.consultar);
+rotas.get('/peca/id', pecaController.listarPecaPorId);
+rotas.put('/peca', pecaController.alterarPeca);
+
+//clientes
+rotas.post("/cliente", clienteController.inserirDadosDeCliente);
+rotas.get('/cliente', clienteController.listarTodos);
+rotas.get('/cliente/id', clienteController.listarPorId);
+rotas.put('/cliente', clienteController.alterarCliente);
+
+//veiculos
+rotas.get('/veiculo', veiculoController.listarTodos);
 
 
 rotas.post("/usuario", usuarioController.incluirDadosDeUsuario);
@@ -67,7 +84,6 @@ rotas.post("/usuario/auth", usuarioController.autenticar, usuarioController.test
 
 rotas.post('/veiculo', veiculoController.incluirDadosDeVeiculo);
 
-rotas.post("/cliente", new ClienteController().inserirDadosDeCliente);
 
 rotas.get('/funcionario', funcionarioController.index);
 
@@ -76,7 +92,6 @@ rotas.post('/funcionario', funcionarioController.salvar);
 rotas.post("/vinculo", new VinculoController().incluir);
 
 
-rotas.get('/veiculo', veiculoController.index);
 
 
 rotas.put('/funcionario', funcionarioController.editar);

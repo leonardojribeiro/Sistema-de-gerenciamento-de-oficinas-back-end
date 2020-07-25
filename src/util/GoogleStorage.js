@@ -16,7 +16,11 @@ module.exports = {
 
   async salvar(nome, buffer) {
     const arquivo = bucket.file(nome);
-    return await arquivo.save(buffer).catch(e => console.log(e));
+    return await arquivo
+      .save(buffer)
+      .catch(e =>{
+        console.log(e)
+      });
   },
 
   async apagar(nome) {

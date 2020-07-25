@@ -1,9 +1,4 @@
-const Marca = require('../models/Marca');
-const mongoose = require('mongoose');
 const marcaServices = require('../services/marcaServices');
-const path = require("path");
-const crypto = require("crypto");
-const GoogleStorage = require('../util/GoogleStorage');
 
 module.exports = {
 
@@ -15,14 +10,16 @@ module.exports = {
     }
     const mensagens = marcaServices.validarMarcaASerInserida(marcaASerInserida);
     if (mensagens.length) {
-      return resposta.status(406)
+      return resposta
+        .status(406)
         .json({
           mensagem: mensagens
         });
     }
     const marcaExistenteNaOficina = await marcaServices.contarPorDescricaoEIdOficina(marcaASerInserida);
     if (marcaExistenteNaOficina) {
-      return resposta.status(406)
+      return resposta
+        .status(406)
         .json({
           mensagem: "Essa marca já está cadastrada"
         });
@@ -31,7 +28,8 @@ module.exports = {
     if (requisicao.file) {
       uriLogo = await marcaServices.fazerUploadDaLogomarca(requisicao.file)
       if (!uriLogo) {
-        return resposta.status(500)
+        return resposta
+          .status(500)
           .json({
             mensagem: "Marca não cadastrada."
           });
@@ -40,7 +38,8 @@ module.exports = {
     marcaASerInserida.uriLogo = uriLogo;
     const marcaInserida = await marcaServices.inserir(marcaASerInserida);
     if (!marcaInserida) {
-      return resposta.status(500)
+      return resposta
+        .status(500)
         .json({
           mensagem: "Marca não cadastrada."
         });
@@ -56,15 +55,16 @@ module.exports = {
     const { idOficina } = requisicao.query;
     const mensagens = marcaServices.validarIdDaOficina({ idOficina });
     if (mensagens.length) {
-      return resposta.status(406)
+      return resposta
+        .status(406)
         .json({
           mensagem: mensagens
         });
     }
     const marcas = await marcaServices.listarPorIdOficina(idOficina);
-    return resposta.json(marcas);
+    return resposta
+      .json(marcas);
   },
-
 
   async listarMarcaPorId(req, resposta) {
     const { idOficina, _id } = req.query;
@@ -74,7 +74,8 @@ module.exports = {
     }
     const mensagens = marcaServices.validarIdDaOficinaEIdDaMarca(informacoesDaMarca);
     if (mensagens.length) {
-      return resposta.status(406)
+      return resposta
+        .status(406)
         .json({
           mensagem: mensagens
         });
@@ -98,13 +99,15 @@ module.exports = {
     }
     const mensagens = marcaServices.validarIdDaOficina(informacoesDaMarca);
     if (mensagens.length) {
-      return resposta.status(406)
+      return resposta
+        .status(406)
         .json({
           mensagem: mensagens
         });
     }
     const marca = await marcaServices.listarPorDescricaoParcialEIdOficina(informacoesDaMarca);
-    return resposta.json(marca);
+    return resposta
+      .json(marca);
   },
 
   async alterarMarca(requisicao, resposta) {
@@ -116,7 +119,8 @@ module.exports = {
     }
     const mensagens = marcaServices.validarMarcaASerAlterada(marcaASerAleterada);
     if (mensagens.length) {
-      return resposta.status(406)
+      return resposta
+        .status(406)
         .json({
           mensagem: mensagens
         });
@@ -124,8 +128,9 @@ module.exports = {
     let uriLogoNova = null;
     if (requisicao.file) {
       uriLogoNova = await marcaServices.fazerUploadDaLogomarca(requisicao.file)
-      if (!uriLogo) {
-        return resposta.status(500)
+      if (!uriLogoNova) {
+        return resposta
+          .status(500)
           .json({
             mensagem: "Marca não alterada."
           });
@@ -134,12 +139,17 @@ module.exports = {
     marcaASerAleterada.uriLogo = uriLogoNova;
     const resultado = await marcaServices.alterarMarca(marcaASerAleterada);
     if (!resultado) {
-      return resposta.status(500)
+      return resposta
+        .status(500)
         .json({
           mensagem: "Marca não editada."
         });
     }
     await marcaServices.apagarLogomarca(uriLogo);
-    return resposta.status(201).json({ mensagem: "Marca alterada com sucesso." });
+    return resposta
+      .status(201)
+      .json({
+        mensagem: "Marca alterada com sucesso."
+      });
   },
 }

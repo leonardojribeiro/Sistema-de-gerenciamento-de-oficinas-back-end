@@ -1,6 +1,7 @@
 const Usuario = require("../models/Usuario");
 const jwt = require("jsonwebtoken");
 const validacao = require("../util/validacao");
+const mongoose = require("mongoose")
 
 module.exports = {
 
@@ -52,18 +53,25 @@ module.exports = {
 
   async login(usuario) {
     return await Usuario
-      .findOne(
-        usuario
-      )
-      .populate({ path: "idOficina" })
-      .select({
-        nomeUsuario: 1,
-        perfil: 1,
-        idOficina: 1,
+      .aggregate()
+      .lookup({
+        from: "oficinas",
+        localField: "idOficina",
+        foreignField: "_id",
+        as: "oficina",
       })
+      .match({
+        nomeUsuario: usuario.nomeUsuario,
+        senha: usuario.senha
+      })
+      .project({
+        senha: 0,
+        idOficina: 0
+      })
+      .unwind("oficina")
       .catch(erro => {
         console.log(erro)
-      });
+      })
   },
 
   async listarPerfilDeUsuarioEIdOficinaPorIdUsuario(id) {
@@ -78,6 +86,7 @@ module.exports = {
       .select({
         perfil: 1,
       })
+      
       .catch(erro => {
         console.log(erro)
       })
@@ -85,17 +94,22 @@ module.exports = {
 
   async loginPorIdUsuario(id) {
     return await Usuario
-      .findOne({
-        _id: id
+      .aggregate()
+      .lookup({
+        from: "oficinas",
+        localField: "idOficina",
+        foreignField: "_id",
+        as: "oficina",
+      }
+      )
+      .match({
+        _id: mongoose.Types.ObjectId(id)
       })
-      .populate({
-        path: 'idOficina',
+      .project({
+        senha: 0,
+        idOficina: 0
       })
-      .select({
-        nomeUsuario: 1,
-        perfil: 1,
-        idOficina: 1,
-      })
+      .unwind("oficina")
       .catch(erro => {
         console.log(erro)
       })
@@ -107,7 +121,6 @@ module.exports = {
     jwt.verify(token, process.env.APP_SECRET, (err, valorDecodificado) => {
       if (err) {
         erro = err;
-        console.log(err);
       }
       else {
         decodificado = valorDecodificado;
@@ -115,7 +128,6 @@ module.exports = {
     });
 
     if (erro) {
-      console.log(erro);
       return null;
     }
     return decodificado;

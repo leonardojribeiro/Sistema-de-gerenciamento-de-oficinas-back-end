@@ -1,5 +1,7 @@
 const vinculoServices = require("../services/vinculoServices");
-const veiculoServices = require("../services/veiculoServices");
+const VeiculoServices = require("../services/VeiculoServices");
+
+const veiculoServices = new VeiculoServices();
 
 module.exports = class VinculoController {
   async incluir(requisicao, resposta) {

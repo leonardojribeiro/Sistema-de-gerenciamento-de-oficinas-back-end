@@ -53,6 +53,7 @@ module.exports = {
       if (upload) {
         return nome;
       }
+      return null;
     }
     catch (erro) {
       console.log(erro)
@@ -84,6 +85,10 @@ module.exports = {
       .find({
         idOficina
       })
+      .select({
+        __v:0,
+        idOficina: 0
+      })
       .catch(erro => {
         console.log(erro)
       });
@@ -92,6 +97,10 @@ module.exports = {
   async listarPorIdMarcaEIdOficina(marca) {
     return await Marca
       .findOne(marca)
+      .select({
+        __v:0,
+        idOficina: 0
+      })
       .catch(erro => {
         console.log(erro)
       });
@@ -106,10 +115,15 @@ module.exports = {
         },
         idOficina: marca.idOficina,
       })
+      .select({
+        __v:0,
+        idOficina: 0,
+      })
       .catch(erro => {
         console.log(erro);
       });
   },
+  
 
   async alterarMarca(marca) {
     return await Marca
@@ -117,7 +131,9 @@ module.exports = {
         {
           _id: marca._id,
         },
-        marca
+        {
+          $set: marca
+        }
       )
       .catch(erro => {
         console.log(erro)

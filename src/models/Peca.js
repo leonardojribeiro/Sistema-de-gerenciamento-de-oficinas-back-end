@@ -1,14 +1,20 @@
 const mongoose = require("mongoose")
 
-
-const peca = new mongoose.Schema({
+const Peca = new mongoose.Schema({
   descricao: {
     type: String,
     required: true,
   },
-  valor: {
-    type: Number,
+  idMarca: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Marca',
     required: true,
   },
-  
+  idOficina: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Oficina',
+    required: true,
+  }
 })
+
+module.exports = mongoose.model("Peca", Peca);

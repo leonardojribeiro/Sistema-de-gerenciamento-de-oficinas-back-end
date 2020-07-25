@@ -1,5 +1,5 @@
 const validacao = require("../util/validacao");
-const Modelo = require("../models/Modelo");
+const Peca = require("../models/Peca");
 const { Types } = require("mongoose");
 const servicoValidacao = require("./servicoValidacao");
 
@@ -21,29 +21,31 @@ const agregacao = {
 module.exports = class ModeloService {
   
   validarIdDaOficina(modelo) {
-    return servicoValidacao.validarIdDaOficina(modelo.idOficina);
+    const mensagens = [];
+    mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.idOficina));
+    return mensagens;
   }
 
-  validarModeloASerInserido(modelo) {
+  validarPecaASerInserida(peca) {
     const mensagens = [];
-    !validacao.validarTexto(modelo.descricao) && mensagens.push("Descrição é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.idMarca));
-    mensagens.push(...this.validarIdDaOficina(modelo));
+    !validacao.validarTexto(peca.descricao) && mensagens.push("Descrição é obrigatório.");
+    mensagens.push(...servicoValidacao.validarIdDaMarca(peca.idMarca));
+    mensagens.push(...this.validarIdDaOficina(peca));
     return mensagens
   }
 
-  validarIdDaOficinaEIdDoModelo(modelo) {
+  validarIdDaOficinaEIdDaPeca(peca) {
     const mensagens = [];
-    mensagens.push(...servicoValidacao.validarIdDoModelo(modelo._id));
-    mensagens.push(...this.validarIdDaOficina(modelo));
+    mensagens.push(...servicoValidacao.validarIdDaPeca(peca._id));
+    mensagens.push(...this.validarIdDaOficina(peca));
     return mensagens
   }
 
-  validarModeloASerAlterado(modelo) {
+  validarPecaASerAlterada(peca) {
     const mensagens = [];
-    !validacao.validarTexto(modelo.descricao) && mensagens.push("Descrição é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.idMarca));
-    mensagens.push(...this.validarIdDaOficina(modelo));
+    !validacao.validarTexto(peca.descricao) && mensagens.push("Descrição é obrigatório.");
+    mensagens.push(...servicoValidacao.validarIdDaMarca(peca.idMarca));
+    mensagens.push(...this.validarIdDaOficina(peca));
     return mensagens
   }
 
@@ -55,20 +57,20 @@ module.exports = class ModeloService {
     return mensagens;
   }
 
-  async inserir(modelo) {
-    return await Modelo
-      .create(modelo)
+  async inserir(peca) {
+    return await Peca
+      .create(peca)
       .catch(erro => {
         console.log(erro);
       });
   }
 
-  async contarPorDescricaoDoModeloEIdOficina(modelo) {
-    return await Modelo
+  async contarPorDescricaoDaPecaEIdOficina(peca) {
+    return await Peca
       .countDocuments({
-        descricao: modelo.descricao,
-        idMarca: modelo.idMarca,
-        idOficina: modelo.idOficina
+        descricao: peca.descricao,
+        idMarca: peca.idMarca,
+        idOficina: peca.idOficina
       })
       .catch(erro => {
         console.log(erro);
@@ -76,7 +78,7 @@ module.exports = class ModeloService {
   }
 
   async listarPorIdOficina(idOficina) {
-    return await Modelo
+    return await Peca
       .aggregate()
       .lookup(agregacao)
       .match({
@@ -89,9 +91,9 @@ module.exports = class ModeloService {
       )
   }
 
-  async listarPorIdModeloEIdOficina(modelo) {
-    return await Modelo
-      .findOne(modelo)
+  async listarPorIdOficinaEIdPeca(peca) {
+    return await Peca
+      .findOne(peca)
       .catch(erro => {
         console.log(erro);
       })
@@ -121,7 +123,7 @@ module.exports = class ModeloService {
         break;
       }
     }
-    return await Modelo
+    return await Peca
       .aggregate()
       .lookup(agregacao)
       .match(match)
@@ -130,13 +132,13 @@ module.exports = class ModeloService {
       .catch(erro => console.log(erro))
   }
 
-  async alterarModelo(modelo) {
-    return await Modelo
+  async alterarPeca(peca) {
+    return await Peca
       .updateOne(
         {
-          _id: modelo._id,
+          _id: peca._id,
         },
-        modelo
+        peca
       )
   }
 

@@ -61,7 +61,7 @@ module.exports = class UsuarioController {
     }
     usuarioLogin.senha = criptografia.criptografar(senha);
     let usuarioLogado = await usuarioServices.login(usuarioLogin);
-    if (!usuarioLogado) {
+    if (!usuarioLogado || !usuarioLogado[0]) {
       const usuarioExistente = await usuarioServices.ContarPorUsuario(usuarioLogin);
       if (usuarioExistente) {
         return resposta.status(401).json({
@@ -74,14 +74,19 @@ module.exports = class UsuarioController {
           mensagem: "Esse usuário não existe."
         });
     }
-    const { _id, perfil } = usuarioLogado;
-    usuarioLogado = {
-      ...usuarioLogado._doc,
-      token: jwt.sign({
-        _id,
+    const { _id, perfil } = usuarioLogado[0];
+    const token = jwt.sign(
+      {
+        _id
       },
-        process.env.APP_SECRET,
-        { expiresIn: 300000 }),
+      process.env.APP_SECRET,
+      {
+        expiresIn: 300000
+      }
+    )
+    usuarioLogado = {
+      ...usuarioLogado[0],
+      token,
     }
     return resposta
       .status(200)
@@ -100,6 +105,8 @@ module.exports = class UsuarioController {
         })
     };
     const descodificado = usuarioServices.autenticar(token);
+    
+    console.log(descodificado);
     if (!descodificado || !descodificado._id) {
       return resposta
         .status(401)
@@ -108,8 +115,9 @@ module.exports = class UsuarioController {
         });
     }
     const { _id } = descodificado;
+    
     const usuarioLogin = await usuarioServices.loginPorIdUsuario(_id);
-    if (!usuarioLogin || !usuarioLogin._doc) {
+    if (!usuarioLogin) {
       return resposta
         .status(500)
         .json({
@@ -119,7 +127,7 @@ module.exports = class UsuarioController {
     return resposta
       .status(200)
       .json({
-        ...usuarioLogin._doc,
+        ...usuarioLogin[0],
         token
       });
   }

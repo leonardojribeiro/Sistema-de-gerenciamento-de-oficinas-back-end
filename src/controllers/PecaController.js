@@ -1,18 +1,16 @@
-const Modelo = require('../models/Modelo');
-const ModeloServices = require('../services/ModeloServices');
-
-const modeloServices = new ModeloServices();
+const PecaServices = require('../services/PecaServices');
+const pecaServices = new PecaServices();
 
 module.exports = {
 
-  async incluirDadosDeModelo(requisicao, resposta) {
+  async incluirDadosDePeca(requisicao, resposta) {
     const { descricao, idMarca, idOficina } = requisicao.body;
-    const modeloASerInserido = {
+    const pecaASerInserida = {
       descricao,
       idMarca,
       idOficina,
     };
-    const mensagens = modeloServices.validarModeloASerInserido(modeloASerInserido);
+    const mensagens = pecaServices.validarPecaASerAlterada(pecaASerInserida);
     if (mensagens.length) {
       return resposta
         .status(406)
@@ -20,32 +18,32 @@ module.exports = {
           mensagem: mensagens
         });
     }
-    const modeloExistenteNaOficina = await modeloServices.contarPorDescricaoDoModeloEIdOficina(modeloASerInserido);
-    if (modeloExistenteNaOficina) {
+    const pecaExistenteNaOficina = await pecaServices.contarPorDescricaoDaPecaEIdOficina(pecaASerInserida);
+    if (pecaExistenteNaOficina) {
       return resposta
         .status(406)
         .json({
-          mensagem: "Esse modelo já está cadastrado"
+          mensagem: "Essa peça já está cadastrada"
         });
     }
-    const modeloInserido = await modeloServices.inserir(modeloASerInserido);
-    if (!modeloInserido) {
+    const pecaInserida = await pecaServices.inserir(pecaASerInserida);
+    if (!pecaInserida) {
       return resposta
         .status(500)
         .json({
-          mensagem: "Modelo não cadastrado."
+          mensagem: "Peça não cadastrada."
         });
     }
     return resposta
       .status(201)
       .json({
-        mensagem: "Modelo cadastrado com sucesso."
+        mensagem: "Peça cadastrada com sucesso."
       });
   },
 
   async listarTodos(requisicao, resposta) {
     const { idOficina } = requisicao.query;
-    const mensagens = modeloServices.validarIdDaOficina({ idOficina });
+    const mensagens = pecaServices.validarIdDaOficina({ idOficina });
     if (mensagens.length) {
       return resposta
         .status(406)
@@ -53,17 +51,17 @@ module.exports = {
           mensagem: mensagens
         });
     }
-    const modelos = await modeloServices.listarPorIdOficina(idOficina);
+    const modelos = await pecaServices.listarPorIdOficina(idOficina);
     return resposta.json(modelos);
   },
 
-  async listarModeloPorId(requisicao, resposta) {
+  async listarPecaPorId(requisicao, resposta) {
     const { idOficina, _id } = requisicao.query;
-    const informacoesDoModelo = {
+    const informacoesDaPeca = {
       _id,
       idOficina,
     }
-    const mensagens = modeloServices.validarIdDaOficinaEIdDoModelo(informacoesDoModelo);
+    const mensagens = pecaServices.validarIdDaOficinaEIdDaPeca(informacoesDaPeca);
     if (mensagens.length) {
       return resposta
         .status(406)
@@ -71,15 +69,15 @@ module.exports = {
           mensagem: mensagens
         });
     }
-    const modeloListado = await modeloServices.listarPorIdModeloEIdOficina(informacoesDoModelo);
-    if (!modeloListado) {
+    const pecaListada = await pecaServices.listarPorIdOficinaEIdPeca(informacoesDaPeca);
+    if (!pecaListada) {
       return resposta
         .status(500)
         .json({
           mensagem: "Erro ao listar modelo."
         });
     }
-    return resposta.json(modeloListado);
+    return resposta.json(pecaListada);
   },
 
   async consultar(requisicao, resposta) {
@@ -89,33 +87,33 @@ module.exports = {
       consulta,
       tipo
     };
-    const mensagens = modeloServices.validarInformacoesDaConsulta(informacoesDaConsulta);
+    const mensagens = pecaServices.validarInformacoesDaConsulta(informacoesDaConsulta);
     if (mensagens.length) {
       return resposta.status(406)
         .json({
           mensagem: mensagens
         });
     }
-    const modelosListados = await modeloServices.consultar(informacoesDaConsulta);
-    if (!modelosListados) {
+    const pecasListadas = await pecaServices.consultar(informacoesDaConsulta);
+    if (!pecasListadas) {
       return resposta
         .status(500)
         .json({
-          mensagem: "Erro ao listar modelos."
+          mensagem: "Erro ao listar marca."
         });
     }
-    return resposta.json(modelosListados);
+    return resposta.json(pecasListadas);
   },
 
-  async alterarModelo(requisicao, resposta) {
+  async alterarPeca(requisicao, resposta) {
     const { _id, descricao, idOficina, idMarca, } = requisicao.body;
-    const modeloASerAlterado = {
+    const pecaASerAlterada = {
       _id,
       descricao,
       idMarca,
       idOficina,
     }
-    const mensagens = modeloServices.validarModeloASerAlterado(modeloASerAlterado);
+    const mensagens = pecaServices.validarPecaASerAlterada(pecaASerAlterada);
     if (mensagens.length) {
       return resposta
         .status(406)
@@ -123,14 +121,15 @@ module.exports = {
           mensagem: mensagens
         });
     }
-    const resultado = await modeloServices.alterarModelo(modeloASerAlterado);
+    const resultado = await pecaServices.alterarPeca(pecaASerAlterada);
     if (!resultado) {
       return resposta
         .status(500)
         .json({
-          mensagem: "Modelo não alterado."
+          mensagem: "Peça não alterada."
         });
     }
-    return resposta.status(201).json({ mensagem: "Modelo alterado com sucesso." });
+    return resposta.status(201).json({ mensagem: "Peça alterada com sucesso." });
   },
+
 }
