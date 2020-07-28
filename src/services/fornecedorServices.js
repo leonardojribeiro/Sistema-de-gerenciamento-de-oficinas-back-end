@@ -1,4 +1,3 @@
-const { inserir } = require("./funcionarioServices");
 const validacao = require("../util/validacao");
 const servicoValidacao = require("./servicoValidacao");
 const Fornecedor = require('../models/Fornecedor');

@@ -1,5 +1,4 @@
 const FornecedorServices = require("../services/FornecedorServices");
-const { listarTodos } = require("./ModeloController");
 const servicoValidacao = require("../services/servicoValidacao");
 const fornecedorServices = new FornecedorServices();
 

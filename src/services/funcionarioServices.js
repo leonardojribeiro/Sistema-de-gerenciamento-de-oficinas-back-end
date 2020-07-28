@@ -1,5 +1,4 @@
 const validacao = require("../util/validacao");
-const { inserir } = require("./clienteServices");
 const Funcionario = require("../models/Funcionario");
 
 

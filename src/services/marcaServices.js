@@ -1,9 +1,6 @@
 const Marca = require("../models/Marca");
 const validacao = require("../util/validacao");
-const { promisify } = require("util");
 const GoogleStorage = require("../util/GoogleStorage");
-
-const path = require("path");
 const crypto = require("crypto");
 
 module.exports = class MarcaServices{

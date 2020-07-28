@@ -1,5 +1,4 @@
 const validacao = require("../util/validacao");
-const { inserir } = require("./marcaServices");
 const Veiculo = require("../models/Veiculo");
 const servicoValidacao = require("./servicoValidacao");
 const { Types } = require("mongoose");

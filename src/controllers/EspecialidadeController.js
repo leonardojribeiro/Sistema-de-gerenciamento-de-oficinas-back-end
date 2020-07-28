@@ -1,5 +1,3 @@
-const Especialidade = require('../models/Especialidade');
-
 const EspecialidadeServices = require('../services/EspecialidadeServices');
 const servicoValidacao = require('../services/servicoValidacao');
 const especialidadeServices = new EspecialidadeServices();

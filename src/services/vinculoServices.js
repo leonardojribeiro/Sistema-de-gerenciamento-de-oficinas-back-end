@@ -1,5 +1,4 @@
 const validacao = require("../util/validacao");
-const { inserir } = require("./VeiculoServices");
 const Vinculo = require("../models/Vinculo");
 
 module.exports = class VinculoServices {
