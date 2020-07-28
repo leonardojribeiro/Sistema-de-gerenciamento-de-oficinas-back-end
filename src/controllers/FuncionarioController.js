@@ -1,6 +1,6 @@
 const Funcionario = require('../models/Funcionario');
 
-class FuncionarioController {
+module.exports = {
     async index(requisicao, resposta) {
         console.log("index");
         const funcionarios = await Funcionario.aggregate(
@@ -14,7 +14,7 @@ class FuncionarioController {
             }]
         ).then().catch(e => { console.log(e) });
         resposta.json({ funcionarios });
-    }
+    },
 
     async salvar(req, res) {
         console.log(req.body);
@@ -25,7 +25,7 @@ class FuncionarioController {
             especialidade
         }).then().catch(e => { });
         return res.json({ funcionario });
-    }
+    },
 
     async editar(req, res) {
 
@@ -46,5 +46,3 @@ class FuncionarioController {
         return res.json(funcionario);
     }
 }
-
-module.exports = FuncionarioController;

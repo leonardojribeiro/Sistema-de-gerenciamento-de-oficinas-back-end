@@ -3,7 +3,7 @@ const ClienteServices = require("../services/ClienteServices");
 const clienteServices = new ClienteServices();
 
 module.exports = {
-  async inserirDadosDeCliente(requisicao, resposta) {
+  async inserirCliente(requisicao, resposta) {
     const {
       nome,
       sexo,
@@ -41,7 +41,7 @@ module.exports = {
           mensagem: "Cliente já cadastrado."
         });
     }
-    const clienteInserido = await clienteServices.inserir(clienteASerInserido);
+    const clienteInserido = await clienteServices.inserirCliente(clienteASerInserido);
     if (!clienteInserido) {
       return resposta.status(500)
         .json({

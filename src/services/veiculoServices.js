@@ -5,15 +5,15 @@ const servicoValidacao = require("./servicoValidacao");
 const { Types } = require("mongoose");
 
 module.exports = class VeiculoServices {
-  validarVeliculoASerInserido(veiculo) {
+  validarVeliculoASerInserido(informacoesDoVeiculo) {
     const mensagens = [];
-    !validacao.validarTexto(veiculo.placa) && mensagens.push("Placa é obrigatória.")
-      || !validacao.validarPlaca(veiculo.placa) && mensagens.push("Placa inválida.");
-    !validacao.validarTexto(veiculo.anoFabricacao) && mensagens.push("Ano de fabricacao é obrigatório.");
-    !validacao.validarTexto(veiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDoModelo(veiculo.idModelo));
-    mensagens.push(...servicoValidacao.validarIdDoCliente(veiculo.idCliente));
-    mensagens.push(...servicoValidacao.validarIdDaOficina(veiculo.idOficina));
+    !validacao.validarTexto(informacoesDoVeiculo.placa) && mensagens.push("Placa é obrigatória.")
+      || !validacao.validarPlaca(informacoesDoVeiculo.placa) && mensagens.push("Placa inválida.");
+    !validacao.validarTexto(informacoesDoVeiculo.anoFabricacao) && mensagens.push("Ano de fabricacao é obrigatório.");
+    !validacao.validarTexto(informacoesDoVeiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
+    mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.idModelo));
+    mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.idCliente));
+    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoVeiculo.idOficina));
     return mensagens;
   }
 
@@ -21,9 +21,29 @@ module.exports = class VeiculoServices {
     return servicoValidacao.validarIdDaOficina(idOficina);
   }
 
-  async inserir(veiculo) {
+  validarVeliculoASerAlterado(informacoesDoVeiculo) {
+    const mensagens = [];
+    !validacao.validarTexto(informacoesDoVeiculo.placa) && mensagens.push("Placa é obrigatória.")
+      || !validacao.validarPlaca(informacoesDoVeiculo.placa) && mensagens.push("Placa inválida.");
+    !validacao.validarTexto(informacoesDoVeiculo.anoFabricacao) && mensagens.push("Ano de fabricacao é obrigatório.");
+    !validacao.validarTexto(informacoesDoVeiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
+    mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.idModelo));
+    mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.idCliente));
+    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoVeiculo.idOficina));
+    mensagens.push(...servicoValidacao.validarIdDoVeiculo(informacoesDoVeiculo._id));
+    return mensagens;
+  }
+
+  validarIdVeiculoEIdOficina(informacoesDoVeiculo) {
+    const mensagens = [];
+    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoVeiculo.idOficina));
+    mensagens.push(...servicoValidacao.validarIdDoVeiculo(informacoesDoVeiculo._id));
+    return mensagens
+  }
+
+  async inserirVeiculo(informacoesDoVeiculo) {
     return await Veiculo
-      .create(veiculo)
+      .create(informacoesDoVeiculo)
       .catch(erro => {
         console.log(erro);
       })
@@ -49,6 +69,11 @@ module.exports = class VeiculoServices {
         foreignField: "idVeiculo",
         as: "vinculo",
       })
+      .unwind("vinculo")
+      .match({
+        idOficina: Types.ObjectId(idOficina),
+        "vinculo.vinculoFinal": { $exists: false }
+      })
       .lookup({
         from: "clientes",
         localField: "vinculo.idCliente",
@@ -67,11 +92,6 @@ module.exports = class VeiculoServices {
         foreignField: "_id",
         as: "marca"
       })
-      .match({
-        idOficina: Types.ObjectId(idOficina)
-      })
-      .unwind("cliente")
-      .unwind("vinculo")
       .unwind("modelo")
       .unwind("marca")
       .project({
@@ -91,21 +111,74 @@ module.exports = class VeiculoServices {
       })
       .catch(erro => console.log(erro))
   }
+
+  async listarPorIdVeiculoEIdOficina(informacoesDoVeiculo) {
+    return await Veiculo
+      .aggregate()
+      .lookup({
+        from: 'vinculos',
+        localField: "_id",
+        foreignField: "idVeiculo",
+        as: "vinculo",
+      })
+      .unwind("vinculo")
+      .match({
+        _id: Types.ObjectId(informacoesDoVeiculo._id),
+        idOficina: Types.ObjectId(informacoesDoVeiculo.idOficina),
+        "vinculo.vinculoFinal": { $exists: false }
+      })
+      .lookup({
+        from: "clientes",
+        localField: "vinculo.idCliente",
+        foreignField: "_id",
+        as: "cliente"
+      })
+      .lookup({
+        from: "modelos",
+        localField: "idModelo",
+        foreignField: "_id",
+        as: "modelo"
+      })
+      .lookup({
+        from: "marcas",
+        localField: "modelo.idMarca",
+        foreignField: "_id",
+        as: "marca"
+      })
+      .unwind("cliente")
+      .unwind("modelo")
+      .unwind("marca")
+      .group({
+        _id: "$_id",
+        idCliente: {
+          $first: "$cliente._id"
+        },
+        idModelo: {
+          $first: "$modelo._id"
+        },
+        placa: {
+          $first: "$placa"
+        },
+        anoFabricacao: {
+          $first: "$anoFabricacao"
+        },
+        anoModelo: {
+          $first: "$anoModelo"
+        }
+      })
+      .catch(erro => console.log(erro))
+  }
+
+  async alterarVeiculo(informacoesDoVeiculo) {
+    return await Veiculo
+      .updateOne(
+        {
+          _id: informacoesDoVeiculo._id
+        },
+        {
+          $set: informacoesDoVeiculo
+        }
+      )
+      .catch(erro => console.log(erro));
+  }
 }
-/*
-.aggregate([{
-  $lookup: {
-    from: 'vinculos',
-    localField: "_id",
-    foreignField: "idVeiculo",
-    as: "vinculo",
-  },
-},
-{
-  $lookup: {
-    from: "clientes",
-    localField: "vinculo.idCliente",
-    foreignField: "_id",
-    as: "cliente"
-  },
-}])*/

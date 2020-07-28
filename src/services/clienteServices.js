@@ -1,29 +1,23 @@
 const validacao = require("../util/validacao");
 const Cliente = require("../models/Cliente");
 const servicoValidacao = require("./servicoValidacao");
-const { listarPorIdOficina } = require("./marcaServices");
+const { listarPorIdOficina } = require("./MarcaServices");
 
 module.exports = class ClienteServices {
-  validarClienteASerInserido(cliente) {
+  validarClienteASerInserido(informacoesDoCliente) {
     const mensagens = [];
-    !validacao.validarTexto(cliente.nome) && mensagens.push("Nome é obrigatório.");
-    !validacao.validarTexto(cliente.dataNascimento) && mensagens.push("Data de nascimento é obrigatória.");
-    !validacao.validarTexto(cliente.cpfCnpj) && mensagens.push("CPF/CNPJ é obrigatório.")
-      || !validacao.validarCpfCnpj(cliente.cpfCnpj) && mensagens.push("CPF/CNPJ inválido");
-    validacao.validarTexto(cliente.telefoneFixo) &&
-      !validacao.validarTelefone(cliente.telefoneFixo) && mensagens.push("Telefone fixo inválido");
-    !validacao.validarTexto(cliente.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
-      || !validacao.validarTelefone(cliente.telefoneCelular) && mensagens.push("Telefone celular inválido.");
-    validacao.validarTexto(cliente.email) &&
-      !validacao.validarTexto(cliente.email) && !validacao.validarEmail(cliente.email) && mensagens.push("E-mail inválido.");
-    !validacao.validarTexto(cliente.endereco.logradouro) && mensagens.push("Logradouro é obrigatório.");
-    !validacao.validarTexto(cliente.endereco.numero) && mensagens.push("Número é obrigatório.");
-    !validacao.validarTexto(cliente.endereco.bairro) && mensagens.push("Bairro é obrigatório.");
-    !validacao.validarTexto(cliente.endereco.cep) && mensagens.push("CEP é obrigatório.")
-      || !validacao.validarCep(cliente.endereco.cep) && mensagens.push("CEP inválido.");
-    !validacao.validarTexto(cliente.endereco.cidade) && mensagens.push("Cidade é obrigatória.");
-    !validacao.validarTexto(cliente.endereco.estado) && mensagens.push("Estado é obrigatório");
-    mensagens.push(...servicoValidacao.validarIdDaOficina(cliente.idOficina));
+    !validacao.validarTexto(informacoesDoCliente.nome) && mensagens.push("Nome é obrigatório.");
+    !validacao.validarTexto(informacoesDoCliente.dataNascimento) && mensagens.push("Data de nascimento é obrigatória.");
+    !validacao.validarTexto(informacoesDoCliente.cpfCnpj) && mensagens.push("CPF/CNPJ é obrigatório.")
+      || !validacao.validarCpfCnpj(informacoesDoCliente.cpfCnpj) && mensagens.push("CPF/CNPJ inválido");
+    validacao.validarTexto(informacoesDoCliente.telefoneFixo) &&
+      !validacao.validarTelefone(informacoesDoCliente.telefoneFixo) && mensagens.push("Telefone fixo inválido");
+    !validacao.validarTexto(informacoesDoCliente.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
+      || !validacao.validarTelefone(informacoesDoCliente.telefoneCelular) && mensagens.push("Telefone celular inválido.");
+    validacao.validarTexto(informacoesDoCliente.email) &&
+       !validacao.validarEmail(informacoesDoCliente.email) && mensagens.push("E-mail inválido.");
+    mensagens.push(...servicoValidacao.validarEndereco(informacoesDoCliente.endereco));
+    mensagens.push(...this.validarIdDaOficina(informacoesDoCliente.idOficina));
     return mensagens;
   }
 
@@ -38,31 +32,31 @@ module.exports = class ClienteServices {
     return mensagens
   }
 
-  validarClienteASerAlterado(cliente) {
+  validarClienteASerAlterado(informacoesDoCliente) {
     const mensagens = [];
-    !validacao.validarTexto(cliente.nome) && mensagens.push("Nome é obrigatório."); 
-    !validacao.validarTexto(cliente.dataNascimento) && mensagens.push("Data de nascimento é obrigatória.");
-    validacao.validarTexto(cliente.telefoneFixo) &&
-      !validacao.validarTelefone(cliente.telefoneFixo) && mensagens.push("Telefone fixo inválido");
-    !validacao.validarTexto(cliente.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
-      || !validacao.validarTelefone(cliente.telefoneCelular) && mensagens.push("Telefone celular inválido.");
-    validacao.validarTexto(cliente.email) &&
-      !validacao.validarTexto(cliente.email) && !validacao.validarEmail(cliente.email) && mensagens.push("E-mail inválido.");
-    mensagens.push(...servicoValidacao.validarEndereco(cliente.endereco));
+    !validacao.validarTexto(informacoesDoCliente.nome) && mensagens.push("Nome é obrigatório."); 
+    !validacao.validarTexto(informacoesDoCliente.dataNascimento) && mensagens.push("Data de nascimento é obrigatória.");
+    validacao.validarTexto(informacoesDoCliente.telefoneFixo) &&
+      !validacao.validarTelefone(informacoesDoCliente.telefoneFixo) && mensagens.push("Telefone fixo inválido");
+    !validacao.validarTexto(informacoesDoCliente.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
+      || !validacao.validarTelefone(informacoesDoCliente.telefoneCelular) && mensagens.push("Telefone celular inválido.");
+    validacao.validarTexto(informacoesDoCliente.email) &&
+      !validacao.validarTexto(informacoesDoCliente.email) && !validacao.validarEmail(informacoesDoCliente.email) && mensagens.push("E-mail inválido.");
+    mensagens.push(...servicoValidacao.validarEndereco(informacoesDoCliente.endereco));
     return mensagens;
   }
 
-  async inserir(cliente) {
+  async inserirCliente(informacoesDoCliente) {
     return await Cliente
-      .create(cliente)
+      .create(informacoesDoCliente)
       .catch(erro => console.log(erro));
   }
 
-  async contarClientesPorCpfEIdOficina(cliente) {
+  async contarClientesPorCpfEIdOficina(informacoesDoCliente) {
     return await Cliente
       .countDocuments({
-        cpfCnpj: cliente.cpfCnpj,
-        idOficina: cliente.idOficina,
+        cpfCnpj: informacoesDoCliente.cpfCnpj,
+        idOficina: informacoesDoCliente.idOficina,
       })
       .catch(erro => console.log(erro))
   }
@@ -86,14 +80,14 @@ module.exports = class ClienteServices {
       .catch(erro => console.log(erro))
   }
 
-  async alterarCliente(cliente) {
+  async alterarCliente(informacoesDoCliente) {
     return await Cliente
       .updateOne(
         {
-          _id: cliente._id
+          _id: informacoesDoCliente._id
         },
         {
-          $set: cliente,
+          $set: informacoesDoCliente,
         },
 
       )

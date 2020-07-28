@@ -23,7 +23,6 @@ const fornecedor = new mongoose.Schema({
   email:{
     type: String,
     unique: true,
-    required: true,
   },
   endereco: {
     type: Endereco,

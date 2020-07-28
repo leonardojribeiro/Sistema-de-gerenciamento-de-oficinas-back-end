@@ -3,7 +3,7 @@ const pecaServices = new PecaServices();
 
 module.exports = {
 
-  async incluirDadosDePeca(requisicao, resposta) {
+  async inserirPeca(requisicao, resposta) {
     const { descricao, idMarca, idOficina } = requisicao.body;
     const pecaASerInserida = {
       descricao,

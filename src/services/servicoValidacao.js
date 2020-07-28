@@ -32,7 +32,26 @@ module.exports = {
     return mensagens;
   },
 
+  validarIdDaEspecialidade(idEspecialidade){
+    const mensagens = [];
+    !validacao.validarTexto(idEspecialidade) && mensagens.push("Id da especialidade é obrigatório.")
+      || !validacao.validarId(idEspecialidade) && mensagens.push("Id da especialidade inválido.");
+    return mensagens;
+  },
 
+  validarIdDoVeiculo(idVeiculo){
+    const mensagens = [];
+    !validacao.validarTexto(idVeiculo) && mensagens.push("Id do veículo é obrigatório.")
+      || !validacao.validarId(idVeiculo) && mensagens.push("Id do veículo inválido.");
+    return mensagens;
+  },
+
+  validarIdDoFornecedor(idFornecedor){
+    const mensagens = [];
+    !validacao.validarTexto(idFornecedor) && mensagens.push("Id do fornecedor é obrigatório.")
+      || !validacao.validarId(idFornecedor) && mensagens.push("Id do fornecedor inválido.");
+    return mensagens;
+  },
 
   validarEndereco(endereco) {
     const mensagens = []

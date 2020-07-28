@@ -5,7 +5,7 @@ const modeloServices = new ModeloServices();
 
 module.exports = {
 
-  async incluirDadosDeModelo(requisicao, resposta) {
+  async inserirModelo(requisicao, resposta) {
     const { descricao, idMarca, idOficina } = requisicao.body;
     const modeloASerInserido = {
       descricao,
@@ -45,7 +45,7 @@ module.exports = {
 
   async listarTodos(requisicao, resposta) {
     const { idOficina } = requisicao.query;
-    const mensagens = modeloServices.validarIdDaOficina({ idOficina });
+    const mensagens = modeloServices.validarIdDaOficina(idOficina);
     if (mensagens.length) {
       return resposta
         .status(406)

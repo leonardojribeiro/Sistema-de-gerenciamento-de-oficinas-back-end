@@ -1,29 +1,88 @@
 const { inserir } = require("./funcionarioServices");
 const validacao = require("../util/validacao");
+const servicoValidacao = require("./servicoValidacao");
+const Fornecedor = require('../models/Fornecedor');
 
-module.exports = {
-  validar(fornecedor) {
+module.exports = class FornecedorServices {
+  validarFornecedorASerInserido(informacoesDoFornecedor) {
     const mensagens = [];
-    !validacao.validarTexto(fornecedor.nomeFantasia) && mensagens.push("Nome fantasia é obrigatório.");
-    !validacao.validarTexto(fornecedor.cpfCnpj) && mensagens.push("CPF / CNPJ é obrigatório.");
-    !validacao.validarCpfCnpj(fornecedor.cpfCnpj) && mensagens.push("CPF / CNPJ inválido");
-    validacao.validarTexto(fornecedor.telefoneFixo) &&
-      !validacao.validarTelefone(fornecedor.telefoneFixo) && mensagens.push("Telefone fixo inválido");
-    !validacao.validarTexto(fornecedor.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
-      || !validacao.validarTelefone(fornecedor.telefoneCelular) && mensagens.push("Telefone celular inválido.");
-    !validacao.validarTexto(fornecedor.email) &&
-      !validacao.validarTexto(fornecedor.email) && !validacao.validarEmail(fornecedor.email) && mensagens.push("E-mail inválido.");
-    !validacao.validarTexto(fornecedor.endereco.logradouro) && mensagens.push("Logradouro é obrigatório.");
-    !validacao.validarTexto(fornecedor.endereco.numero) && mensagens.push("Número é obrigatório.");
-    !validacao.validarTexto(fornecedor.endereco.bairro) && mensagens.push("Endereço é obrigatório.");
-    !validacao.validarTexto(fornecedor.endereco.cep) && mensagens.push("CEP é obrigatório.")
-      || !validacao.validarCep(fornecedor.endereco.cep) && mensagens.push("CEP inválido.");
-    !validacao.validarTexto(fornecedor.endereco.cidade) && mensagens.push("Cidade é obrigatória.");
-    !validacao.validarTexto(fornecedor.endereco.estado) && mensagens.push("Estado é obrigatório");
+    !validacao.validarTexto(informacoesDoFornecedor.nomeFantasia) && mensagens.push("Nome fantasia é obrigatório.");
+    !validacao.validarTexto(informacoesDoFornecedor.cpfCnpj) && mensagens.push("CPF / CNPJ é obrigatório.");
+    !validacao.validarCpfCnpj(informacoesDoFornecedor.cpfCnpj) && mensagens.push("CPF / CNPJ inválido");
+    validacao.validarTexto(informacoesDoFornecedor.telefoneFixo) &&
+      !validacao.validarTelefone(informacoesDoFornecedor.telefoneFixo) && mensagens.push("Telefone fixo inválido");
+    !validacao.validarTexto(informacoesDoFornecedor.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
+      || !validacao.validarTelefone(informacoesDoFornecedor.telefoneCelular) && mensagens.push("Telefone celular inválido.");
+    validacao.validarTexto(informacoesDoFornecedor.email) &&
+      !validacao.validarEmail(informacoesDoFornecedor.email) && mensagens.push("E-mail inválido.");
+    mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFornecedor.endereco));
+    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoFornecedor.idOficina))
     return mensagens;
-  },
+  }
 
-  async inserir(fornecedor){
-    
+  validarFornecedorASerAlterado(informacoesDoFornecedor) {
+    const mensagens = [];
+    !validacao.validarTexto(informacoesDoFornecedor.nomeFantasia) && mensagens.push("Nome fantasia é obrigatório.");
+    !validacao.validarTexto(informacoesDoFornecedor.cpfCnpj) && mensagens.push("CPF / CNPJ é obrigatório.");
+    !validacao.validarCpfCnpj(informacoesDoFornecedor.cpfCnpj) && mensagens.push("CPF / CNPJ inválido");
+    validacao.validarTexto(informacoesDoFornecedor.telefoneFixo) &&
+      !validacao.validarTelefone(informacoesDoFornecedor.telefoneFixo) && mensagens.push("Telefone fixo inválido");
+    !validacao.validarTexto(informacoesDoFornecedor.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
+      || !validacao.validarTelefone(informacoesDoFornecedor.telefoneCelular) && mensagens.push("Telefone celular inválido.");
+    validacao.validarTexto(informacoesDoFornecedor.email) &&
+      !validacao.validarEmail(informacoesDoFornecedor.email) && mensagens.push("E-mail inválido.");
+    mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFornecedor.endereco));
+    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoFornecedor.idOficina))
+    mensagens.push(...servicoValidacao.validarIdDoFornecedor(informacoesDoFornecedor._id))
+    return mensagens;
+  }
+
+  validarIdDoForncedorEIdDaOficina(informacoesDoFornecedor){
+    const mensagens = [];
+    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoFornecedor.idOficina));
+    mensagens.push(...servicoValidacao.validarIdDoFornecedor(informacoesDoFornecedor._id));
+    return mensagens;
+  }
+
+  async contarFornecedoresPorCpfCnpjEIdOficina(informacoesDoFornecedor) {
+    return await Fornecedor
+      .countDocuments({
+        cpfCnpj: informacoesDoFornecedor.cpfCnpj,
+        idOficina: informacoesDoFornecedor.idOficina,
+      })
+      .catch(erro => console.log(erro))
+  }
+
+  async inserirFornecedor(informacoesDoFornecedor){
+    return await Fornecedor
+    .create(informacoesDoFornecedor)
+    .catch(erro=>console.log(erro));
+  }
+
+  async listarPorIdOficina(idOficina){
+    return await Fornecedor
+    .find({
+      idOficina
+    })
+    .catch(erro => console.log(erro))
+  }
+
+  async listarPorIdFornecedorEIdOficina(informacoesDoFornecedor){
+    return await Fornecedor
+    .findOne(informacoesDoFornecedor)
+    .catch(erro => console.log(erro))
+  }
+
+  async alterarFornecedor(informacoesDoFornecedor){
+    return await Fornecedor
+    .updateOne(
+      {
+        _id: informacoesDoFornecedor._id,
+      },
+      {
+        $set: informacoesDoFornecedor
+      }
+    )
+    .catch(erro => console.log(erro))
   }
 }

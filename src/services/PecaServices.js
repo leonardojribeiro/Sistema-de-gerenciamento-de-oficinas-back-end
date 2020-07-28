@@ -21,9 +21,7 @@ const agregacao = {
 module.exports = class ModeloService {
   
   validarIdDaOficina(modelo) {
-    const mensagens = [];
-    mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.idOficina));
-    return mensagens;
+    return servicoValidacao.validarIdDaMarca(modelo.idOficina);
   }
 
   validarPecaASerInserida(peca) {

@@ -1,8 +1,9 @@
-const marcaServices = require('../services/marcaServices');
+const MarcaServices = require('../services/MarcaServices');
+const marcaServices = new MarcaServices();
 
 module.exports = {
 
-  async incluirDadosDaMarca(requisicao, resposta) {
+  async inserirMarca(requisicao, resposta) {
     const { descricao, idOficina } = requisicao.body;
     const marcaASerInserida = {
       descricao,
@@ -53,7 +54,7 @@ module.exports = {
 
   async listarTodos(requisicao, resposta) {
     const { idOficina } = requisicao.query;
-    const mensagens = marcaServices.validarIdDaOficina({ idOficina });
+    const mensagens = marcaServices.validarIdDaOficina({idOficina});
     if (mensagens.length) {
       return resposta
         .status(406)
@@ -97,7 +98,7 @@ module.exports = {
       descricao,
       idOficina,
     }
-    const mensagens = marcaServices.validarIdDaOficina(informacoesDaMarca);
+    const mensagens = marcaServices.validarIdDaOficina({idOficina});
     if (mensagens.length) {
       return resposta
         .status(406)

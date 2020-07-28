@@ -2,7 +2,7 @@ const validacao = require("../util/validacao");
 const { inserir } = require("./VeiculoServices");
 const Vinculo = require("../models/Vinculo");
 
-module.exports = {
+module.exports = class VinculoServices {
 
   validar(vinculo) {
     const mensagens = [];
@@ -10,7 +10,7 @@ module.exports = {
     !validacao.validarTexto(vinculo.idVeiculo) && mensagens.push("Id do veículo é obrigatório.");
     !validacao.validarTexto(vinculo.idOficina) && mensagens.push("Id da oficina é obrigatório.");
     return mensagens
-  },
+  }
 
   async inserir(vinculo) {
     return await Vinculo
@@ -18,7 +18,7 @@ module.exports = {
       .catch(erro => {
         console.log(erro);
       });
-  },
+  }
 
   async contarPorIdClienteIdVeiculoEIdOficina(vinculo) {
     return await Vinculo
@@ -31,7 +31,7 @@ module.exports = {
       .catch(erro => {
         console.log(erro);
       })
-  },
+  }
 
   async listarPorIdVeiculoEIdOficina(vinculo) {
     return await Vinculo
@@ -43,7 +43,7 @@ module.exports = {
       .catch(erro => {
         console.log(erro);
       })
-  },
+  }
 
   async alterarVinculo(vinculo) {
     return await Vinculo
