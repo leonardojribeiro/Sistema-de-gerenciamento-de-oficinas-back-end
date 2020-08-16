@@ -1,12 +1,14 @@
 const Modelo = require('../models/Modelo');
 const ModeloServices = require('../services/ModeloServices');
+const servicoValidacao = require('../services/servicoValidacao');
 
 const modeloServices = new ModeloServices();
 
 module.exports = {
 
   async inserirModelo(requisicao, resposta) {
-    const { descricao, idMarca, idOficina } = requisicao.body;
+    const { idOficina } = requisicao;
+    const { descricao, idMarca, } = requisicao.body;
     const modeloASerInserido = {
       descricao,
       idMarca,
@@ -44,26 +46,19 @@ module.exports = {
   },
 
   async listarTodos(requisicao, resposta) {
-    const { idOficina } = requisicao.query;
-    const mensagens = modeloServices.validarIdDaOficina(idOficina);
-    if (mensagens.length) {
-      return resposta
-        .status(406)
-        .json({
-          mensagem: mensagens
-        });
-    }
+    const { idOficina } = requisicao;
     const modelos = await modeloServices.listarPorIdOficina(idOficina);
     return resposta.json(modelos);
   },
 
   async listarModeloPorId(requisicao, resposta) {
-    const { idOficina, _id } = requisicao.query;
+    const { idOficina } = requisicao;
+    const { _id } = requisicao.query;
     const informacoesDoModelo = {
       _id,
       idOficina,
     }
-    const mensagens = modeloServices.validarIdDaOficinaEIdDoModelo(informacoesDoModelo);
+    const mensagens = servicoValidacao.validarIdDoModelo(_id);
     if (mensagens.length) {
       return resposta
         .status(406)
@@ -83,7 +78,8 @@ module.exports = {
   },
 
   async consultar(requisicao, resposta) {
-    const { idOficina, consulta, tipo } = requisicao.query;
+    const { idOficina } = requisicao;
+    const { consulta, tipo } = requisicao.query;
     const informacoesDaConsulta = {
       idOficina,
       consulta,
@@ -108,12 +104,11 @@ module.exports = {
   },
 
   async alterarModelo(requisicao, resposta) {
-    const { _id, descricao, idOficina, idMarca, } = requisicao.body;
+    const { _id, descricao, idMarca, } = requisicao.body;
     const modeloASerAlterado = {
       _id,
       descricao,
       idMarca,
-      idOficina,
     }
     const mensagens = modeloServices.validarModeloASerAlterado(modeloASerAlterado);
     if (mensagens.length) {

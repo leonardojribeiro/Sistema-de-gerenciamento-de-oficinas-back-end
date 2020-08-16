@@ -19,23 +19,17 @@ const agregacao = {
 };
 
 module.exports = class ModeloService {
-  
-  validarIdDaOficina(idOficina) {
-    return servicoValidacao.validarIdDaOficina(idOficina);
-  }
 
   validarModeloASerInserido(modelo) {
     const mensagens = [];
     !validacao.validarTexto(modelo.descricao) && mensagens.push("Descrição é obrigatório.");
     mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.idMarca));
-    mensagens.push(...this.validarIdDaOficina(modelo.idOficina));
     return mensagens
   }
 
   validarIdDaOficinaEIdDoModelo(modelo) {
     const mensagens = [];
     mensagens.push(...servicoValidacao.validarIdDoModelo(modelo._id));
-    mensagens.push(...this.validarIdDaOficina(modelo.idOficina));
     return mensagens
   }
 
@@ -43,13 +37,11 @@ module.exports = class ModeloService {
     const mensagens = [];
     !validacao.validarTexto(modelo.descricao) && mensagens.push("Descrição é obrigatório.");
     mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.idMarca));
-    mensagens.push(...this.validarIdDaOficina(modelo.idOficina));
     return mensagens
   }
 
   validarInformacoesDaConsulta(informacoes) {
     const mensagens = [];
-    mensagens.push(...this.validarIdDaOficina(informacoes.idOficina));
     !validacao.validarNumero(informacoes.tipo) && mensagens.push("Tipo da busca é obrigatório.")
       || !(informacoes.tipo === "0" || informacoes.tipo === "1") && mensagens.push("Tipo da busca inválido.")
     return mensagens;

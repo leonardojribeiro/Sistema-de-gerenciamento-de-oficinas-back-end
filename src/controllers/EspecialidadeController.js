@@ -5,13 +5,12 @@ const especialidadeServices = new EspecialidadeServices();
 module.exports = {
 
   async inserirEspecialidade(requisicao, resposta) {
-    const { descricao, idOficina } = requisicao.body;
+    const { idOficina } = requisicao;
+    const { descricao } = requisicao.body;
     const especialidadeASerInserida = {
       descricao,
       idOficina,
     };
-
-    console.log(especialidadeASerInserida);
     const mensagens = especialidadeServices.validarEspecialidadeASerInserida(especialidadeASerInserida);
     if (mensagens.length) {
       return resposta.status(406)
@@ -40,26 +39,19 @@ module.exports = {
   },
 
   async listarTodos(requisicao, resposta) {
-    const { idOficina } = requisicao.query;
-    const mensagens = servicoValidacao.validarIdDaOficina(idOficina);
-    if (mensagens.length) {
-      return resposta
-        .status(406)
-        .json({
-          mensagem: mensagens
-        });
-    }
+    const { idOficina } = requisicao;
     const modelos = await especialidadeServices.listarPorIdOficina(idOficina);
     return resposta.json(modelos);
   },
 
   async listarEspecialidadePorId(requisicao, resposta) {
-    const { idOficina, _id } = requisicao.query;
+    const { idOficina } = requisicao;
+    const { _id } = requisicao.query;
     const informacoesDaEspecialidade = {
       _id,
       idOficina,
     }
-    const mensagens = especialidadeServices.validarIdEspecialidadeEIdOficina(informacoesDaEspecialidade);
+    const mensagens = servicoValidacao.validarIdDaEspecialidade(_id)
     if (mensagens.length) {
       return resposta
         .status(406)
@@ -79,11 +71,10 @@ module.exports = {
   },
 
   async alterarEspecialidade(requisicao, resposta) {
-    const { idOficina, descricao, _id } = requisicao.body;
+    const { descricao, _id } = requisicao.body;
     const especialidadeASerAlterada = {
       _id,
       descricao,
-      idOficina,
     }
     const mensagens = especialidadeServices.validarEspecialidadeASerAlterada(especialidadeASerAlterada);
     if (mensagens.length) {

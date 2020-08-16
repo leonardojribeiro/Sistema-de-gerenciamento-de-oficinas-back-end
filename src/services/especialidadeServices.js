@@ -8,24 +8,16 @@ module.exports = class EspecialidadeServices {
   validarEspecialidadeASerInserida(especialidade) {
     const mensagens = [];
     !validacao.validarTexto(especialidade.descricao) && mensagens.push("Descrição é obrigatório");
-    mensagens.push(...servicoValidacao.validarIdDaOficina(especialidade.idOficina))
     return mensagens;
   }
 
   validarEspecialidadeASerAlterada(especialidade){
     const mensagens = [];
     !validacao.validarTexto(especialidade.descricao) && mensagens.push("Descrição é obrigatório");
-    mensagens.push(...servicoValidacao.validarIdDaOficina(especialidade.idOficina));
     mensagens.push(...servicoValidacao.validarIdDaEspecialidade(especialidade._id));
     return mensagens;
   }
 
-  validarIdEspecialidadeEIdOficina(especialidade){
-    const mensagens = [];
-    mensagens.push(...servicoValidacao.validarIdDaOficina(especialidade.idOficina));
-    mensagens.push(...servicoValidacao.validarIdDaEspecialidade(especialidade._id));
-    return mensagens;
-  }
 
   async inserir(especialidade, opt) {
     return await Especialidade

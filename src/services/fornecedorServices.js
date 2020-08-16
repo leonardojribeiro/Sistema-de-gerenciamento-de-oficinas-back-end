@@ -15,7 +15,6 @@ module.exports = class FornecedorServices {
     validacao.validarTexto(informacoesDoFornecedor.email) &&
       !validacao.validarEmail(informacoesDoFornecedor.email) && mensagens.push("E-mail inválido.");
     mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFornecedor.endereco));
-    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoFornecedor.idOficina))
     return mensagens;
   }
 
@@ -31,15 +30,7 @@ module.exports = class FornecedorServices {
     validacao.validarTexto(informacoesDoFornecedor.email) &&
       !validacao.validarEmail(informacoesDoFornecedor.email) && mensagens.push("E-mail inválido.");
     mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFornecedor.endereco));
-    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoFornecedor.idOficina))
     mensagens.push(...servicoValidacao.validarIdDoFornecedor(informacoesDoFornecedor._id))
-    return mensagens;
-  }
-
-  validarIdDoForncedorEIdDaOficina(informacoesDoFornecedor){
-    const mensagens = [];
-    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoFornecedor.idOficina));
-    mensagens.push(...servicoValidacao.validarIdDoFornecedor(informacoesDoFornecedor._id));
     return mensagens;
   }
 

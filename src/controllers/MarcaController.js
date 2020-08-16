@@ -1,10 +1,12 @@
 const MarcaServices = require('../services/MarcaServices');
+const servicoValidacao = require('../services/servicoValidacao');
 const marcaServices = new MarcaServices();
 
 module.exports = {
 
   async inserirMarca(requisicao, resposta) {
-    const { descricao, idOficina } = requisicao.body;
+    const { idOficina } = requisicao;
+    const { descricao, } = requisicao.body;
     const marcaASerInserida = {
       descricao,
       idOficina,
@@ -53,27 +55,20 @@ module.exports = {
   },
 
   async listarTodos(requisicao, resposta) {
-    const { idOficina } = requisicao.query;
-    const mensagens = marcaServices.validarIdDaOficina({idOficina});
-    if (mensagens.length) {
-      return resposta
-        .status(406)
-        .json({
-          mensagem: mensagens
-        });
-    }
+    const { idOficina } = requisicao;
     const marcas = await marcaServices.listarPorIdOficina(idOficina);
     return resposta
       .json(marcas);
   },
 
-  async listarMarcaPorId(req, resposta) {
-    const { idOficina, _id } = req.query;
+  async listarMarcaPorId(requisicao, resposta) {
+    const { idOficina } = requisicao;
+    const { _id } = requisicao.query;
     const informacoesDaMarca = {
       _id,
       idOficina,
     }
-    const mensagens = marcaServices.validarIdDaOficinaEIdDaMarca(informacoesDaMarca);
+    const mensagens = servicoValidacao.validarIdDaMarca(_id);
     if (mensagens.length) {
       return resposta
         .status(406)
@@ -93,18 +88,11 @@ module.exports = {
   },
 
   async listarPorDescricaoParcialEIdOficina(requisicao, resposta) {
-    const { idOficina, descricao } = requisicao.query;
+    const { idOficina } = requisicao;
+    const { descricao } = requisicao.query;
     const informacoesDaMarca = {
       descricao,
       idOficina,
-    }
-    const mensagens = marcaServices.validarIdDaOficina({idOficina});
-    if (mensagens.length) {
-      return resposta
-        .status(406)
-        .json({
-          mensagem: mensagens
-        });
     }
     const marca = await marcaServices.listarPorDescricaoParcialEIdOficina(informacoesDaMarca);
     return resposta
@@ -112,11 +100,10 @@ module.exports = {
   },
 
   async alterarMarca(requisicao, resposta) {
-    const { _id, descricao, idOficina, uriLogo, } = requisicao.body;
+    const { _id, descricao, uriLogo, } = requisicao.body;
     const marcaASerAleterada = {
       _id,
       descricao,
-      idOficina,
     }
     const mensagens = marcaServices.validarMarcaASerAlterada(marcaASerAleterada);
     if (mensagens.length) {

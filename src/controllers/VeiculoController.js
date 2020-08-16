@@ -1,6 +1,7 @@
 const Veiculo = require('../models/Veiculo');
 const VeiculoServices = require('../services/VeiculoServices');
 const VinculoServices = require('../services/VinculoServices');
+const servicoValidacao = require('../services/servicoValidacao');
 
 const veiculoServices = new VeiculoServices();
 const vinculoServices = new VinculoServices();
@@ -8,7 +9,8 @@ const vinculoServices = new VinculoServices();
 module.exports = {
 
   async inserirVeiculo(requisicao, resposta) {
-    const { placa, anoFabricacao, anoModelo, idModelo, idOficina, idCliente } = requisicao.body;
+    const { idOficina } = requisicao;
+    const { placa, anoFabricacao, anoModelo, idModelo, idCliente } = requisicao.body;
     const veiculoASerInserido = {
       placa,
       anoFabricacao,
@@ -63,26 +65,19 @@ module.exports = {
   },
 
   async listarTodos(requisicao, resposta) {
-    const { idOficina } = requisicao.query;
-    const mensagens = veiculoServices.validarIdDaOficina(idOficina);
-    if (mensagens.length) {
-      return resposta
-        .status(406)
-        .json({
-          mensagem: mensagens
-        });
-    }
+    const { idOficina } = requisicao;
     const veiculos = await veiculoServices.listarPorIdOficina(idOficina);
     return resposta.json(veiculos);
   },
 
   async listarPorId(requisicao, resposta) {
-    const { idOficina, _id } = requisicao.query;
+    const { idOficina } = requisicao;
+    const { _id } = requisicao.query;
     const informacoesDoVeiculo = {
       _id,
       idOficina,
     }
-    const mensagens = veiculoServices.validarIdVeiculoEIdOficina(informacoesDoVeiculo);
+    const mensagens = servicoValidacao.validarIdDoVeiculo(_id);
     if (mensagens.length) {
       return resposta
         .status(406)
@@ -102,7 +97,8 @@ module.exports = {
   },
 
   async alterarVeiculo(requisicao, resposta) {
-    const { _id, placa, anoFabricacao, anoModelo, idModelo, idOficina, idCliente } = requisicao.body;
+    const { idOficina } = requisicao;
+    const { _id, placa, anoFabricacao, anoModelo, idModelo, idCliente } = requisicao.body;
     const veiculoASerAlterado = {
       _id,
       placa,
@@ -110,7 +106,6 @@ module.exports = {
       anoModelo,
       idModelo,
       idCliente,
-      idOficina,
     }
     const mensagens = veiculoServices.validarVeliculoASerAlterado(veiculoASerAlterado);
     if (mensagens.length) {

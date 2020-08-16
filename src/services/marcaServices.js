@@ -11,22 +11,11 @@ module.exports = class MarcaServices{
   validarMarcaASerInserida(marca) {
     const mensagens = [];
     !validacao.validarTexto(marca.descricao) && mensagens.push("Descrição é obrigatório.");
-    !validacao.validarTexto(marca.idOficina) && mensagens.push("Id da oficina é obrigatório.")
-      || !validacao.validarId(marca.idOficina) && mensagens.push("Id da oficina inválido.");
-    return mensagens;
-  }
-
-  validarIdDaOficina(marca) {
-    const mensagens = [];
-    !validacao.validarTexto(marca.idOficina) && mensagens.push("Id da oficina é obrigatório.")
-      || !validacao.validarId(marca.idOficina) && mensagens.push("Id da oficina inválido.");
     return mensagens;
   }
 
   validarIdDaOficinaEIdDaMarca(marca) {
     const mensagens = [];
-    !validacao.validarTexto(marca.idOficina) && mensagens.push("Id da oficina é obrigatório.")
-      || !validacao.validarId(marca.idOficina) && mensagens.push("Id da oficina inválido.");
     !validacao.validarTexto(marca._id) && mensagens.push("Id da marca é obrigatório.")
       || !validacao.validarId(marca._id) && mensagens.push("Id da marca inválido.");
     return mensagens;
@@ -37,8 +26,6 @@ module.exports = class MarcaServices{
     !validacao.validarTexto(marca._id) && mensagens.push("Id da marca é obrigatório.")
       || !validacao.validarId(marca._id) && mensagens.push("Id da marca inválido.");
     !validacao.validarTexto(marca.descricao) && mensagens.push("Descrição é obrigatório.");
-    !validacao.validarTexto(marca.idOficina) && mensagens.push("Id da oficina é obrigatório.")
-      || !validacao.validarId(marca.idOficina) && mensagens.push("Id da oficina inválido.");
     return mensagens;
   }
 

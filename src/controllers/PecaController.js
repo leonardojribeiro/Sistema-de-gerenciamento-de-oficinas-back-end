@@ -1,10 +1,12 @@
 const PecaServices = require('../services/PecaServices');
+const servicoValidacao = require('../services/servicoValidacao');
 const pecaServices = new PecaServices();
 
 module.exports = {
 
   async inserirPeca(requisicao, resposta) {
-    const { descricao, idMarca, idOficina } = requisicao.body;
+    const { idOficina } = requisicao;
+    const { descricao, idMarca,} = requisicao.body;
     const pecaASerInserida = {
       descricao,
       idMarca,
@@ -42,26 +44,19 @@ module.exports = {
   },
 
   async listarTodos(requisicao, resposta) {
-    const { idOficina } = requisicao.query;
-    const mensagens = pecaServices.validarIdDaOficina({ idOficina });
-    if (mensagens.length) {
-      return resposta
-        .status(406)
-        .json({
-          mensagem: mensagens
-        });
-    }
+    const { idOficina } = requisicao;
     const modelos = await pecaServices.listarPorIdOficina(idOficina);
     return resposta.json(modelos);
   },
 
   async listarPecaPorId(requisicao, resposta) {
-    const { idOficina, _id } = requisicao.query;
+    const { idOficina } = requisicao;
+    const { _id } = requisicao.query;
     const informacoesDaPeca = {
       _id,
       idOficina,
     }
-    const mensagens = pecaServices.validarIdDaOficinaEIdDaPeca(informacoesDaPeca);
+    const mensagens = servicoValidacao.validarIdDaPeca(_id);
     if (mensagens.length) {
       return resposta
         .status(406)
@@ -81,7 +76,8 @@ module.exports = {
   },
 
   async consultar(requisicao, resposta) {
-    const { idOficina, consulta, tipo } = requisicao.query;
+    const { idOficina } = requisicao;
+    const { consulta, tipo } = requisicao.query;
     const informacoesDaConsulta = {
       idOficina,
       consulta,
@@ -106,12 +102,11 @@ module.exports = {
   },
 
   async alterarPeca(requisicao, resposta) {
-    const { _id, descricao, idOficina, idMarca, } = requisicao.body;
+    const { _id, descricao, idMarca, } = requisicao.body;
     const pecaASerAlterada = {
       _id,
       descricao,
       idMarca,
-      idOficina,
     }
     const mensagens = pecaServices.validarPecaASerAlterada(pecaASerAlterada);
     if (mensagens.length) {

@@ -66,7 +66,7 @@ module.exports = {
       })
       .project({
         senha: 0,
-        idOficina: 0
+        __v: 0
       })
       .unwind("oficina")
       .catch(erro => {

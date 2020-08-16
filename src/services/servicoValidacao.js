@@ -53,6 +53,13 @@ module.exports = {
     return mensagens;
   },
 
+  validarIdDoFuncionario(idFuncionario){
+    const mensagens = [];
+    !validacao.validarTexto(idFuncionario) && mensagens.push("Id do funcionário é obrigatório.")
+      || !validacao.validarId(idFuncionario) && mensagens.push("Id do funcionário inválido.");
+    return mensagens;
+  },
+
   validarEndereco(endereco) {
     const mensagens = []
     if (endereco) {

@@ -14,7 +14,7 @@ const funcionario = new mongoose.Schema({
   sexo: {
     type: String,
   },
-  cpfCnpj: {
+  cpf: {
     type: String,
     required: true,
   },
@@ -25,7 +25,6 @@ const funcionario = new mongoose.Schema({
   },
   email: {
     type: String,
-    unique: true,
   },
   endereco: {
     type: Endereco,
@@ -36,7 +35,7 @@ const funcionario = new mongoose.Schema({
     ref: "Oficina",
     required: true,
   },
-  especialidade: [
+  idsEspecialidades: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Especialidade'

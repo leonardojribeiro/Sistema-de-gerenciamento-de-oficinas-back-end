@@ -17,18 +17,12 @@ module.exports = class ClienteServices {
     validacao.validarTexto(informacoesDoCliente.email) &&
        !validacao.validarEmail(informacoesDoCliente.email) && mensagens.push("E-mail inválido.");
     mensagens.push(...servicoValidacao.validarEndereco(informacoesDoCliente.endereco));
-    mensagens.push(...this.validarIdDaOficina(informacoesDoCliente.idOficina));
     return mensagens;
-  }
-
-  validarIdDaOficina(idOficina) {
-    return servicoValidacao.validarIdDaOficina(idOficina);
   }
 
   validarIdDoCLienteEIdDaOficina(informacoesDoCliente) {
     const mensagens = [];
     mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoCliente._id));
-    mensagens.push(...this.validarIdDaOficina(informacoesDoCliente.idOficina));
     return mensagens
   }
 

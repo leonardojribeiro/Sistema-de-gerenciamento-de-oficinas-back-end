@@ -17,5 +17,6 @@
   "scripts": {
     "in": "nodemon src/index.js",
     "start": "node src/index.js"
-  }
+  },
+  "devDependencies": {}
 }

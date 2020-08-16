@@ -74,10 +74,12 @@ module.exports = class UsuarioController {
           mensagem: "Esse usuário não existe."
         });
     }
-    const { _id, perfil } = usuarioLogado[0];
+    const { _id, perfil, idOficina } = usuarioLogado[0];
     const token = jwt.sign(
       {
-        _id
+        _id,
+        perfil,
+        idOficina,
       },
       process.env.APP_SECRET,
       {

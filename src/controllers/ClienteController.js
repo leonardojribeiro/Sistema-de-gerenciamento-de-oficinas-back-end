@@ -1,9 +1,11 @@
 const ClienteServices = require("../services/ClienteServices");
+const servicoValidacao = require("../services/servicoValidacao");
 
 const clienteServices = new ClienteServices();
 
 module.exports = {
   async inserirCliente(requisicao, resposta) {
+    const { idOficina } = requisicao;
     const {
       nome,
       sexo,
@@ -13,7 +15,6 @@ module.exports = {
       telefoneCelular,
       email,
       endereco,
-      idOficina,
     } = requisicao.body;
     const clienteASerInserido = {
       nome,
@@ -55,14 +56,7 @@ module.exports = {
   },
 
   async listarTodos(requisicao, resposta) {
-    const { idOficina } = requisicao.query;
-    const mensagens = clienteServices.validarIdDaOficina(idOficina);
-    if (mensagens.length) {
-      return resposta.status(406)
-        .json({
-          mensagem: mensagens
-        });
-    }
+    const { idOficina } = requisicao;
     const clientesListados = await clienteServices.listarPorIdOficina(idOficina);
     if (!clientesListados) {
       return resposta
@@ -75,9 +69,10 @@ module.exports = {
   },
 
   async listarPorId(requisicao, resposta) {
-    const { idOficina, _id } = requisicao.query;
+    const { idOficina } = requisicao;
+    const { _id } = requisicao.query;
     const informacoesDoCliente = { idOficina, _id };
-    const mensagens = clienteServices.validarIdDoCLienteEIdDaOficina(informacoesDoCliente);
+    const mensagens = servicoValidacao.validarIdDoCliente(_id);
     if (mensagens.length) {
       return resposta.status(406)
         .json({

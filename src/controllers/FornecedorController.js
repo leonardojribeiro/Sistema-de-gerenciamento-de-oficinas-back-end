@@ -3,7 +3,8 @@ const servicoValidacao = require("../services/servicoValidacao");
 const fornecedorServices = new FornecedorServices();
 
 module.exports = {
-  async inserirFornecedor(requisicao, resposta){
+  async inserirFornecedor(requisicao, resposta) {
+    const { idOficina } = requisicao;
     const {
       nomeFantasia,
       razaoSocial,
@@ -12,7 +13,6 @@ module.exports = {
       telefoneCelular,
       email,
       endereco,
-      idOficina,
     } = requisicao.body;
     const fornecedorASerInserido = {
       nomeFantasia,
@@ -22,7 +22,6 @@ module.exports = {
       telefoneCelular,
       email,
       endereco,
-      idOficina,
     };
     console.log(fornecedorASerInserido)
     const mensagens = fornecedorServices.validarFornecedorASerInserido(fornecedorASerInserido);
@@ -53,15 +52,8 @@ module.exports = {
       });
   },
 
-  async listarTodos(requisicao, resposta){
-    const { idOficina } = requisicao.query;
-    const mensagens = servicoValidacao.validarIdDaOficina(idOficina);
-    if (mensagens.length) {
-      return resposta.status(406)
-        .json({
-          mensagem: mensagens
-        });
-    }
+  async listarTodos(requisicao, resposta) {
+    const { idOficina } = requisicao;
     const fornecedoesListados = await fornecedorServices.listarPorIdOficina(idOficina);
     if (!fornecedoesListados) {
       return resposta
@@ -73,10 +65,11 @@ module.exports = {
     return resposta.json(fornecedoesListados)
   },
 
-  async listarPorId(requisicao, resposta){
-    const { idOficina, _id } = requisicao.query;
+  async listarPorId(requisicao, resposta) {
+    const { idOficina } = requisicao;
+    const { _id } = requisicao.query;
     const informacoesDoFornecedor = { idOficina, _id };
-    const mensagens = fornecedorServices.validarIdDoForncedorEIdDaOficina(informacoesDoFornecedor);
+    const mensagens = servicoValidacao.validarIdDoFornecedor(_id)
     if (mensagens.length) {
       return resposta.status(406)
         .json({
@@ -104,7 +97,6 @@ module.exports = {
       telefoneCelular,
       email,
       endereco,
-      idOficina,
     } = requisicao.body;
     const FornecedorASerAlterado = {
       _id,
@@ -115,7 +107,6 @@ module.exports = {
       telefoneCelular,
       email,
       endereco,
-      idOficina
     };
     const mensagens = fornecedorServices.validarFornecedorASerAlterado(FornecedorASerAlterado);
     if (mensagens.length) {

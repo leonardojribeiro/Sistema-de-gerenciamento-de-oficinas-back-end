@@ -12,12 +12,7 @@ module.exports = class VeiculoServices {
     !validacao.validarTexto(informacoesDoVeiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
     mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.idModelo));
     mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.idCliente));
-    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoVeiculo.idOficina));
     return mensagens;
-  }
-
-  validarIdDaOficina(idOficina) {
-    return servicoValidacao.validarIdDaOficina(idOficina);
   }
 
   validarVeliculoASerAlterado(informacoesDoVeiculo) {
@@ -28,16 +23,8 @@ module.exports = class VeiculoServices {
     !validacao.validarTexto(informacoesDoVeiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
     mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.idModelo));
     mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.idCliente));
-    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoVeiculo.idOficina));
     mensagens.push(...servicoValidacao.validarIdDoVeiculo(informacoesDoVeiculo._id));
     return mensagens;
-  }
-
-  validarIdVeiculoEIdOficina(informacoesDoVeiculo) {
-    const mensagens = [];
-    mensagens.push(...servicoValidacao.validarIdDaOficina(informacoesDoVeiculo.idOficina));
-    mensagens.push(...servicoValidacao.validarIdDoVeiculo(informacoesDoVeiculo._id));
-    return mensagens
   }
 
   async inserirVeiculo(informacoesDoVeiculo) {

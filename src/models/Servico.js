@@ -5,7 +5,7 @@ const servico = new mongoose.Schema({
     type: String,
     required: true,
   },
-  tempoDuração: {
+  tempoDuracao: {
     type: Date,
     required: true,
   },
