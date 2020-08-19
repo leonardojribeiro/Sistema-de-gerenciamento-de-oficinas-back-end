@@ -9,8 +9,8 @@ export interface IOrdemDeServico extends Document {
   dataDeInicio: Date;
   dataDeConclusao: Date;
   andamento: number;
-  valorTotalServicos: number;
-  valorTotalPecas: number;
+  valorTotalDosServicos: number;
+  valorTotalDasPecas: number;
   desconto: number;
   valorTotal: number;
   categoria: string;
@@ -39,11 +39,11 @@ const ordemDeServico = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  valorTotalServicos: {
+  valorTotalDosServicos: {
     type: Number,
     required: true,
   },
-  valorTotalPecas: {
+  valorTotalDasPecas: {
     type: Number,
     required: true,
   },

@@ -1,10 +1,12 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { IServico } from './Servico';
 import { IFuncionario } from './Funcionario';
 
-export interface IItemDeServico{
+export interface IItemDeServico extends Document{
   idServico: IServico['_id'];
   idFuncionario: IFuncionario['_id'];
+  garantia: number;
+  unidadeDeGarantia: string;
   valorUnitario: number;
   quantidade: number;
   valorTotal: number;
@@ -20,6 +22,14 @@ const ItemDeServico = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "Servico",
+  },
+  garantia: {
+    type: Number,
+    required: true,
+  },
+  unidadeDeGarantia:{
+    type: String,
+    required: true,
   },
   valorUnitario: {
     type: Number,

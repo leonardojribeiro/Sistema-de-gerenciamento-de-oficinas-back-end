@@ -12,6 +12,7 @@ import ServicoController from "./controllers/ServicoController";
 import FornecedorContoller from "./controllers/FornecedorController";
 import VeiculoController from "./controllers/VeiculoController";
 import EspecialidadeController from './controllers/EspecialidadeController';
+import OrdemDeServicoContoller from "./controllers/OrdemDeServicoController";
 
 const modeloController = new ModeloController();
 const pecaController = new PecaController();
@@ -23,6 +24,7 @@ const veiculoController = new VeiculoController();
 const usuarioController = new UsuarioController();
 const funcionarioController = new FuncionarioController();
 const especialidadeController = new EspecialidadeController();
+const ordemDeServicoController = new OrdemDeServicoContoller();
 //const OficinaController = new OficinaController();
 const rotas = Router();
 
@@ -35,7 +37,7 @@ rotas.get("/", (req: Request, res: Response) => {
 //   multer(multerConfig).single("logomarca"),
 //   oficinaController.cadastroDeOficinaCandidata,
 // );
-
+rotas.post('/ordemdeservico', Auth, ordemDeServicoController.incluirOrdemDeServico)
 
 //marcas 
 rotas.post('/marca', Auth, multer(multerConfig).single("logomarca"), marcaController.inserirMarca);
