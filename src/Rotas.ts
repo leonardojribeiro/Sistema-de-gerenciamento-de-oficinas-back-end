@@ -37,7 +37,8 @@ rotas.get("/", (req: Request, res: Response) => {
 //   multer(multerConfig).single("logomarca"),
 //   oficinaController.cadastroDeOficinaCandidata,
 // );
-rotas.post('/ordemdeservico', Auth, ordemDeServicoController.incluirOrdemDeServico)
+rotas.post('/ordemdeservico', Auth, ordemDeServicoController.incluirOrdemDeServico);
+rotas.get('/ordemdeservico', Auth, ordemDeServicoController.listarTodas);
 
 //marcas 
 rotas.post('/marca', Auth, multer(multerConfig).single("logomarca"), marcaController.inserirMarca);
