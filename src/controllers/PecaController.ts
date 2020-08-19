@@ -65,7 +65,7 @@ export default class PecaController {
   }
 
   async listarPecaPorId(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body as string;
+    const idOficina = requisicao.body.idOficina as string;
     const _id = requisicao.query._id as string;
     try {
       const informacoesDaPeca = {

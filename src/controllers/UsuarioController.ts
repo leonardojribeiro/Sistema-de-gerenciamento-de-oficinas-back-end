@@ -126,7 +126,6 @@ export default class UsuarioController {
             mensagem: "Erro ao encontrar usuário."
           });
       }
-      console.log(usuarioLogin)
       return resposta
         .status(200)
         .json(usuarioLogin[0]);
