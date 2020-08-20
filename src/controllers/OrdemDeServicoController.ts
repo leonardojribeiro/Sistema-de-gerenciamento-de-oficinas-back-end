@@ -7,8 +7,6 @@ import Marca from "../models/Marca";
 
 export default class OrdemDeServicoContoller {
   async incluirOrdemDeServico(requisicao: Request, resposta: Response) {
-
-
     const dataDeRegistro = requisicao.body.dataDeRegistro as Date;
     const dataDeInicio = requisicao.body.dataDeInicio as Date;
     const dataDeConclusao = requisicao.body.dataDeConclusao as Date;
@@ -65,76 +63,114 @@ export default class OrdemDeServicoContoller {
         })
         .unwind("peca")
         .lookup({
-          from: "marcas",
-          localField: "peca.idMarca",
-          foreignField: "_id",
-          as: "marca",
-        })
-        .unwind('marca')
-        .lookup({
-          from:"fornecedors",
+          from: "fornecedors",
           localField: "itensDePeca.idFornecedor",
           foreignField: "_id",
           as: "fornecedor",
         })
         .unwind("fornecedor")
+        .lookup({
+          from: "veiculos",
+          localField: "idVeiculo",
+          foreignField: "_id",
+          as: "veiculo",
+        })
+        .unwind("veiculo")
         .project({
-          "itensDePeca.garantia": "$itensDePeca.garantia",
-          "itensDePeca.unidadeDeGarantia": "$itensDePeca.unidadeDeGarantia",
+          "veiculo._id": "$veiculo._id",
+          "veiculo.placa": "$veiculo.placa",
+          // "itensDePeca.garantia": "$itensDePeca.garantia",
+          //"itensDePeca.unidadeDeGarantia": "$itensDePeca.unidadeDeGarantia",
           "itensDePeca.valorUnitario": "$itensDePeca.valorUnitario",
           "itensDePeca.quantidade": "$itensDePeca.quantidade",
           "itensDePeca.valorTotal": "$itensDePeca.valorTotal",
           "itensDePeca.peca._id": "$peca._id",
           "itensDePeca.peca.descricao": "$peca.descricao",
-          "itensDePeca.peca.marca._id": "$marca._id",
-          "itensDePeca.peca.marca.descricao": "$marca.descricao",
-          "itensDePeca.peca.marca.uriLogo": "$marca.uriLogo",
+          //  "itensDePeca.peca.marca._id": "$marca._id",
+          // "itensDePeca.peca.marca.descricao": "$marca.descricao",
+          // "itensDePeca.peca.marca.uriLogo": "$marca.uriLogo",
           "itensDePeca.fornecedor._id": "$fornecedor._id",
           "itensDePeca.fornecedor.nomeFantasia": "$fornecedor.nomeFantasia",
           "dataDeRegistro": "$dataDeRegistro",
           "dataDeInicio": "$dataDeInicio",
           "dataDeConclusao": "$dataDeConclusao",
+          "valorTotalDasPecas": "$valorTotalDasPecas",
+          "valorTotalDosServicos": "$valorTotalDosServicos",
+          "desconto": "$desconto",
+          "valorTotal": "$valorTotal",
+          "categoria": "$categoria",
+          "status": "$status",
+          "sintoma": "$sintoma",
+          "itensDeServico": "$itensDeServico"
         })
-        .group({  
+        .group({
           _id: "$_id",
-          itensDePeca: {"$push": "$itensDePeca"},
-          dataDeRegistro: {
-            $first: "$dataDeRegistro"
-          },
-          dataDeInicio: {
-            $first: "$dataDeInicio"
-          },
-          dataDeConclusao: {
-            $first: "$dataDeConclusao"
-          }
+          itensDePeca: { $push: "$itensDePeca" },
+          dataDeRegistro: { $first: "$dataDeRegistro" },
+          dataDeInicio: { $first: "$dataDeInicio" },
+          dataDeConclusao: { $first: "$dataDeConclusao" },
+          valorTotalDasPecas: { $first: "$valorTotalDasPecas" },
+          valorTotalDosServicos: { $first: "$valorTotalDosServicos" },
+          desconto: { $first: "$desconto" },
+          valorTotal: { $first: "$valorTotal" },
+          categoria: { $first: "$categoria" },
+          status: { $first: "$status" },
+          sintoma: { $first: "$sintoma" },
+          veiculo: {$first: "$veiculo"},
+          itensDeServico: { $first: "$itensDeServico" },
         })
-
-        // .lookup({
-        //   from: 'marcas',
-        //   localField: 'pecas.idMarca',
-        //   foreignField: '_id',
-        //   as: 'pecas.marca'
-        // })
-
-
-
-
-
-      // .lookup({
-      //   from: 'fornecedors',
-      //   localField: "itensDePeca.idFornecedor",
-      //   foreignField: "_id",
-      //   as: "fornecedores"
-      // })
-      // .group({
-      //   _id: "$_id",
-      //   itemDePeca: {
-      //     $concatObject: ['$fornecedores', '$pecas']
-      //   }
-      // })
-
-
-
+        .unwind("itensDeServico")
+        .lookup({
+          from: "servicos",
+          localField: "itensDeServico.idServico",
+          foreignField: "_id",
+          as: "servico",
+        })
+        .unwind("servico")
+        .lookup({
+          from: "funcionarios",
+          localField: "itensDeServico.idFuncionario",
+          foreignField: "_id",
+          as: "funcionario",
+        })
+        .unwind("funcionario")
+        .project({
+          "veiculo": "$veiculo",
+          "itensDePeca": "$itensDePeca",
+          "itensDeServico.valorUnitario": "$itensDeServico.valorUnitario",
+          "itensDeServico.quantidade": "$itensDeServico.quantidade",
+          "itensDeServico.valorTotal": "$itensDeServico.valorTotal",
+          "itensDeServico.servico._id": "$servico._id",
+          "itensDeServico.servico.descricao": "$servico.descricao",
+          "itensDeServico.funcionario._id": "$funcionario._id",
+          "itensDeServico.funcionario.nome": "$funcionario.nome",
+          "dataDeRegistro": "$dataDeRegistro",
+          "dataDeInicio": "$dataDeInicio",
+          "dataDeConclusao": "$dataDeConclusao",
+          "valorTotalDasPecas": "$valorTotalDasPecas",
+          "valorTotalDosServicos": "$valorTotalDosServicos",
+          "desconto": "$desconto",
+          "valorTotal": "$valorTotal",
+          "categoria": "$categoria",
+          "status": "$status",
+          "sintoma": "$sintoma",
+        })
+        .group({
+          _id: "$_id",
+          veiculo: {$first: "$veiculo"},
+          itensDePeca: { $first: "$itensDePeca" },
+          itensDeServico: { $push: "$itensDeServico" },
+          dataDeRegistro: { $first: "$dataDeRegistro" },
+          dataDeInicio: { $first: "$dataDeInicio" },
+          dataDeConclusao: { $first: "$dataDeConclusao" },
+          valorTotalDasPecas: { $first: "$valorTotalDasPecas" },
+          valorTotalDosServicos: { $first: "$valorTotalDosServicos" },
+          desconto: { $first: "$desconto" },
+          valorTotal: { $first: "$valorTotal" },
+          categoria: { $first: "$categoria" },
+          status: { $first: "$status" },
+          sintoma: { $first: "$sintoma" },
+        })
 
       return resposta.json(ordemDeServico);
     }
