@@ -7,14 +7,14 @@ const pecaServices = new PecaServices();
 export default class PecaController {
 
   async inserirPeca(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
-    const idMarca = requisicao.body.idMarca as string;
+    const marca = requisicao.body.marca as string;
     try {
       const pecaASerInserida = {
         descricao,
-        idMarca,
-        idOficina,
+        marca,
+        oficina,
       } as IPeca;
       const mensagens = pecaServices.validarPecaASerAlterada(pecaASerInserida);
       if (mensagens.length) {
@@ -53,9 +53,9 @@ export default class PecaController {
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     try {
-      const modelos = await pecaServices.listarPorIdOficina(idOficina);
+      const modelos = await pecaServices.listarPorIdOficina(oficina);
       return resposta.json(modelos);
     }
     catch (erro) {
@@ -65,12 +65,12 @@ export default class PecaController {
   }
 
   async listarPecaPorId(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
       const informacoesDaPeca = {
         _id,
-        idOficina,
+        oficina,
       } as IPeca;
       const mensagens = servicoValidacao.validarIdDaPeca(_id);
       if (mensagens.length) {
@@ -97,12 +97,12 @@ export default class PecaController {
   }
 
   async consultar(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const consulta = requisicao.query.consulta as string;
     const tipo = requisicao.query.tipo as string;
     try {
       const informacoesDaConsulta = {
-        idOficina,
+        oficina,
         consulta,
         tipo
       };
@@ -132,12 +132,12 @@ export default class PecaController {
   async alterarPeca(requisicao: Request, resposta: Response) {
     const _id = requisicao.body._id as string;
     const descricao = requisicao.body.descricao as string;
-    const idMarca = requisicao.body.idMarca as string;
+    const marca = requisicao.body.marca as string;
     try {
       const pecaASerAlterada = {
         _id,
         descricao,
-        idMarca,
+        marca,
       } as IPeca;
       const mensagens = pecaServices.validarPecaASerAlterada(pecaASerAlterada);
       if (mensagens.length) {

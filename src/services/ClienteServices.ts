@@ -44,14 +44,14 @@ export default class ClienteServices {
     return await Cliente
       .countDocuments({
         cpfCnpj: informacoesDoCliente.cpfCnpj,
-        idOficina: informacoesDoCliente.idOficina,
+        oficina: informacoesDoCliente.oficina,
       });
   }
 
-  async listarPorIdOficina(idOficina: string) {
+  async listarPorIdOficina(oficina: string) {
     return await Cliente
       .find({
-        idOficina
+        oficina
       });
   }
 
@@ -59,7 +59,7 @@ export default class ClienteServices {
     return await Cliente
       .findOne(informacoesDoCliente)
       .select({
-        idOficina: 0,
+        oficina: 0,
         __v: 0,
 
       });

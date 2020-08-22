@@ -21,7 +21,7 @@ export default class OrdemDeServicoContoller {
     const sintoma = requisicao.body.sintoma as string;
     const itensDeServico = requisicao.body.itensDeServico as IItemDeServico[];
     const itensDePeca = requisicao.body.itensDePeca as IItemDePeca[];
-    const idVeiculo = requisicao.body.idVeiculo as string;
+    const veiculo = requisicao.body.idVeiculo as string;
     const idOficina = requisicao.body.idOficina as string;
     try {
       const informacoesDaOrdemDeServico = {
@@ -38,7 +38,7 @@ export default class OrdemDeServicoContoller {
         valorTotal,
         itensDeServico,
         itensDePeca,
-        idVeiculo,
+        veiculo,
         idOficina,
       } as IOrdemDeServico;
       console.log(informacoesDaOrdemDeServico);
@@ -56,71 +56,12 @@ export default class OrdemDeServicoContoller {
       const ordemDeServico = await OrdemDeServico
         .find()
         .populate({
-          path: "itensDePeca.idPeca"
+          path: "itensDePeca.peca",
+          populate:{
+            path: "marca",
+          }
         })
-
-
-
-        //.aggregate()
-      //   .lookup({
-      //     from: "fornecedors",
-      //     localField: "itensDePeca.idFornecedor",
-      //     foreignField: "_id",
-      //     as: "fornecedores",
-      //   })
-      //   .lookup({
-      //     from: "pecas",
-      //     localField: "itensDePeca.idPeca",
-      //     foreignField: "_id",
-      //     as: "pecas",
-      //   })
-      //   .lookup({
-      //     from: "funcionarios",
-      //     localField: "itensDeServico.idFuncionario",
-      //     foreignField: "_id",
-      //     as: "funcionarios",
-      //   })
-      //   .lookup({
-      //     from: "servicos",
-      //     localField: "itensDeServico.idServico",
-      //     foreignField: "_id",
-      //     as: "servicos",
-      //   })
-      //   .lookup({
-      //     from: "veiculos",
-      //     localField: "idVeiculo",
-      //     foreignField: "_id",
-      //     as: "veiculo",
-      //   })
-      //   .unwind('veiculo')
-      //   .group({
-      //     _id: "$_id",
-      //     itensDePeca: {$first: "$itensDePeca"},
-      //     fornecedores: { $first: "$fornecedores" },
-      //     pecas: { $first: "$pecas" },
-      //     itensDeServico: {$first: "$itensDeServico"},
-      //     funcionarios: { $first: "$funcionarios" },
-      //     servicos: { $first: "$servicos" },
-      //     veiculo: { $first: "$veiculo" },
-      //     dataDeRegistro: { $first: "$dataDeRegistro" },
-      //     dataDeInicio: { $first: "$dataDeInicio" },
-      //     dataDeConclusao: { $first: "$dataDeConclusao" },
-      //     valorTotalDasPecas: { $first: "$valorTotalDasPecas" },
-      //     valorTotalDosServicos: { $first: "$valorTotalDosServicos" },
-      //     desconto: { $first: "$desconto" },
-      //     valorTotal: { $first: "$valorTotal" },
-      //     categoria: { $first: "$categoria" },
-      //     status: { $first: "$status" },
-      //     sintoma: { $first: "$sintoma" },
-      //   })
-      // .project({
-      //   _id: 1,
-      //   "fornecedores.endereco":0,
-      //   "funcionarios.endereco":0,
-      //   "veiculo.idOficina":0,
-      // })
-     
-
+        
       return resposta.json(ordemDeServico);
     }
     catch (erro) {

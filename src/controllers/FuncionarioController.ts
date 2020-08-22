@@ -7,7 +7,7 @@ const funcionarioServices = new FuncionarioServices();
 
 export default class FuncionarioController {
   async inserirFuncionario(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const nome = requisicao.body.nome as string
     const sexo = requisicao.body.sexo as string
     const cpf = requisicao.body.cpf as string
@@ -15,7 +15,7 @@ export default class FuncionarioController {
     const telefoneFixo = requisicao.body.telefoneFixo as string
     const telefoneCelular = requisicao.body.telefoneCelular as string
     const email = requisicao.body.email as string
-    const idsEspecialidades = requisicao.body.idsEspecialidades as string[]
+    const especialidades = requisicao.body.especialidades as string[]
     const endereco = requisicao.body.endereco as IEndereco;
     try {
       const funcionarioASerInserido = {
@@ -26,9 +26,9 @@ export default class FuncionarioController {
         telefoneFixo,
         telefoneCelular,
         email,
-        idsEspecialidades,
+        especialidades,
         endereco,
-        idOficina,
+        oficina,
       } as IFuncionario;
       const mensagens = funcionarioServices.validarFuncionarioASerInserido(funcionarioASerInserido);
       if (mensagens.length) {
@@ -64,9 +64,9 @@ export default class FuncionarioController {
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     try {
-      const funcionariosListados = await funcionarioServices.listarPorIdOficina(idOficina);
+      const funcionariosListados = await funcionarioServices.listarPorIdOficina(oficina);
       if (!funcionariosListados) {
         return resposta
           .status(500)
@@ -83,11 +83,11 @@ export default class FuncionarioController {
   }
 
   async listarPorId(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
       const informacoesDoFuncionario = {
-        idOficina,
+        oficina,
         _id
       } as IFuncionario;
       const mensagens = servicoValidacao.validarIdDoFuncionario(_id);
@@ -122,7 +122,7 @@ export default class FuncionarioController {
     const telefoneCelular = requisicao.body.telefoneCelular as string;
     const email = requisicao.body.email as string;
     const endereco = requisicao.body.endereco as IEndereco;
-    const idsEspecialidades = requisicao.body.idsEspecialidades as string[]
+    const especialidades = requisicao.body.especialidades as string[]
     try {
       const funcionarioASerAlterado = {
         _id,
@@ -133,7 +133,7 @@ export default class FuncionarioController {
         telefoneCelular,
         email,
         endereco,
-        idsEspecialidades,
+        especialidades,
       } as IFuncionario;
       const mensagens = funcionarioServices.validarClienteASerAlterado(funcionarioASerAlterado);
 

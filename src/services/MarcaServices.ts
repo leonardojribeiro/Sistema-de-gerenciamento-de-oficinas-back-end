@@ -42,14 +42,14 @@ export default class MarcaServices {
     return await Marca
       .countDocuments({
         descricao: marca.descricao,
-        idOficina: marca.idOficina,
+        idOficina: marca.oficina,
       });
   }
 
-  async listarPorIdOficina(idOficina: string) {
+  async listarPorIdOficina(oficina: string) {
     return await Marca
       .find({
-        idOficina
+        oficina
       })
       .select({
         __v: 0,
@@ -62,7 +62,7 @@ export default class MarcaServices {
       .findOne(marca)
       .select({
         __v: 0,
-        idOficina: 0
+        oficina: 0
       });
   }
 
@@ -73,11 +73,11 @@ export default class MarcaServices {
           $regex: marca.descricao,
           $options: "i",
         },
-        idOficina: marca.idOficina,
+        oficina: marca.oficina,
       })
       .select({
         __v: 0,
-        idOficina: 0,
+        oficina: 0,
       });
   }
 

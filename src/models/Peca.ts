@@ -4,8 +4,8 @@ import { IOficina } from "./Oficina";
 
 export interface IPeca extends Document {
   descricao: string;
-  idMarca: IMarca['_id'];
-  idOficina: IOficina['_id'];
+  marca: IMarca['_id'];
+  oficina: IOficina['_id'];
 }
 
 const peca = new mongoose.Schema({
@@ -13,12 +13,12 @@ const peca = new mongoose.Schema({
     type: String,
     required: true,
   },
-  idMarca: {
+  marca: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Marca',
     required: true,
   },
-  idOficina: {
+  oficina: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Oficina',
     required: true,

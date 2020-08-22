@@ -2,9 +2,9 @@ import mongoose, { Document } from 'mongoose';
 import { IPeca } from './Peca';
 import { IFornecedor } from './Fornecedor';
 
-export interface IItemDePeca extends Document{
-  idPeca: IPeca['_id'];
-  idFornecedor: IFornecedor['_id'];
+export interface IItemDePeca extends Document {
+  peca: IPeca['_id'];
+  fornecedor: IFornecedor['_id'];
   unidadeDeGarantia: string;
   valorUnitario: number;
   quantidade: number;
@@ -12,12 +12,12 @@ export interface IItemDePeca extends Document{
 }
 
 const ItemDePeca = new mongoose.Schema({
-  idPeca: {
+  peca: {
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "Peca",
   },
-  idFornecedor: {
+  fornecedor: {
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "Fornecedor",
@@ -26,7 +26,7 @@ const ItemDePeca = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  unidadeDeGarantia:{
+  unidadeDeGarantia: {
     type: String,
     required: true,
   },

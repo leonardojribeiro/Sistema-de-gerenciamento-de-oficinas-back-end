@@ -41,11 +41,11 @@ rotas.post('/ordemdeservico', Auth, ordemDeServicoController.incluirOrdemDeServi
 rotas.get('/ordemdeservico', Auth, ordemDeServicoController.listarTodas);
 
 //marcas 
-rotas.post('/marca', Auth, multer(multerConfig).single("logomarca"), marcaController.inserirMarca);
+rotas.post('/marca',  multer(multerConfig).single("logomarca"), Auth, marcaController.inserirMarca);
 rotas.get('/marca', Auth, marcaController.listarTodos);
 rotas.get('/marca/descricao/', Auth, marcaController.listarPorDescricaoParcialEIdOficina);
 rotas.get('/marca/id/', Auth, marcaController.listarMarcaPorId);
-rotas.put('/marca', Auth, multer(multerConfig).single("logomarca"), marcaController.alterarMarca);
+rotas.put('/marca',  multer(multerConfig).single("logomarca"), Auth, marcaController.alterarMarca);
 
 //modelo
 rotas.get('/modelo', Auth, modeloController.listarTodos);

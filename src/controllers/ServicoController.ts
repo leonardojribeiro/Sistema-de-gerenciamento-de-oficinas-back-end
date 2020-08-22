@@ -5,7 +5,7 @@ import servicoValidacao from "../services/servicoValidacao";
 const servicoServices = new ServicoServices();
 export default class ServicoController{
   async inserirServico(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
     const tempoDuracao = requisicao.body.tempoDuracao as number;
     const valor = requisicao.body.valor as number;
@@ -14,7 +14,7 @@ export default class ServicoController{
         descricao,
         tempoDuracao,
         valor,
-        idOficina,
+        oficina,
       } as IServico
       const mensagens = servicoServices.validarServico(informacoesDoServico);
       if (mensagens.length) {
@@ -49,9 +49,9 @@ export default class ServicoController{
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     try {
-      const servicosListados = await servicoServices.listarPorIdOficina(idOficina);
+      const servicosListados = await servicoServices.listarPorIdOficina(oficina);
       if (!servicosListados) {
         return resposta
           .status(500)
@@ -68,11 +68,11 @@ export default class ServicoController{
   }
   
   async listarPorId(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
       const informacoesDoServico = {
-        idOficina,
+        oficina,
         _id
       } as IServico;
       const mensagens = servicoValidacao.validarIdDoServico(_id);
@@ -99,7 +99,7 @@ export default class ServicoController{
   }
 
   async alterarServico(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.body._id as string;
     const descricao = requisicao.body.descricao as string;
     const tempoDuracao = requisicao.body.tempoDuracao as number;
@@ -109,7 +109,7 @@ export default class ServicoController{
         descricao,
         tempoDuracao,
         valor,
-        idOficina,
+        oficina,
         _id,
       } as IServico
       const mensagens = servicoServices.validarServicoASerAlterado(informacoesDoServico);
@@ -117,13 +117,6 @@ export default class ServicoController{
         return resposta.status(406)
           .json({
             mensagem: mensagens
-          });
-      }
-      const servicoExistenteNaOficina = await servicoServices.contarServicosPorDescricaoEIdOficina(informacoesDoServico);
-      if (servicoExistenteNaOficina) {
-        return resposta.status(406)
-          .json({
-            mensagem: "Serviço já cadastrado."
           });
       }
       const result = await servicoServices.alterarServico(informacoesDoServico);

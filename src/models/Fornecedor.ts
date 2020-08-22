@@ -10,7 +10,7 @@ export interface IFornecedor extends Document{
   telefoneCelular: string;
   email: string;
   endereco: IEndereco;
-  idOficina: IOficina['_id'];
+  oficina: IOficina['_id'];
 }
 
 const fornecedor = new mongoose.Schema({
@@ -39,7 +39,7 @@ const fornecedor = new mongoose.Schema({
     type: Endereco,
     required: true,
   },
-  idOficina: {
+  oficina: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   }

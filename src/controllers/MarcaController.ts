@@ -4,14 +4,14 @@ import { Request, Response } from 'express';
 import { IMarca } from '../models/Marca';
 const marcaServices = new MarcaServices();
 
-export default class MarcaController{
+export default class MarcaController {
   async inserirMarca(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
     try {
       const marcaASerInserida = {
         descricao,
-        idOficina,
+        oficina,
       } as IMarca;
       const mensagens = marcaServices.validarMarcaASerInserida(marcaASerInserida);
       if (mensagens.length) {
@@ -62,9 +62,9 @@ export default class MarcaController{
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     try {
-      const marcas = await marcaServices.listarPorIdOficina(idOficina);
+      const marcas = await marcaServices.listarPorIdOficina(oficina);
       return resposta
         .json(marcas);
     }
@@ -75,12 +75,12 @@ export default class MarcaController{
   }
 
   async listarMarcaPorId(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
       const informacoesDaMarca = {
         _id,
-        idOficina,
+        oficina,
       } as IMarca;
       const mensagens = servicoValidacao.validarIdDaMarca(_id);
       if (mensagens.length) {
@@ -107,12 +107,12 @@ export default class MarcaController{
   }
 
   async listarPorDescricaoParcialEIdOficina(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.query.descricao as string;
     try {
       const informacoesDaMarca = {
         descricao,
-        idOficina,
+        oficina,
       } as IMarca;
       const marca = await marcaServices.listarPorDescricaoParcialEIdOficina(informacoesDaMarca);
       return resposta

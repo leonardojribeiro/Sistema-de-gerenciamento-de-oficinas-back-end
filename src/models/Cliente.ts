@@ -11,7 +11,7 @@ export interface ICliente extends Document {
   telefoneCelular: string;
   email: string;
   endereco: IEndereco;
-  idOficina: IOficina['_id'];
+  oficina: IOficina['_id'];
 }
 
 const cliente = new mongoose.Schema({
@@ -42,7 +42,7 @@ const cliente = new mongoose.Schema({
     type: Endereco,
     required: true,
   },
-  idOficina: {
+  oficina: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Oficina",
     required: true,

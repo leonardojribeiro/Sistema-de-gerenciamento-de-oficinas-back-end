@@ -12,8 +12,8 @@ export interface IFuncionario extends Document{
   telefoneFixo: string;
   email: string;
   endereco: IEndereco;
-  idOficina: IOficina['_id'];
-  idsEspecialidades: IEspecialidade['_id'][];
+  oficina: IOficina['_id'];
+  especialidades: IEspecialidade['_id'][];
 }
 
 const funcionario = new mongoose.Schema({
@@ -44,12 +44,12 @@ const funcionario = new mongoose.Schema({
     type: Endereco,
     required: true,
   },
-  idOficina: {
+  oficina: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Oficina",
     required: true,
   },
-  idsEspecialidades: [
+  especialidades: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Especialidade'

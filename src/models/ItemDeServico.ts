@@ -3,8 +3,8 @@ import { IServico } from './Servico';
 import { IFuncionario } from './Funcionario';
 
 export interface IItemDeServico extends Document{
-  idServico: IServico['_id'];
-  idFuncionario: IFuncionario['_id'];
+  servico: IServico['_id'];
+  funcionario: IFuncionario['_id'];
   garantia: number;
   unidadeDeGarantia: string;
   valorUnitario: number;
@@ -13,12 +13,12 @@ export interface IItemDeServico extends Document{
 }
 
 const ItemDeServico = new mongoose.Schema({
-  idFuncionario: {
+  funcionario: {
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "Funcionario",
   },
-  idServico: {
+  servico: {
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "Servico",

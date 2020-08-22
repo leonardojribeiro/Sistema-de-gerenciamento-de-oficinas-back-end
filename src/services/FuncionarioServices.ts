@@ -6,16 +6,16 @@ import { Types } from "mongoose";
 
 
 export default class FuncionarioServices {
-  validarIdsEspecialidades(idsEspecialidades: string[]) {
+  validarIdsEspecialidades(especialidades: string[]) {
     const mensagens: string[] = [];
-    if (!idsEspecialidades) {
+    if (!especialidades) {
       mensagens.push("Especialidades são obrigatórias")
     }
-    else if (!idsEspecialidades.length) {
+    else if (!especialidades.length) {
       mensagens.push("Deve ter pelo menos uma especialidade")
     }
     else {
-      idsEspecialidades.forEach((especialidade) => {
+      especialidades.forEach((especialidade) => {
         mensagens.push(...servicoValidacao.validarIdDaEspecialidade(especialidade))
       })
     }
@@ -34,7 +34,7 @@ export default class FuncionarioServices {
       || !validacao.validarTelefone(informacoesDoFuncionario.telefoneCelular) && mensagens.push("Telefone celular inválido.");
     validacao.validarTexto(informacoesDoFuncionario.email) &&
       !validacao.validarTexto(informacoesDoFuncionario.email) && !validacao.validarEmail(informacoesDoFuncionario.email) && mensagens.push("E-mail inválido.");
-    mensagens.push(...this.validarIdsEspecialidades(informacoesDoFuncionario.idsEspecialidades));
+    mensagens.push(...this.validarIdsEspecialidades(informacoesDoFuncionario.especialidades));
     mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFuncionario.endereco));
     return mensagens;
   }
@@ -49,7 +49,7 @@ export default class FuncionarioServices {
       || !validacao.validarTelefone(informacoesDoFuncionario.telefoneCelular) && mensagens.push("Telefone celular inválido.");
     validacao.validarTexto(informacoesDoFuncionario.email) &&
       !validacao.validarTexto(informacoesDoFuncionario.email) && !validacao.validarEmail(informacoesDoFuncionario.email) && mensagens.push("E-mail inválido.");
-    mensagens.push(...this.validarIdsEspecialidades(informacoesDoFuncionario.idsEspecialidades));
+    mensagens.push(...this.validarIdsEspecialidades(informacoesDoFuncionario.especialidades));
     mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFuncionario.endereco));
     return mensagens;
   }
@@ -58,26 +58,26 @@ export default class FuncionarioServices {
     return await Funcionario
       .countDocuments({
         cpf: informacoesDoFuncionario.cpf,
-        idOficina: informacoesDoFuncionario.idOficina,
+        oficina: informacoesDoFuncionario.oficina,
       })
   }
 
-  async listarPorIdOficina(idOficina: string) {
+  async listarPorIdOficina(oficina: string) {
     return await Funcionario
       .aggregate()
       .lookup({
         from: 'especialidades',
-        localField: 'idsEspecialidades',
+        localField: 'especialidades',
         foreignField: '_id',
         as: 'especialidades'
       })
       .match({
-        idOficina: Types.ObjectId(idOficina),
+        oficina: Types.ObjectId(oficina),
       })
       .project({
-        'especialidades.idOficina': 0,
+        'especialidades.oficina': 0,
         'especialidades.__v': 0,
-        idOficina: 0,
+        oficina: 0,
         __v: 0
       });
   }
@@ -87,18 +87,18 @@ export default class FuncionarioServices {
       .aggregate()
       .lookup({
         from: 'especialidades',
-        localField: 'idsEspecialidades',
+        localField: 'especialidades',
         foreignField: '_id',
         as: 'especialidades'
       })
       .match({
         _id: Types.ObjectId(informacoesDoFuncionario._id),
-        idOficina: Types.ObjectId(informacoesDoFuncionario.idOficina),
+        oficina: Types.ObjectId(informacoesDoFuncionario.oficina),
       })
       .project({
-        'especialidades.idOficina': 0,
+        'especialidades.oficina': 0,
         'especialidades.__v': 0,
-        idOficina: 0,
+        oficina: 0,
         __v: 0
       });
   }

@@ -5,7 +5,7 @@ export interface IServico extends Document{
   descricao: string;
   tempoDuracao: number;
   valor: number;
-  idOficina: IOficina['_id'];
+  oficina: IOficina['_id'];
 }
 
 const servico = new mongoose.Schema({
@@ -21,7 +21,7 @@ const servico = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  idOficina: {
+  oficina: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Oficina",
     required: true,

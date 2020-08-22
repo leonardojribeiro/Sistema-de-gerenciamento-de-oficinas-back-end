@@ -7,14 +7,14 @@ const modeloServices = new ModeloServices();
 
 export default class ModeloController {
   async inserirModelo(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
-    const idMarca = requisicao.body.idMarca as string;
+    const marca = requisicao.body.marca as string;
     try {
       const modeloASerInserido = {
         descricao,
-        idMarca,
-        idOficina,
+        marca,
+        oficina,
       } as IModelo;
       const mensagens = modeloServices.validarModeloASerInserido(modeloASerInserido);
       if (mensagens.length) {
@@ -53,9 +53,9 @@ export default class ModeloController {
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     try {
-      const modelos = await modeloServices.listarPorIdOficina(idOficina);
+      const modelos = await modeloServices.listarPorIdOficina(oficina);
       return resposta.json(modelos);
     }
     catch (erro) {
@@ -65,12 +65,12 @@ export default class ModeloController {
   }
 
   async listarModeloPorId(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
       const informacoesDoModelo = {
         _id,
-        idOficina,
+        oficina,
       } as IModelo;
       const mensagens = servicoValidacao.validarIdDoModelo(_id);
       if (mensagens.length) {
@@ -97,12 +97,12 @@ export default class ModeloController {
   }
 
   async consultar(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const consulta = requisicao.body.consulta as string;
     const tipo = requisicao.body.tipo as string;
     try {
       const informacoesDaConsulta = {
-        idOficina,
+        oficina,
         consulta,
         tipo
       };
@@ -132,12 +132,12 @@ export default class ModeloController {
   async alterarModelo(requisicao: Request, resposta: Response) {
     const _id = requisicao.body._id as string;
     const descricao = requisicao.body.descricao as string;
-    const idMarca = requisicao.body.idMarca as string;
+    const marca = requisicao.body.marca as string;
     try {
       const modeloASerAlterado = {
         _id,
         descricao,
-        idMarca,
+        marca,
       } as IModelo;
       const mensagens = modeloServices.validarModeloASerAlterado(modeloASerAlterado);
       if (mensagens.length) {
@@ -161,6 +161,5 @@ export default class ModeloController {
       console.log(erro);
       return resposta.status(400).send();
     }
-
   }
 }

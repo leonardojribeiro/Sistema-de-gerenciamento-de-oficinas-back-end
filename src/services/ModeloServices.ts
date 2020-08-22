@@ -7,15 +7,15 @@ import servicoValidacao from "./servicoValidacao";
 
 const selecaoCampos = {
   idMarca: 0,
-  idOficina: 0,
+  oficina: 0,
   __v: 0,
-  "marca.idOficina": 0,
+  "marca.oficina": 0,
   "marca.__v": 0
 };
 
 const agregacao = {
   from: "marcas",
-  localField: "idMarca",
+  localField: "marca",
   foreignField: "_id",
   as: "marca",
 };
@@ -25,14 +25,14 @@ export default class ModeloService {
   validarModeloASerInserido(modelo: IModelo) {
     const mensagens: string[] = [];
     !validacao.validarTexto(modelo.descricao) && mensagens.push("Descrição é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.idMarca));
+    mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.marca));
     return mensagens
   }
 
   validarModeloASerAlterado(modelo: IModelo) {
     const mensagens: string[] = [];
     !validacao.validarTexto(modelo.descricao) && mensagens.push("Descrição é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.idMarca));
+    mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.marca));
     return mensagens
   }
 
@@ -52,17 +52,17 @@ export default class ModeloService {
     return await Modelo
       .countDocuments({
         descricao: modelo.descricao,
-        idMarca: modelo.idMarca,
-        idOficina: modelo.idOficina
+        idMarca: modelo.marca,
+        idOficina: modelo.oficina
       });
   }
 
-  async listarPorIdOficina(idOficina: string) {
+  async listarPorIdOficina(oficina: string) {
     return await Modelo
       .aggregate()
       .lookup(agregacao)
       .match({
-        idOficina: Types.ObjectId(idOficina)
+        oficina: Types.ObjectId(oficina)
       })
       .unwind("marca")
       .project(selecaoCampos);
@@ -82,7 +82,7 @@ export default class ModeloService {
             $regex: consulta.consulta,
             $options: "i",
           },
-          idOficina: Types.ObjectId(consulta.idOficina)
+          oficina: Types.ObjectId(consulta.oficina)
         };
         break;
       }
@@ -92,7 +92,7 @@ export default class ModeloService {
             $regex: consulta.consulta,
             $options: "i",
           },
-          idOficina: Types.ObjectId(consulta.idOficina)
+          oficina: Types.ObjectId(consulta.oficina)
         };
         break;
       }

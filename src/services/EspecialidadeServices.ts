@@ -27,13 +27,13 @@ export default class EspecialidadeServices {
     return await Especialidade
       .countDocuments({
         descricao: especialidade.descricao,
-        idOficina: especialidade.idOficina,
+        oficina: especialidade.oficina,
       })
   }
 
-  async listarPorIdOficina(idOficina: string) {
+  async listarPorIdOficina(oficina: string) {
     return await Especialidade
-      .find({ idOficina })
+      .find({ oficina })
   }
 
   async listarPorIdEspecialidadeEIdOficina(informacoesDaEspecialidade: IEspecialidade) {

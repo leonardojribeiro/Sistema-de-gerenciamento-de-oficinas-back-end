@@ -1,11 +1,11 @@
 import mongoose, { Document } from 'mongoose';
-import {IMarca} from './Marca';
+import  {IMarca, marca} from './Marca';
 import { IOficina } from './Oficina';
 
 export interface IModelo extends Document{
   descricao: string;
-  idMarca: IMarca['_id'];
-  idOficina: IOficina['_id'];
+  marca: IMarca['_id'];
+  oficina: IOficina['_id'];
 }
 
 const modelo = new mongoose.Schema({
@@ -13,12 +13,12 @@ const modelo = new mongoose.Schema({
     type: String,
     required: true,
   },
-  idMarca: {
+  marca: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Marca',
+    ref: "Marca",
     required: true,
   },
-  idOficina: {
+  oficina: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Oficina',
     required: true,

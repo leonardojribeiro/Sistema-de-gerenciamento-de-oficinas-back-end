@@ -38,7 +38,7 @@ export default async function autenticar(requisicao: Request, resposta: Response
     const decoded = jwt.verify(token, process.env.APP_SECRET as string);
     if (decoded) {
       const { idOficina, _id, } = decoded as DecodedToken;
-      requisicao.body.idOficina = idOficina;
+      requisicao.body.oficina = idOficina;
       requisicao.body.idUsuario = _id;
       return proximo();
     }

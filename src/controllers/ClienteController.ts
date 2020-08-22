@@ -8,7 +8,7 @@ const clienteServices = new ClienteServices();
 
 export default class ClienteController{
   async inserirCliente(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const nome = requisicao.body.nome as string;
     const sexo = requisicao.body.sexo as string;
     const cpfCnpj = requisicao.body.cpfCnpj as string;
@@ -27,7 +27,7 @@ export default class ClienteController{
         telefoneCelular,
         email,
         endereco,
-        idOficina,
+        oficina,
       } as ICliente;
       const mensagens = clienteServices.validarClienteASerInserido(clienteASerInserido);
       if (mensagens.length) {
@@ -63,9 +63,9 @@ export default class ClienteController{
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     try {
-      const clientesListados = await clienteServices.listarPorIdOficina(idOficina);
+      const clientesListados = await clienteServices.listarPorIdOficina(oficina);
       if (!clientesListados) {
         return resposta
           .status(500)
@@ -82,11 +82,11 @@ export default class ClienteController{
   }
 
   async listarPorId(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
       const informacoesDoCliente = {
-        idOficina,
+        oficina,
         _id
       } as ICliente;
       const mensagens = servicoValidacao.validarIdDoCliente(_id);

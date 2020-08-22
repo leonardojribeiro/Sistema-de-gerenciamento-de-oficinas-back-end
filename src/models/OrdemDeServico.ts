@@ -18,7 +18,7 @@ export interface IOrdemDeServico extends Document {
   sintoma: string;
   itensDeServico: IItemDeServico[];
   itensDePeca: IItemDePeca[];
-  idVeiculo: IVeiculo['_id'];
+  veiculo: IVeiculo['_id'];
   idOficina: IOficina['_id'];
 }
 
@@ -75,7 +75,7 @@ const ordemDeServico = new mongoose.Schema({
     type: [ItemDePeca],
     required: true,
   },
-  idVeiculo: {
+  veiculo: {
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "Veiculo",

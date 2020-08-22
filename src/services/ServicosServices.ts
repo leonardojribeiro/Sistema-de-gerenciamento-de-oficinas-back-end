@@ -25,7 +25,7 @@ export default class ServicoServices {
   async contarServicosPorDescricaoEIdOficina(informacoesDoServico: IServico) {
     return await Servico
       .countDocuments({
-        idOficina: informacoesDoServico.idOficina,
+        oficina: informacoesDoServico.oficina,
         descricao: informacoesDoServico.descricao,
       })
   }
@@ -35,10 +35,10 @@ export default class ServicoServices {
       .create(informacoesDoServico)
   }
 
-  async listarPorIdOficina(idOficina: string) {
+  async listarPorIdOficina(oficina: string) {
     return await Servico
       .find({
-        idOficina: idOficina,
+        oficina: oficina,
       })
   }
 
@@ -46,7 +46,7 @@ export default class ServicoServices {
     return await Servico
       .findOne({
         _id: informacoesDoFuncionario._id,
-        idOficina: informacoesDoFuncionario.idOficina,
+        oficina: informacoesDoFuncionario.oficina,
       })
   }
 

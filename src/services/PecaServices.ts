@@ -4,16 +4,16 @@ import { Types } from "mongoose";
 import servicoValidacao from "./servicoValidacao";
 
 const selecaoCampos = {
-  idMarca: 0,
-  idOficina: 0,
+  
+  oficina: 0,
   __v: 0,
-  "marca.idOficina": 0,
+  "marca.oficina": 0,
   "marca.__v": 0
 };
 
 const agregacao = {
   from: "marcas",
-  localField: "idMarca",
+  localField: "marca",
   foreignField: "_id",
   as: "marca",
 };
@@ -23,14 +23,14 @@ export default class ModeloService {
   validarPecaASerInserida(peca: IPeca) {
     const mensagens = [];
     !validacao.validarTexto(peca.descricao) && mensagens.push("Descrição é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDaMarca(peca.idMarca));
+    mensagens.push(...servicoValidacao.validarIdDaMarca(peca.marca));
     return mensagens
   }
 
   validarPecaASerAlterada(peca: IPeca) {
     const mensagens: string[] = [];
     !validacao.validarTexto(peca.descricao) && mensagens.push("Descrição é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDaMarca(peca.idMarca));
+    mensagens.push(...servicoValidacao.validarIdDaMarca(peca.marca));
     return mensagens
   }
 
@@ -50,17 +50,17 @@ export default class ModeloService {
     return await Peca
       .countDocuments({
         descricao: peca.descricao,
-        idMarca: peca.idMarca,
-        idOficina: peca.idOficina
+        marca: peca.marca,
+        oficina: peca.oficina
       });
   }
 
-  async listarPorIdOficina(idOficina: string) {
+  async listarPorIdOficina(oficina: string) {
     return await Peca
       .aggregate()
       .lookup(agregacao)
       .match({
-        idOficina: Types.ObjectId(idOficina)
+        oficina: Types.ObjectId(oficina)
       })
       .unwind("marca")
       .project(selecaoCampos);
@@ -80,7 +80,7 @@ export default class ModeloService {
             $regex: consulta.consulta,
             $options: "i",
           },
-          idOficina: Types.ObjectId(consulta.idOficina)
+          oficina: Types.ObjectId(consulta.oficina)
         };
         break;
       }
@@ -90,7 +90,7 @@ export default class ModeloService {
             $regex: consulta.consulta,
             $options: "i",
           },
-          idOficina: Types.ObjectId(consulta.idOficina)
+          oficina: Types.ObjectId(consulta.oficina)
         };
         break;
       }

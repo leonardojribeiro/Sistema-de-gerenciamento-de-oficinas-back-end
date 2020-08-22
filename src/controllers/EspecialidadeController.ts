@@ -7,12 +7,12 @@ const especialidadeServices = new EspecialidadeServices();
 
 export default class EspecialidadeController {
   async inserirEspecialidade(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
     try {
       const especialidadeASerInserida = {
         descricao,
-        idOficina,
+        oficina,
       } as IEspecialidade;
       const mensagens = especialidadeServices.validarEspecialidadeASerInserida(especialidadeASerInserida);
       if (mensagens.length) {
@@ -48,8 +48,8 @@ export default class EspecialidadeController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     try {
-      const idOficina = requisicao.body.idOficina as string;
-      const modelos = await especialidadeServices.listarPorIdOficina(idOficina);
+      const oficina = requisicao.body.oficina as string;
+      const modelos = await especialidadeServices.listarPorIdOficina(oficina);
       return resposta.json(modelos);
     }
     catch (erro) {
@@ -59,12 +59,12 @@ export default class EspecialidadeController {
   }
 
   async listarEspecialidadePorId(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
       const informacoesDaEspecialidade = {
         _id,
-        idOficina,
+        oficina,
       } as IEspecialidade
       const mensagens = servicoValidacao.validarIdDaEspecialidade(_id)
       if (mensagens.length) {

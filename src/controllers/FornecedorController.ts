@@ -7,7 +7,7 @@ const fornecedorServices = new FornecedorServices();
 
 export default class FornecedorContoller {
   async inserirFornecedor(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina;
+    const oficina = requisicao.body.oficina;
     const nomeFantasia = requisicao.body.nomeFantasia as string;
     const razaoSocial = requisicao.body.razaoSocial as string;
     const cpfCnpj = requisicao.body.cpfCnpj as string;
@@ -59,9 +59,9 @@ export default class FornecedorContoller {
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     try {
-      const fornecedoesListados = await fornecedorServices.listarPorIdOficina(idOficina);
+      const fornecedoesListados = await fornecedorServices.listarPorIdOficina(oficina);
       if (!fornecedoesListados) {
         return resposta
           .status(500)
@@ -78,11 +78,11 @@ export default class FornecedorContoller {
   }
 
   async listarPorId(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
       const informacoesDoFornecedor = {
-        idOficina,
+        oficina,
         _id
       } as IFornecedor;
       const mensagens = servicoValidacao.validarIdDoFornecedor(_id)

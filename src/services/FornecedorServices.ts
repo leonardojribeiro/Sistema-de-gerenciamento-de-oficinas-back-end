@@ -39,7 +39,7 @@ export default class FornecedorServices {
     return await Fornecedor
       .countDocuments({
         cpfCnpj: informacoesDoFornecedor.cpfCnpj,
-        idOficina: informacoesDoFornecedor.idOficina,
+        oficina: informacoesDoFornecedor.oficina,
       });
   }
 
@@ -48,10 +48,10 @@ export default class FornecedorServices {
       .create(informacoesDoFornecedor);
   }
 
-  async listarPorIdOficina(idOficina: string) {
+  async listarPorIdOficina(oficina: string) {
     return await Fornecedor
       .find({
-        idOficina
+        oficina
       });
   }
 

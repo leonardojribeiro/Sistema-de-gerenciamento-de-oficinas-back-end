@@ -3,7 +3,7 @@ import { IOficina } from './Oficina';
 
 export interface IEspecialidade extends Document{
   descricao: string;
-  idOficina: IOficina['_id'];
+  oficina: IOficina['_id'];
 }
 
 const especialidade = new mongoose.Schema({
@@ -11,7 +11,7 @@ const especialidade = new mongoose.Schema({
     type: String,
     required: true,
   },
-  idOficina: {
+  oficina: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Oficina",
     required: true,
