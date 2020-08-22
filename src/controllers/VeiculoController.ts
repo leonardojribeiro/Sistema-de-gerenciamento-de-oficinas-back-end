@@ -5,32 +5,31 @@ import { Response, Request } from 'express';
 import { IVeiculo } from '../models/Veiculo';
 import { ICliente } from '../models/Cliente';
 import { IVinculo } from '../models/Vinculo';
-import DataUtil from '../util/DataUtil';
 import getDataAtual from '../util/DataUtil';
 const veiculoServices = new VeiculoServices();
 const vinculoServices = new VinculoServices();
 
 interface InformacoesDoVeiculo extends IVeiculo {
-  idCliente: ICliente['_id'];
+  cliente: ICliente['_id'];
 }
 
 export default class VeiculoController{
 
   async inserirVeiculo(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const placa = requisicao.body.placa as string;
     const anoFabricacao = requisicao.body.anoFabricacao as Date;
     const anoModelo = requisicao.body.anoModelo as Date;
-    const idModelo = requisicao.body.idModelo as string;
-    const idCliente = requisicao.body.idCliente as string;
+    const modelo = requisicao.body.modelo as string;
+    const cliente = requisicao.body.cliente as string;
     try {
       const veiculoASerInserido = {
         placa,
         anoFabricacao,
         anoModelo,
-        idModelo,
-        idCliente,
-        idOficina,
+        modelo,
+        cliente,
+        oficina,
       } as InformacoesDoVeiculo
       const mensagens = veiculoServices.validarVeliculoASerInserido(veiculoASerInserido);
       if (mensagens.length) {
@@ -60,9 +59,9 @@ export default class VeiculoController{
       vinculoInicial.setTime(Date.now());
       const vinculoASerCriado = {
         vinculoInicial,
-        idCliente,
-        idVeiculo: veiculoInserido._id,
-        idOficina,
+        cliente,
+        veiculo: veiculoInserido._id,
+        oficina,
       } as IVinculo;
       const vinculo = await vinculoServices.inserir(vinculoASerCriado)
       if (!vinculo) {
@@ -85,9 +84,9 @@ export default class VeiculoController{
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     try {
-      const veiculos = await veiculoServices.listarPorIdOficina(idOficina);
+      const veiculos = await veiculoServices.listarPorIdOficina(oficina);
       return resposta.json(veiculos);
     }
     catch (erro) {
@@ -97,12 +96,12 @@ export default class VeiculoController{
   }
 
   async listarPorId(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
       const informacoesDoVeiculo = {
         _id,
-        idOficina,
+        oficina,
       } as InformacoesDoVeiculo;
       const mensagens = servicoValidacao.validarIdDoVeiculo(_id);
       if (mensagens.length) {
@@ -117,7 +116,7 @@ export default class VeiculoController{
         return resposta
           .status(500)
           .json({
-            mensagem: "Erro ao listar especialidade."
+            mensagem: "Erro ao listar veículo."
           });
       }
       return resposta.json(veiculoListado[0])
@@ -129,21 +128,21 @@ export default class VeiculoController{
   }
   
   async alterarVeiculo(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string;
+    const oficina = requisicao.body.oficina as string;
     const _id = requisicao.body._id as string;
     const placa = requisicao.body.placa as string;
     const anoFabricacao = requisicao.body.anoFabricacao as Date;
     const anoModelo = requisicao.body.anoModelo as Date;
-    const idModelo = requisicao.body.idModelo as string;
-    const idCliente = requisicao.body.idCliente as string;
+    const modelo = requisicao.body.modelo as string;
+    const cliente = requisicao.body.cliente as string;
     try {
       const veiculoASerAlterado = {
         _id,
         placa,
         anoFabricacao,
         anoModelo,
-        idModelo,
-        idCliente,
+        modelo,
+        cliente,
       } as InformacoesDoVeiculo;
       const mensagens = veiculoServices.validarVeliculoASerAlterado(veiculoASerAlterado);
       if (mensagens.length) {
@@ -155,9 +154,9 @@ export default class VeiculoController{
       }
 
       const informacoesDoVinculo = {
-        idCliente,
-        idVeiculo: _id,
-        idOficina,
+        cliente,
+        veiculo: _id,
+        oficina,
       } as IVinculo;
       //conta os vinculos que tem o mesmo ids e que não estão com vínculo final
       const vinculoExistente = await vinculoServices.contarPorIdClienteIdVeiculoEIdOficina(informacoesDoVinculo);

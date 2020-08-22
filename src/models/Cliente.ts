@@ -46,6 +46,7 @@ const cliente = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Oficina",
     required: true,
+    select: false,
   }
 });
 

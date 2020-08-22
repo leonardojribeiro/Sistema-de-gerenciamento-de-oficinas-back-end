@@ -21,8 +21,9 @@ export default class OrdemDeServicoContoller {
     const sintoma = requisicao.body.sintoma as string;
     const itensDeServico = requisicao.body.itensDeServico as IItemDeServico[];
     const itensDePeca = requisicao.body.itensDePeca as IItemDePeca[];
-    const veiculo = requisicao.body.idVeiculo as string;
-    const idOficina = requisicao.body.idOficina as string;
+    const veiculo = requisicao.body.veiculo as string;
+    const oficina = requisicao.body.oficina as string;
+    console.log(requisicao.body)
     try {
       const informacoesDaOrdemDeServico = {
         dataDeRegistro,
@@ -39,9 +40,8 @@ export default class OrdemDeServicoContoller {
         itensDeServico,
         itensDePeca,
         veiculo,
-        idOficina,
+        oficina,
       } as IOrdemDeServico;
-      console.log(informacoesDaOrdemDeServico);
       await OrdemDeServico.create(informacoesDaOrdemDeServico);
       return resposta.status(201).json({ mensagem: "Ordem de serviço cadastrada com sucesso!" })
     }
@@ -51,7 +51,7 @@ export default class OrdemDeServicoContoller {
     }
   }
   async listarTodas(requisicao: Request, resposta: Response) {
-    const idOficina = requisicao.body.idOficina as string
+    const oficina = requisicao.body.oficina as string
     try {
       const ordemDeServico = await OrdemDeServico
         .find()
@@ -60,6 +60,18 @@ export default class OrdemDeServicoContoller {
           populate:{
             path: "marca",
           }
+        })
+        .populate({
+          path: "itensDePeca.fornecedor"
+        })
+        .populate({
+          path: "itensDeServico.funcionario"
+        })
+        .populate({
+          path: "itensDeServico.servico"
+        })
+        .populate({
+          path: "veiculo"
         })
         
       return resposta.json(ordemDeServico);

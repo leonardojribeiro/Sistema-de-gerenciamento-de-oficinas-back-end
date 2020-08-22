@@ -25,6 +25,7 @@ const usuario = new Schema({
     type: Schema.Types.ObjectId, 
     ref: 'Oficina',
     required: true,
+    select: false,
   }
 });
 

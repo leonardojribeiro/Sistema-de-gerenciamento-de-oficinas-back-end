@@ -6,8 +6,8 @@ export interface IVeiculo extends Document{
   placa: string;
   anoFabricacao: Date;
   anoModelo: Date;
-  idModelo: IModelo['_id'];
-  idOficina: IOficina['_id'];
+  modelo: IModelo['_id'];
+  oficina: IOficina['_id'];
 }
 
 const veiculo = new mongoose.Schema({
@@ -23,15 +23,16 @@ const veiculo = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  idModelo: {
+  modelo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Modelo',
     required: true,
   },
-  idOficina: {
+  oficina: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Modelo',
+    ref: 'oficina',
     required: true,
+    select: false,
   }
 });
 

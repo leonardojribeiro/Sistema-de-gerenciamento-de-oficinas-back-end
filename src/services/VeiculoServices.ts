@@ -10,8 +10,8 @@ export default class VeiculoServices {
       || !validacao.validarPlaca(informacoesDoVeiculo.placa) && mensagens.push("Placa inválida.");
     !validacao.validarData(informacoesDoVeiculo.anoFabricacao) && mensagens.push("Ano de fabricacao é obrigatório.");
     !validacao.validarData(informacoesDoVeiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.idModelo));
-    //mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.idCliente));
+    mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.modelo));
+    //mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.cliente));
     return mensagens;
   }
 
@@ -21,8 +21,8 @@ export default class VeiculoServices {
       || !validacao.validarPlaca(informacoesDoVeiculo.placa) && mensagens.push("Placa inválida.");
     !validacao.validarData(informacoesDoVeiculo.anoFabricacao) && mensagens.push("Ano de fabricacao é obrigatório.");
     !validacao.validarData(informacoesDoVeiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.idModelo));
-    //mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.idCliente));
+    mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.modelo));
+    //mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.cliente));
     mensagens.push(...servicoValidacao.validarIdDoVeiculo(informacoesDoVeiculo._id));
     return mensagens;
   }
@@ -36,56 +36,54 @@ export default class VeiculoServices {
     return await Veiculo
       .countDocuments({
         placa: veiculo.placa,
-        idOficina: veiculo.idOficina,
+        oficina: veiculo.oficina,
       });
   }
 
-  async listarPorIdOficina(idOficina: string) {
+  async listarPorIdOficina(oficina: string) {
     return await Veiculo
       .aggregate()
       .lookup({
         from: 'vinculos',
         localField: "_id",
-        foreignField: "idVeiculo",
+        foreignField: "veiculo",
         as: "vinculo",
       })
       .unwind("vinculo")
       .match({
-        idOficina: Types.ObjectId(idOficina),
+        oficina: Types.ObjectId(oficina),
         "vinculo.vinculoFinal": { $exists: false }
       })
       .lookup({
         from: "clientes",
-        localField: "vinculo.idCliente",
+        localField: "vinculo.cliente",
         foreignField: "_id",
         as: "cliente"
       })
       .lookup({
         from: "modelos",
-        localField: "idModelo",
+        localField: "modelo",
         foreignField: "_id",
         as: "modelo"
       })
       .lookup({
         from: "marcas",
-        localField: "modelo.idMarca",
+        localField: "modelo.marca",
         foreignField: "_id",
         as: "marca"
       })
       .unwind("modelo")
       .unwind("marca")
       .project({
-        idModelo: 0,
-        idOficina: 0,
+        oficina: 0,
         __v: 0,
         vinculo: 0,
         "cliente.__v": 0,
         "cliente.endereco": 0,
-        "cliente.idOficina": 0,
-        "modelo.idMarca": 0,
-        "modelo.idOficina": 0,
+        "cliente.oficina": 0,
+        "modelo.oficina": 0,
         "modelo.__v": 0,
-        "marca.idOficina": 0,
+        "marca.oficina": 0,
         "marca.__v": 0,
       });
   }
@@ -96,30 +94,30 @@ export default class VeiculoServices {
       .lookup({
         from: 'vinculos',
         localField: "_id",
-        foreignField: "idVeiculo",
+        foreignField: "veiculo",
         as: "vinculo",
       })
       .unwind("vinculo")
       .match({
         _id: Types.ObjectId(informacoesDoVeiculo._id),
-        idOficina: Types.ObjectId(informacoesDoVeiculo.idOficina),
+        oficina: Types.ObjectId(informacoesDoVeiculo.oficina),
         "vinculo.vinculoFinal": { $exists: false }
       })
       .lookup({
         from: "clientes",
-        localField: "vinculo.idCliente",
+        localField: "vinculo.cliente",
         foreignField: "_id",
         as: "cliente"
       })
       .lookup({
         from: "modelos",
-        localField: "idModelo",
+        localField: "modelo",
         foreignField: "_id",
         as: "modelo"
       })
       .lookup({
         from: "marcas",
-        localField: "modelo.idMarca",
+        localField: "modelo.marca",
         foreignField: "_id",
         as: "marca"
       })
@@ -128,10 +126,10 @@ export default class VeiculoServices {
       .unwind("marca")
       .group({
         _id: "$_id",
-        idCliente: {
+        cliente: {
           $first: "$cliente._id"
         },
-        idModelo: {
+        modelo: {
           $first: "$modelo._id"
         },
         placa: {

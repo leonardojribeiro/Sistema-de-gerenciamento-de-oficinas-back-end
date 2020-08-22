@@ -5,9 +5,9 @@ export default class VinculoServices {
 
   validar(vinculo: IVinculo) {
     const mensagens : string[] = []
-    !validacao.validarTexto(vinculo.idCliente) && mensagens.push("Id do cliente é obrigatório.");
-    !validacao.validarTexto(vinculo.idVeiculo) && mensagens.push("Id do veículo é obrigatório.");
-    !validacao.validarTexto(vinculo.idOficina) && mensagens.push("Id da oficina é obrigatório.");
+    !validacao.validarTexto(vinculo.cliente) && mensagens.push("Id do cliente é obrigatório.");
+    !validacao.validarTexto(vinculo.veiculo) && mensagens.push("Id do veículo é obrigatório.");
+    !validacao.validarTexto(vinculo.oficina) && mensagens.push("Id da oficina é obrigatório.");
     return mensagens
   }
 
@@ -19,9 +19,9 @@ export default class VinculoServices {
   async contarPorIdClienteIdVeiculoEIdOficina(vinculo: IVinculo) {
     return await Vinculo
       .countDocuments({
-        idCliente: vinculo.idCliente,
-        idVeiculo: vinculo.idVeiculo,
-        idOficina: vinculo.idOficina,
+        cliente: vinculo.cliente,
+        veiculo: vinculo.veiculo,
+        oficina: vinculo.oficina,
         vinculoFinal: undefined
       });
   }
@@ -29,8 +29,8 @@ export default class VinculoServices {
   async listarPorIdVeiculoEIdOficina(vinculo: IVinculo) {
     return await Vinculo
       .findOne({
-        idVeiculo: vinculo.idVeiculo,
-        idOficina: vinculo.idOficina,
+        veiculo: vinculo.veiculo,
+        oficina: vinculo.oficina,
         vinculoFinal: undefined
       });
   }

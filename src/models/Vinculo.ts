@@ -6,9 +6,9 @@ import { IVeiculo } from "./Veiculo";
 export interface IVinculo extends Document{
   vinculoInicial: Date;
   vinculoFinal?: Date;
-  idVeiculo: IVeiculo['_id'];
-  idCliente: ICliente['_id'];
-  idOficina: IOficina['_id'];
+  veiculo: IVeiculo['_id'];
+  cliente: ICliente['_id'];
+  oficina: IOficina['_id'];
 }
 
 const vinculo = new mongoose.Schema({
@@ -19,17 +19,17 @@ const vinculo = new mongoose.Schema({
   vinculoFinal: {
     type: Date,
   },
-  idVeiculo:{
+  veiculo:{
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: "Veiculo"
   },
-  idCliente: {
+  cliente: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: "Cliente"
   },
-  idOficina: {
+  oficina: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: "Oficina"

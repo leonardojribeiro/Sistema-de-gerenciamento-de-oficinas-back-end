@@ -19,7 +19,7 @@ export interface IOrdemDeServico extends Document {
   itensDeServico: IItemDeServico[];
   itensDePeca: IItemDePeca[];
   veiculo: IVeiculo['_id'];
-  idOficina: IOficina['_id'];
+  oficina: IOficina['_id'];
 }
 
 const ordemDeServico = new mongoose.Schema({
@@ -80,10 +80,11 @@ const ordemDeServico = new mongoose.Schema({
     required: true,
     ref: "Veiculo",
   },
-  idOficina: {
+  oficina: {
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "Oficina",
+    select: false,
   }
 });
 

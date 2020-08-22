@@ -16,7 +16,8 @@ export const marca = new mongoose.Schema({
   oficina: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Oficina",
-    required: true
+    required: true,
+    select: false,
   }
 });
 

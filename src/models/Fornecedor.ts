@@ -42,6 +42,7 @@ const fornecedor = new mongoose.Schema({
   oficina: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+    select: false,
   }
 });
 
