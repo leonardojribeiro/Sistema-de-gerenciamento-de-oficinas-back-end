@@ -1,10 +1,15 @@
 import { Storage } from "@google-cloud/storage";
 
-const storage =
-  new Storage({
+const storage = process.env.DESENVOLVIMENTO
+  ? new Storage({
     projectId: "universal-valve-275012",
     keyFilename: "D:/Downloads/universal-valve-275012-2220cb9ae931.json"
-  });
+  })
+  : new Storage({
+    projectId: "universal-valve-275012",
+  })
+
+  console.log(process.env.DESENVOLVIMENTO)
 
 const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET as string);
 

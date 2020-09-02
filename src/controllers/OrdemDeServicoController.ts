@@ -42,6 +42,9 @@ export default class OrdemDeServicoContoller {
         veiculo,
         oficina,
       } as IOrdemDeServico;
+
+      //const os = new OrdemDeServico(informacoesDaOrdemDeServico)
+      //await os.validate()
       await OrdemDeServico.create(informacoesDaOrdemDeServico);
       return resposta.status(201).json({ mensagem: "Ordem de serviço cadastrada com sucesso!" })
     }

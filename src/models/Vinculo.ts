@@ -32,7 +32,8 @@ const vinculo = new mongoose.Schema({
   oficina: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "Oficina"
+    ref: "Oficina",
+    select: false,
   }
 });
 

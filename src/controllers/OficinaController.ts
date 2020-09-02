@@ -23,7 +23,7 @@ export default class OficinaController {
       longitude,
     } = requisicao.body;
 
-    const uriLogo = requisicao.file.key;
+    //const uriLogo = requisicao.file;
 
     const oficina = {
       nomeFantasia,
@@ -33,7 +33,7 @@ export default class OficinaController {
       telefoneCelular,
       email,
       website,
-      uriLogo,
+      //uriLogo,
       endereco: {
         logradouro,
         numero,
@@ -54,7 +54,7 @@ export default class OficinaController {
     const mensagens = oficinaServicos.validar(oficina);
 
     if (mensagens.length) {
-      oficinaServicos.apagarLogomarca(uriLogo);
+      //oficinaServicos.apagarLogomarca(uriLogo);
       return resposta.status(406)
         .json({
           mensagem: mensagens
@@ -67,7 +67,7 @@ export default class OficinaController {
     const oficinaComMesmoEmail = await oficinaServicos.listarPorEmail(email);
 
     if (oficinaComMesmoCpfCnpj) {
-      oficinaServicos.apagarLogomarca(uriLogo);//apaga a logomarca
+      //oficinaServicos.apagarLogomarca(uriLogo);//apaga a logomarca
       return resposta.status(406)
         .json({
           mensagem: "O CPF/CNPJ informado já se encontra cadastrado."
@@ -75,7 +75,7 @@ export default class OficinaController {
     }
 
     if (oficinaComMesmoEmail) {
-      oficinaServicos.apagarLogomarca(uriLogo);//apaga a logomarca
+     // oficinaServicos.apagarLogomarca(uriLogo);//apaga a logomarca
       return resposta.status(406)
         .json({
           mensagem: "O E-mail informado já se encontra cadastrado."
@@ -85,7 +85,7 @@ export default class OficinaController {
     const oficinaInserida = await oficinaServicos.inserir(oficina);
 
     if (!oficinaInserida) {
-      oficinaServicos.apagarLogomarca(uriLogo);
+      //oficinaServicos.apagarLogomarca(uriLogo);
       return resposta.status(500)
         .json({
           mensagem: "Oficina candidata não cadastrada."

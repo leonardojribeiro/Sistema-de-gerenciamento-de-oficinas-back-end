@@ -24,6 +24,7 @@ export default class FornecedorContoller {
         telefoneCelular,
         email,
         endereco,
+        oficina,
       } as IFornecedor
       const mensagens = fornecedorServices.validarFornecedorASerInserido(fornecedorASerInserido);
       if (mensagens.length) {
@@ -33,7 +34,6 @@ export default class FornecedorContoller {
           });
       }
       const fornecedorExistenteNaOficina = await fornecedorServices.contarFornecedoresPorCpfCnpjEIdOficina(fornecedorASerInserido);
-      console.log(fornecedorExistenteNaOficina)
       if (fornecedorExistenteNaOficina) {
         return resposta.status(406)
           .json({

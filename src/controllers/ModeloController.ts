@@ -98,8 +98,8 @@ export default class ModeloController {
 
   async consultar(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const consulta = requisicao.body.consulta as string;
-    const tipo = requisicao.body.tipo as string;
+    const consulta = requisicao.query.consulta as string;
+    const tipo = requisicao.query.tipo as string;
     try {
       const informacoesDaConsulta = {
         oficina,
