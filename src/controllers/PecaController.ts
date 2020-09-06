@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import PecaServices from '../services/PecaServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { IPeca } from "../models/Peca";
+import { Types } from "mongoose";
 const pecaServices = new PecaServices();
 
 export default class PecaController {
@@ -54,9 +55,20 @@ export default class PecaController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
+    const page = requisicao.query.page as string;
+    const limit = requisicao.query.limit as string;
+
     try {
-      const modelos = await pecaServices.listarPorIdOficina(oficina);
-      return resposta.json(modelos);
+      if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
+        return resposta.status(400).send();
+      }
+      const skip = (Number(page) - 1) * Number(limit);
+      const total = await pecaServices.contarPorOficina(oficina);
+      const pecas = await pecaServices.listarPorOficina(oficina, Number(limit), skip);
+      return resposta.json({
+        pecas,
+        total,
+      });
     }
     catch (erro) {
       console.log(erro)
@@ -85,7 +97,7 @@ export default class PecaController {
         return resposta
           .status(500)
           .json({
-            mensagem: "Erro ao listar modelo."
+            mensagem: "Erro ao listar peça."
           });
       }
       return resposta.json(pecaListada);
@@ -99,29 +111,27 @@ export default class PecaController {
   async consultar(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const consulta = requisicao.query.consulta as string;
-    const tipo = requisicao.query.tipo as string;
+    const marca = requisicao.query.marca as string;
+    const page = requisicao.query.page as string;
+    const limit = requisicao.query.limit as string;
     try {
-      const informacoesDaConsulta = {
-        oficina,
-        consulta,
-        tipo
-      };
-      const mensagens = pecaServices.validarInformacoesDaConsulta(informacoesDaConsulta);
-      if (mensagens.length) {
-        return resposta.status(406)
-          .json({
-            mensagem: mensagens
-          });
+      if (!page || !limit || Number(page) < 1 || Number(limit) < 1 || (marca && !Types.ObjectId.isValid(marca))) {
+        return resposta.status(400).send();
       }
-      const pecasListadas = await pecaServices.consultar(informacoesDaConsulta);
-      if (!pecasListadas) {
+      const skip = (Number(page) - 1) * Number(limit);
+      const pecas = await pecaServices.consultar(consulta, marca, oficina, Number(limit), skip, false);
+      const total = await pecaServices.consultar(consulta, marca, oficina, Number(limit), skip, true);
+      if (!pecas) {
         return resposta
           .status(500)
           .json({
-            mensagem: "Erro ao listar marca."
+            mensagem: "Erro ao listar peças."
           });
       }
-      return resposta.json(pecasListadas);
+      return resposta.json({
+        pecas,
+        total
+      });
     }
     catch (erro) {
       console.log(erro)

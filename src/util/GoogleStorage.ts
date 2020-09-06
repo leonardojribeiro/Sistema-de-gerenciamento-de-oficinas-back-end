@@ -9,8 +9,6 @@ const storage = process.env.DESENVOLVIMENTO
     projectId: "universal-valve-275012",
   })
 
-  console.log(process.env.DESENVOLVIMENTO)
-
 const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET as string);
 
 export default {

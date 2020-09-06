@@ -2,9 +2,10 @@ import validacao from "../util/validacao";
 import Peca, { IPeca } from "../models/Peca";
 import { Types } from "mongoose";
 import servicoValidacao from "./servicoValidacao";
+import Marca from "../models/Marca";
 
 const selecaoCampos = {
-  
+
   oficina: 0,
   __v: 0,
   "marca.oficina": 0,
@@ -34,13 +35,6 @@ export default class ModeloService {
     return mensagens
   }
 
-  validarInformacoesDaConsulta(informacoes: any) {
-    const mensagens: string[] = [];
-    !validacao.validarNumero(informacoes.tipo) && mensagens.push("Tipo da busca é obrigatório.")
-      || !(informacoes.tipo === "0" || informacoes.tipo === "1") && mensagens.push("Tipo da busca inválido.")
-    return mensagens;
-  }
-
   async inserir(peca: IPeca) {
     return await Peca
       .create(peca);
@@ -55,15 +49,33 @@ export default class ModeloService {
       });
   }
 
-  async listarPorIdOficina(oficina: string) {
+  async contarPorOficina(oficina: string) {
     return await Peca
-      .aggregate()
-      .lookup(agregacao)
-      .match({
+      .countDocuments({
+        oficina: oficina
+      });
+  }
+
+  async listarPorOficina(oficina: string, limit: number, skip: number) {
+    return await Peca
+      .find({
         oficina: Types.ObjectId(oficina)
       })
-      .unwind("marca")
-      .project(selecaoCampos);
+      .populate({
+        path: "marca"
+      })
+      .limit(limit)
+      .skip(skip)
+    // .aggregate()
+    // .lookup(agregacao)
+    // .match({
+    //   oficina: Types.ObjectId(oficina)
+    // })
+    // .unwind("marca")
+    // .limit(200)
+    // .skip(100)
+
+    // .project(selecaoCampos);
   }
 
   async listarPorIdOficinaEIdPeca(peca: IPeca) {
@@ -71,36 +83,44 @@ export default class ModeloService {
       .findOne(peca);
   }
 
-  async consultar(consulta: any) {
+  async consultar(consulta: string, marca: string, oficina: string, limit: number, skip: number, contar: boolean) {
     let match;
-    switch (consulta.tipo) {
-      case "0": {
-        match = {
-          descricao: {
-            $regex: consulta.consulta,
-            $options: "i",
-          },
-          oficina: Types.ObjectId(consulta.oficina)
-        };
-        break;
-      }
-      case "1": {
-        match = {
-          "marca.descricao": {
-            $regex: consulta.consulta,
-            $options: "i",
-          },
-          oficina: Types.ObjectId(consulta.oficina)
-        };
-        break;
-      }
+    if (marca) {
+      match = {
+        descricao: {
+          $regex: consulta,
+          $options: "i",
+        },
+        marca,
+        oficina
+      };
     }
-    return await Peca
-      .aggregate()
-      .lookup(agregacao)
-      .match(match)
-      .unwind("marca")
-      .project(selecaoCampos);
+    else {
+      match = {
+        descricao: {
+          $regex: consulta,
+          $options: "i",
+        },
+        oficina
+      };
+    }
+    if (contar) {
+      return await Peca
+        .find(match)
+        .populate({
+          path: "marca",
+        })
+        .count();
+    }
+    else {
+      return await Peca
+        .find(match)
+        .populate({
+          path: "marca",
+        })
+        .skip(skip)
+        .limit(limit)
+    }
   }
 
   async alterarPeca(peca: IPeca) {
