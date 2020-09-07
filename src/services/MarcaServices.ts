@@ -46,16 +46,27 @@ export default class MarcaServices {
       });
   }
 
-  async listarPorIdOficina(oficina: string) {
+  async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Marca
       .find({
         oficina
       })
+      .skip(pular)
+      .limit(limite)
       .select({
         __v: 0,
-        idOficina: 0
       });
   }
+
+  async contarPorOficina(oficina: string,) {
+    return await Marca
+      .find({
+        oficina
+      })
+      .count();
+  }
+
+
 
   async listarPorIdMarcaEIdOficina(marca: IMarca) {
     return await Marca
@@ -66,21 +77,33 @@ export default class MarcaServices {
       });
   }
 
-  async listarPorDescricaoParcialEIdOficina(marca: IMarca) {
+  async consultar(oficina: string, descricao: string, pular: number, limite: number) {
     return await Marca
       .find({
         descricao: {
-          $regex: marca.descricao,
+          $regex: descricao,
           $options: "i",
         },
-        oficina: marca.oficina,
+        oficina,
       })
+      .skip(pular)
+      .limit(limite)
       .select({
         __v: 0,
-        oficina: 0,
-      });
+      })
   }
 
+  async contarPorConsulta(oficina: string, descricao: string) {
+    return await Marca
+      .find({
+        descricao: {
+          $regex: descricao,
+          $options: "i",
+        },
+        oficina,
+      })
+      .count()
+  }
 
   async alterarMarca(marca: IMarca) {
     return await Marca

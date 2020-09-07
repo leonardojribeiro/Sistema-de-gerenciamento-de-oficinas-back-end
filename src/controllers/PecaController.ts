@@ -3,6 +3,7 @@ import PecaServices from '../services/PecaServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { IPeca } from "../models/Peca";
 import { Types } from "mongoose";
+import validacao from "../util/validacao";
 const pecaServices = new PecaServices();
 
 export default class PecaController {
@@ -55,16 +56,15 @@ export default class PecaController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const page = requisicao.query.page as string;
-    const limit = requisicao.query.limit as string;
-
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
     try {
-      if (!page || !limit || Number(page) < 1 || Number(limit) < 1) {
+      if (!validacao.validarPaginacao) {
         return resposta.status(400).send();
       }
-      const skip = (Number(page) - 1) * Number(limit);
+      const pular = (pagina - 1) * limite;
       const total = await pecaServices.contarPorOficina(oficina);
-      const pecas = await pecaServices.listarPorOficina(oficina, Number(limit), skip);
+      const pecas = await pecaServices.listarPorOficina(oficina, Number(limite), pular);
       return resposta.json({
         pecas,
         total,
@@ -112,15 +112,15 @@ export default class PecaController {
     const oficina = requisicao.body.oficina as string;
     const consulta = requisicao.query.consulta as string;
     const marca = requisicao.query.marca as string;
-    const page = requisicao.query.page as string;
-    const limit = requisicao.query.limit as string;
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
     try {
-      if (!page || !limit || Number(page) < 1 || Number(limit) < 1 || (marca && !Types.ObjectId.isValid(marca))) {
+      if (!validacao.validarPaginacao(pagina, limite) || (marca && !Types.ObjectId.isValid(marca))) {
         return resposta.status(400).send();
       }
-      const skip = (Number(page) - 1) * Number(limit);
-      const pecas = await pecaServices.consultar(consulta, marca, oficina, Number(limit), skip, false);
-      const total = await pecaServices.consultar(consulta, marca, oficina, Number(limit), skip, true);
+      const pular = (pagina - 1) * limite;
+      const pecas = await pecaServices.consultar(oficina, consulta, marca, limite, pular);
+      const total = await pecaServices.contarPorConsulta(oficina, consulta, marca,);
       if (!pecas) {
         return resposta
           .status(500)

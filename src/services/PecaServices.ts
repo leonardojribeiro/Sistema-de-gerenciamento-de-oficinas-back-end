@@ -83,7 +83,9 @@ export default class ModeloService {
       .findOne(peca);
   }
 
-  async consultar(consulta: string, marca: string, oficina: string, limit: number, skip: number, contar: boolean) {
+
+
+  async consultar(oficina: string, consulta: string, marca: string, limit: number, skip: number,) {
     let match;
     if (marca) {
       match = {
@@ -104,23 +106,49 @@ export default class ModeloService {
         oficina
       };
     }
-    if (contar) {
-      return await Peca
-        .find(match)
-        .populate({
-          path: "marca",
-        })
-        .count();
+
+    return await Peca
+      .find(match)
+      .populate({
+        path: "marca",
+        select: {
+          __v: 0
+        }
+      })
+      .skip(skip)
+      .limit(limit)
+      .select({
+        __v: 0,
+      })
+  }
+
+  async contarPorConsulta(oficina: string, consulta: string, marca: string) {
+    let match;
+    if (marca) {
+      match = {
+        descricao: {
+          $regex: consulta,
+          $options: "i",
+        },
+        marca,
+        oficina
+      };
     }
     else {
-      return await Peca
-        .find(match)
-        .populate({
-          path: "marca",
-        })
-        .skip(skip)
-        .limit(limit)
+      match = {
+        descricao: {
+          $regex: consulta,
+          $options: "i",
+        },
+        oficina
+      };
     }
+    return await Peca
+      .find(match)
+      .populate({
+        path: "marca",
+      })
+      .count();
   }
 
   async alterarPeca(peca: IPeca) {

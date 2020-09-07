@@ -38,7 +38,7 @@ function validaCpf(cpf: string) {
   return (dv1 === parseInt(cpf.charAt(9)) && dv2 === parseInt(cpf.charAt(10)));
 }
 
-function validaCnpj(cnpj : string) {
+function validaCnpj(cnpj: string) {
   let soma = 0;
   let peso = 5;
   let resto;
@@ -141,12 +141,16 @@ function validarPlaca(placa: string) {
   return placa && placa.length === 7;
 }
 
-function validarData(data: Date){
-  return !! new Date(data);
+function validarData(data: Date) {
+  return !!new Date(data);
 }
 
-function validarId(id: string){
+function validarId(id: string) {
   return mongoose.Types.ObjectId.isValid(id);
+}
+
+function validarPaginacao(pagina: number, limite: number) {
+  return (pagina && limite && pagina >= 1 && limite >= 1);
 }
 
 export default {
@@ -161,4 +165,5 @@ export default {
   validarPlaca,
   validarId,
   validarData,
+  validarPaginacao,
 }

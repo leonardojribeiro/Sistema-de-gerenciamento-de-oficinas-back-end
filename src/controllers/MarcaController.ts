@@ -2,6 +2,7 @@ import MarcaServices from '../services/MarcaServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IMarca } from '../models/Marca';
+import validacao from '../util/validacao';
 const marcaServices = new MarcaServices();
 
 export default class MarcaController {
@@ -63,10 +64,19 @@ export default class MarcaController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
     try {
-      const marcas = await marcaServices.listarPorIdOficina(oficina);
-      return resposta
-        .json(marcas);
+      if (!validacao.validarPaginacao(pagina, limite)) {
+        return resposta.status(400).send();
+      }
+      const pular = (pagina - 1) * limite;
+      const marcas = await marcaServices.listarPorOficina(oficina, pular, limite);
+      const total = await marcaServices.contarPorOficina(oficina);
+      return resposta.json({
+        marcas,
+        total
+      });
     }
     catch (erro) {
       console.log(erro);
@@ -106,17 +116,23 @@ export default class MarcaController {
     }
   }
 
-  async listarPorDescricaoParcialEIdOficina(requisicao: Request, resposta: Response) {
+  async consultar(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.query.descricao as string;
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
     try {
-      const informacoesDaMarca = {
-        descricao,
-        oficina,
-      } as IMarca;
-      const marca = await marcaServices.listarPorDescricaoParcialEIdOficina(informacoesDaMarca);
+      if (!validacao.validarPaginacao(pagina, limite)) {
+        return resposta.status(400).send();
+      }
+      const pular = (pagina - 1) * limite;
+      const marcas = await marcaServices.consultar(oficina, descricao, pular, limite);
+      const total = await marcaServices.contarPorConsulta(oficina, descricao,);
       return resposta
-        .json(marca);
+        .json({
+          marcas,
+          total,
+        });
     }
     catch (erro) {
       console.log(erro);
