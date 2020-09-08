@@ -102,7 +102,9 @@ export default class ModeloService {
     }
     return await Modelo
       .find(match)
-
+      .populate({
+        path: "marca"
+      })
       .skip(pular)
       .limit(limite);
   }

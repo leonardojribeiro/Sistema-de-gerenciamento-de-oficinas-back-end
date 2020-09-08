@@ -64,7 +64,11 @@ export default class ModeloController {
       }
       const pular = (pagina - 1) * limite;
       const modelos = await modeloServices.listarPorOficina(oficina, pular, limite);
-      return resposta.json(modelos);
+      const total = await modeloServices.contarPorOficina(oficina);
+      return resposta.json({
+        modelos,
+        total
+      });
     }
     catch (erro) {
       console.log(erro);
