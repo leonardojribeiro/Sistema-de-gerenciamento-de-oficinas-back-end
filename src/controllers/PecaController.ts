@@ -64,7 +64,7 @@ export default class PecaController {
       }
       const pular = (pagina - 1) * limite;
       const total = await pecaServices.contarPorOficina(oficina);
-      const pecas = await pecaServices.listarPorOficina(oficina, Number(limite), pular);
+      const pecas = await pecaServices.listarPorOficina(oficina, pular, limite);
       return resposta.json({
         pecas,
         total,
@@ -119,7 +119,7 @@ export default class PecaController {
         return resposta.status(400).send();
       }
       const pular = (pagina - 1) * limite;
-      const pecas = await pecaServices.consultar(oficina, consulta, marca, limite, pular);
+      const pecas = await pecaServices.consultar(oficina, consulta, marca, pular, limite,);
       const total = await pecaServices.contarPorConsulta(oficina, consulta, marca,);
       if (!pecas) {
         return resposta

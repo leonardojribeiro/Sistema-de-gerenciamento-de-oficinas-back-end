@@ -97,7 +97,7 @@ export default class UsuarioController {
         },
         process.env.APP_SECRET as string,
         {
-          expiresIn: 300000
+          expiresIn: 432000
         }
       )
       usuarioLogado = {

@@ -57,15 +57,21 @@ export default class ModeloService {
       });
   }
 
-  async listarPorIdOficina(oficina: string) {
+  async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Modelo
-      .aggregate()
-      .lookup(agregacao)
-      .match({
-        oficina: Types.ObjectId(oficina)
+      .find({ oficina })
+      .populate({
+        path: "marca",
       })
-      .unwind("marca")
-      .project(selecaoCampos);
+      .skip(pular)
+      .limit(limite);
+  }
+
+  async contarPorOficina(oficina: string,) {
+    return await Modelo
+      .countDocuments({
+        oficina
+      })
   }
 
   async listarPorIdModeloEIdOficina(modelo: IModelo) {
@@ -73,36 +79,57 @@ export default class ModeloService {
       .findOne(modelo);
   }
 
-  async consultar(consulta: any) {
+  async consultar(oficina: string, consulta: string, marca: string, pular: number, limite: number) {
     let match;
-    switch (consulta.tipo) {
-      case "0": {
-        match = {
-          descricao: {
-            $regex: consulta.consulta,
-            $options: "i",
-          },
-          oficina: Types.ObjectId(consulta.oficina)
-        };
-        break;
-      }
-      case "1": {
-        match = {
-          "marca.descricao": {
-            $regex: consulta.consulta,
-            $options: "i",
-          },
-          oficina: Types.ObjectId(consulta.oficina)
-        };
-        break;
-      }
+    if (marca) {
+      match = {
+        descricao: {
+          $regex: consulta,
+          $options: "i",
+        },
+        marca,
+        oficina,
+      };
+    }
+    else {
+      match = {
+        descricao: {
+          $regex: consulta,
+          $options: "i",
+        },
+        oficina
+      };
     }
     return await Modelo
-      .aggregate()
-      .lookup(agregacao)
-      .match(match)
-      .unwind("marca")
-      .project(selecaoCampos);
+      .find(match)
+
+      .skip(pular)
+      .limit(limite);
+  }
+
+  async contarPorConsulta(oficina: string, consulta: string, marca: string) {
+    let match;
+    if (marca) {
+      match = {
+        descricao: {
+          $regex: consulta,
+          $options: "i",
+        },
+        marca,
+        oficina,
+      };
+    }
+    else {
+      match = {
+        descricao: {
+          $regex: consulta,
+          $options: "i",
+        },
+        oficina
+      };
+    }
+    return await Modelo
+      .countDocuments(match);
   }
 
   async alterarModelo(modelo: IModelo) {

@@ -52,11 +52,11 @@ export default class ModeloService {
   async contarPorOficina(oficina: string) {
     return await Peca
       .countDocuments({
-        oficina: oficina
+        oficina
       });
   }
 
-  async listarPorOficina(oficina: string, limit: number, skip: number) {
+  async listarPorOficina(oficina: string, skip: number, limit: number,) {
     return await Peca
       .find({
         oficina: Types.ObjectId(oficina)
@@ -66,16 +66,6 @@ export default class ModeloService {
       })
       .limit(limit)
       .skip(skip)
-    // .aggregate()
-    // .lookup(agregacao)
-    // .match({
-    //   oficina: Types.ObjectId(oficina)
-    // })
-    // .unwind("marca")
-    // .limit(200)
-    // .skip(100)
-
-    // .project(selecaoCampos);
   }
 
   async listarPorIdOficinaEIdPeca(peca: IPeca) {
@@ -85,7 +75,7 @@ export default class ModeloService {
 
 
 
-  async consultar(oficina: string, consulta: string, marca: string, limit: number, skip: number,) {
+  async consultar(oficina: string, consulta: string, marca: string, skip: number, limit: number,) {
     let match;
     if (marca) {
       match = {
@@ -144,11 +134,7 @@ export default class ModeloService {
       };
     }
     return await Peca
-      .find(match)
-      .populate({
-        path: "marca",
-      })
-      .count();
+      .countDocuments(match);
   }
 
   async alterarPeca(peca: IPeca) {

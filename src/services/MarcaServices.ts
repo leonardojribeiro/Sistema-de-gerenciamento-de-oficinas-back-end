@@ -60,12 +60,10 @@ export default class MarcaServices {
 
   async contarPorOficina(oficina: string,) {
     return await Marca
-      .find({
-        oficina
+      .countDocuments({
+        oficina,
       })
-      .count();
   }
-
 
 
   async listarPorIdMarcaEIdOficina(marca: IMarca) {
@@ -95,14 +93,13 @@ export default class MarcaServices {
 
   async contarPorConsulta(oficina: string, descricao: string) {
     return await Marca
-      .find({
+      .countDocuments({
         descricao: {
           $regex: descricao,
           $options: "i",
         },
         oficina,
       })
-      .count()
   }
 
   async alterarMarca(marca: IMarca) {

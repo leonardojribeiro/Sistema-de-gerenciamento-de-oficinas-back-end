@@ -2,6 +2,8 @@ import ModeloServices from '../services/ModeloServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IModelo } from '../models/Modelo';
+import validacao from '../util/validacao';
+import { Types } from 'mongoose';
 
 const modeloServices = new ModeloServices();
 
@@ -54,8 +56,14 @@ export default class ModeloController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
     try {
-      const modelos = await modeloServices.listarPorIdOficina(oficina);
+      if (!validacao.validarPaginacao(pagina, limite)) {
+        return resposta.status(400).send();
+      }
+      const pular = (pagina - 1) * limite;
+      const modelos = await modeloServices.listarPorOficina(oficina, pular, limite);
       return resposta.json(modelos);
     }
     catch (erro) {
@@ -99,29 +107,27 @@ export default class ModeloController {
   async consultar(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const consulta = requisicao.query.consulta as string;
-    const tipo = requisicao.query.tipo as string;
+    const marca = requisicao.query.marca as string;
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
     try {
-      const informacoesDaConsulta = {
-        oficina,
-        consulta,
-        tipo
-      };
-      const mensagens = modeloServices.validarInformacoesDaConsulta(informacoesDaConsulta);
-      if (mensagens.length) {
-        return resposta.status(406)
-          .json({
-            mensagem: mensagens
-          });
+      if (!validacao.validarPaginacao(pagina, limite) || (marca && !Types.ObjectId.isValid(marca))) {
+        return resposta.status(400).send();
       }
-      const modelosListados = await modeloServices.consultar(informacoesDaConsulta);
-      if (!modelosListados) {
+      const pular = (pagina - 1) * limite;
+      const modelos = await modeloServices.consultar(oficina, consulta, marca, pular, limite);
+      const total = await modeloServices.contarPorConsulta(oficina, consulta, marca,);
+      if (!modelos) {
         return resposta
           .status(500)
           .json({
             mensagem: "Erro ao listar modelos."
           });
       }
-      return resposta.json(modelosListados);
+      return resposta.json({
+        modelos,
+        total,
+      });
     }
     catch (erro) {
       console.log(erro);
