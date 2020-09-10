@@ -48,9 +48,18 @@ export default class ClienteServices {
       });
   }
 
-  async listarPorIdOficina(oficina: string) {
+  async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Cliente
       .find({
+        oficina
+      })
+      .skip(pular)
+      .limit(limite);
+  }
+
+  async contarPorOficina(oficina: string) {
+    return await Cliente
+      .countDocuments({
         oficina
       });
   }

@@ -3,10 +3,11 @@ import servicoValidacao from "../services/servicoValidacao";
 import { Response, Request } from "express";
 import { ICliente } from "../models/Cliente";
 import { IEndereco } from "../models/Endereco";
+import validacao from "../util/validacao";
 
 const clienteServices = new ClienteServices();
 
-export default class ClienteController{
+export default class ClienteController {
   async inserirCliente(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const nome = requisicao.body.nome as string;
@@ -64,16 +65,26 @@ export default class ClienteController{
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
     try {
-      const clientesListados = await clienteServices.listarPorIdOficina(oficina);
-      if (!clientesListados) {
+      if (!validacao.validarPaginacao(pagina, limite)) {
+        return resposta.status(400).send();
+      }
+      const pular = (pagina - 1) * limite;
+      const clientes = await clienteServices.listarPorOficina(oficina, pular, limite);
+      const total = await clienteServices.contarPorOficina(oficina);
+      if (!clientes) {
         return resposta
           .status(500)
           .json({
             mensagem: "Erro ao listar clientes."
           });
       }
-      return resposta.json(clientesListados)
+      return resposta.json({
+        clientes,
+        total
+      })
     }
     catch (erro) {
       console.log(erro);

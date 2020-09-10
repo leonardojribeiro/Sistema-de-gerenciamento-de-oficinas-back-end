@@ -110,7 +110,7 @@ export default class ModeloController {
 
   async consultar(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const consulta = requisicao.query.consulta as string;
+    const descricao = requisicao.query.descricao as string;
     const marca = requisicao.query.marca as string;
     const pagina = Number(requisicao.query.pagina);
     const limite = Number(requisicao.query.limite);
@@ -119,8 +119,8 @@ export default class ModeloController {
         return resposta.status(400).send();
       }
       const pular = (pagina - 1) * limite;
-      const modelos = await modeloServices.consultar(oficina, consulta, marca, pular, limite);
-      const total = await modeloServices.contarPorConsulta(oficina, consulta, marca,);
+      const modelos = await modeloServices.consultar(oficina, descricao, marca, pular, limite);
+      const total = await modeloServices.contarPorConsulta(oficina, descricao, marca,);
       if (!modelos) {
         return resposta
           .status(500)

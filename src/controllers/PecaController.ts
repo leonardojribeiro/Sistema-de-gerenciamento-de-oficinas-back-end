@@ -59,7 +59,7 @@ export default class PecaController {
     const pagina = Number(requisicao.query.pagina);
     const limite = Number(requisicao.query.limite);
     try {
-      if (!validacao.validarPaginacao) {
+      if (!validacao.validarPaginacao(pagina, limite)) {
         return resposta.status(400).send();
       }
       const pular = (pagina - 1) * limite;
@@ -110,7 +110,7 @@ export default class PecaController {
 
   async consultar(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const consulta = requisicao.query.consulta as string;
+    const descricao = requisicao.query.descricao as string;
     const marca = requisicao.query.marca as string;
     const pagina = Number(requisicao.query.pagina);
     const limite = Number(requisicao.query.limite);
@@ -119,8 +119,8 @@ export default class PecaController {
         return resposta.status(400).send();
       }
       const pular = (pagina - 1) * limite;
-      const pecas = await pecaServices.consultar(oficina, consulta, marca, pular, limite,);
-      const total = await pecaServices.contarPorConsulta(oficina, consulta, marca,);
+      const pecas = await pecaServices.consultar(oficina, descricao, marca, pular, limite,);
+      const total = await pecaServices.contarPorConsulta(oficina, descricao, marca,);
       if (!pecas) {
         return resposta
           .status(500)
