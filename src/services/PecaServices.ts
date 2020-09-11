@@ -59,7 +59,7 @@ export default class ModeloService {
   async listarPorOficina(oficina: string, skip: number, limit: number,) {
     return await Peca
       .find({
-        oficina: Types.ObjectId(oficina)
+        oficina
       })
       .populate({
         path: "marca"

@@ -25,7 +25,7 @@ function validaCpf(cpf: string) {
     peso--;
   }
   resto = 11 - (soma % 11);
-  dv1 = (resto === 10 || resto === 10) ? 0 : resto;
+  dv1 = (resto === 10 || resto === 11) ? 0 : resto;
   //valida o segundo digito
   soma = 0;
   peso = 11;
