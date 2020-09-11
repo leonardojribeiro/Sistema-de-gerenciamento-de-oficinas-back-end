@@ -64,6 +64,7 @@ rotas.put('/peca', Auth,  pecaController.alterarPeca);
 // //clientes
 rotas.post("/cliente", Auth,  clienteController.inserirCliente);
 rotas.get('/cliente', Auth,  clienteController.listarTodos);
+rotas.get('/cliente/consulta', Auth,  clienteController.consultar);
 rotas.get('/cliente/id', Auth,  clienteController.listarPorId);
 rotas.put('/cliente', Auth,  clienteController.alterarCliente);
 

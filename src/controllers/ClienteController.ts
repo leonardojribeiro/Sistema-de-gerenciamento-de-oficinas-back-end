@@ -123,6 +123,40 @@ export default class ClienteController {
     }
   }
 
+  async consultar(requisicao: Request, resposta: Response) {
+    const oficina = requisicao.body.oficina as string;
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
+    const nome = requisicao.query.nome as string;
+    const cpfCnpj = requisicao.query.cpfCnpj as string;
+    const email = requisicao.query.email as string;
+    const telefone = requisicao.query.telefone as string;
+    try {
+      if (!validacao.validarPaginacao(pagina, limite)) {
+        return resposta.status(400).send();
+      }
+      const pular = (pagina - 1) * limite;
+      console.log(oficina, nome, cpfCnpj, email, telefone, pular, limite)
+      const clientes = await clienteServices.consultar(oficina, nome, cpfCnpj, email, telefone, pular, limite);
+      //const total = await clienteServices.contarPorOficina(oficina);
+      if (!clientes) {
+        return resposta
+          .status(500)
+          .json({
+            mensagem: "Erro ao listar clientes."
+          });
+      }
+      return resposta.json({
+        clientes,
+        //total
+      })
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
+  }
+
   async alterarCliente(requisicao: Request, resposta: Response) {
     const _id = requisicao.body._id as string;
     const nome = requisicao.body.nome as string;

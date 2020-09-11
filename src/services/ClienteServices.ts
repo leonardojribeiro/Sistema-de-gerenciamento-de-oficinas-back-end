@@ -64,6 +64,35 @@ export default class ClienteServices {
       });
   }
 
+  async consultar(oficina: string, nome: string = "", cpfCnpj: string = "", email: string = "", telefone: string = "", pular: number, limite: number) {
+    return await Cliente
+      .find({
+        oficina,
+        nome: {
+          $regex: `^${nome}`,
+          $options: "i",
+        },
+        cpfCnpj: {
+          $regex: `^${cpfCnpj}`,
+          $options: "i",
+        },
+        email: {
+          $regex: `^${email}`,
+          $options: "i",
+        },
+        telefoneCelular: {
+          $regex: `^${telefone}`,
+          $options: "i",
+        },
+        telefoneFixo: {
+          $regex: `^${telefone}`,
+          $options: "i",
+        }
+      })
+      .skip(pular)
+      .limit(limite);
+  }
+
   async listarPorIdClienteEIdOficina(informacoesDoCliente: ICliente) {
     return await Cliente
       .findOne(informacoesDoCliente)
