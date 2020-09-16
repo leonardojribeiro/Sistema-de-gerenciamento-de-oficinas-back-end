@@ -4,6 +4,7 @@ import { Response, Request } from "express";
 import { ICliente } from "../models/Cliente";
 import { IEndereco } from "../models/Endereco";
 import validacao from "../util/validacao";
+import { replaceNoNumeric } from "../util/Replace";
 
 const clienteServices = new ClienteServices();
 
@@ -22,10 +23,10 @@ export default class ClienteController {
       const clienteASerInserido = {
         nome,
         sexo,
-        cpfCnpj,
+        cpfCnpj: replaceNoNumeric(cpfCnpj),
         dataNascimento,
-        telefoneFixo,
-        telefoneCelular,
+        telefoneFixo: replaceNoNumeric(telefoneFixo),
+        telefoneCelular: replaceNoNumeric(telefoneCelular),
         email,
         endereco,
         oficina,
@@ -38,7 +39,6 @@ export default class ClienteController {
           });
       }
       const clienteExistenteNaOficina = await clienteServices.contarClientesPorCpfEIdOficina(clienteASerInserido);
-      console.log(clienteExistenteNaOficina)
       if (clienteExistenteNaOficina) {
         return resposta.status(406)
           .json({
@@ -128,17 +128,20 @@ export default class ClienteController {
     const pagina = Number(requisicao.query.pagina);
     const limite = Number(requisicao.query.limite);
     const nome = requisicao.query.nome as string;
-    const cpfCnpj = requisicao.query.cpfCnpj as string;
+    let cpfCnpj = requisicao.query.cpfCnpj as string | undefined;
     const email = requisicao.query.email as string;
-    const telefone = requisicao.query.telefone as string;
+    let telefone = requisicao.query.telefone as string | undefined;
     try {
       if (!validacao.validarPaginacao(pagina, limite)) {
         return resposta.status(400).send();
       }
       const pular = (pagina - 1) * limite;
-      console.log(oficina, nome, cpfCnpj, email, telefone, pular, limite)
+      cpfCnpj = replaceNoNumeric(cpfCnpj);
+      console.log(telefone)
+      telefone = replaceNoNumeric(telefone);
+      console.log(telefone)
       const clientes = await clienteServices.consultar(oficina, nome, cpfCnpj, email, telefone, pular, limite);
-      //const total = await clienteServices.contarPorOficina(oficina);
+      const total = await clienteServices.contarPorConsulta(oficina, nome, cpfCnpj, email, telefone);
       if (!clientes) {
         return resposta
           .status(500)
@@ -148,7 +151,7 @@ export default class ClienteController {
       }
       return resposta.json({
         clientes,
-        //total
+        total
       })
     }
     catch (erro) {
@@ -166,14 +169,15 @@ export default class ClienteController {
     const telefoneCelular = requisicao.body.telefoneCelular as string;
     const email = requisicao.body.email as string;
     const endereco = requisicao.body.endereco as IEndereco;
+    console.log(telefoneFixo, replaceNoNumeric(telefoneFixo))
     try {
       const clienteASerAlterado = {
         _id,
         nome,
         sexo,
         dataNascimento,
-        telefoneFixo,
-        telefoneCelular,
+        telefoneFixo: replaceNoNumeric(telefoneFixo),
+        telefoneCelular: replaceNoNumeric(telefoneCelular),
         email,
         endereco,
       } as ICliente

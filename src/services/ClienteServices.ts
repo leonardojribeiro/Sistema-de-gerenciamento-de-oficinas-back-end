@@ -80,17 +80,56 @@ export default class ClienteServices {
           $regex: `^${email}`,
           $options: "i",
         },
-        telefoneCelular: {
-          $regex: `^${telefone}`,
-          $options: "i",
-        },
-        telefoneFixo: {
-          $regex: `^${telefone}`,
-          $options: "i",
-        }
+        $or: [
+          {
+            telefoneCelular: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+          {
+            telefoneFixo: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+        ]
       })
       .skip(pular)
       .limit(limite);
+  }
+
+  async contarPorConsulta(oficina: string, nome: string = "", cpfCnpj: string = "", email: string = "", telefone: string = "") {
+    return await Cliente
+      .countDocuments({
+        oficina,
+        nome: {
+          $regex: `^${nome}`,
+          $options: "i",
+        },
+        cpfCnpj: {
+          $regex: `^${cpfCnpj}`,
+          $options: "i",
+        },
+        email: {
+          $regex: `^${email}`,
+          $options: "i",
+        },
+        $or: [
+          {
+            telefoneCelular: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+          {
+            telefoneFixo: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+        ]
+      });
   }
 
   async listarPorIdClienteEIdOficina(informacoesDoCliente: ICliente) {

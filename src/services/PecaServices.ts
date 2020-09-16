@@ -75,12 +75,12 @@ export default class ModeloService {
 
 
 
-  async consultar(oficina: string, consulta: string, marca: string, skip: number, limit: number,) {
+  async consultar(oficina: string, descricao: string, marca: string, skip: number, limit: number,) {
     let match;
     if (marca) {
       match = {
         descricao: {
-          $regex: consulta,
+          $regex: `^${descricao}`,
           $options: "i",
         },
         marca,
@@ -90,7 +90,7 @@ export default class ModeloService {
     else {
       match = {
         descricao: {
-          $regex: consulta,
+          $regex: `^${descricao}`,
           $options: "i",
         },
         oficina
@@ -112,12 +112,12 @@ export default class ModeloService {
       })
   }
 
-  async contarPorConsulta(oficina: string, consulta: string, marca: string) {
+  async contarPorConsulta(oficina: string, descricao: string, marca: string) {
     let match;
     if (marca) {
       match = {
         descricao: {
-          $regex: consulta,
+          $regex: `^${descricao}`,
           $options: "i",
         },
         marca,
@@ -127,7 +127,7 @@ export default class ModeloService {
     else {
       match = {
         descricao: {
-          $regex: consulta,
+          $regex: `^${descricao}`,
           $options: "i",
         },
         oficina

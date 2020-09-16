@@ -79,12 +79,12 @@ export default class ModeloService {
       .findOne(modelo);
   }
 
-  async consultar(oficina: string, consulta: string, marca: string, pular: number, limite: number) {
+  async consultar(oficina: string, descricao: string, marca: string, pular: number, limite: number) {
     let match;
     if (marca) {
       match = {
         descricao: {
-          $regex: consulta,
+          $regex: `^${descricao}`,
           $options: "i",
         },
         marca,
@@ -94,7 +94,7 @@ export default class ModeloService {
     else {
       match = {
         descricao: {
-          $regex: consulta,
+          $regex: `^${descricao}`,
           $options: "i",
         },
         oficina
@@ -109,12 +109,12 @@ export default class ModeloService {
       .limit(limite);
   }
 
-  async contarPorConsulta(oficina: string, consulta: string, marca: string) {
+  async contarPorConsulta(oficina: string, descricao: string, marca: string) {
     let match;
     if (marca) {
       match = {
         descricao: {
-          $regex: consulta,
+          $regex: `^${descricao}`,
           $options: "i",
         },
         marca,
@@ -124,7 +124,7 @@ export default class ModeloService {
     else {
       match = {
         descricao: {
-          $regex: consulta,
+          $regex: `^${descricao}`,
           $options: "i",
         },
         oficina

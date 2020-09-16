@@ -79,7 +79,7 @@ export default class MarcaServices {
     return await Marca
       .find({
         descricao: {
-          $regex: descricao,
+          $regex: `^${descricao}`,
           $options: "i",
         },
         oficina,
@@ -95,7 +95,7 @@ export default class MarcaServices {
     return await Marca
       .countDocuments({
         descricao: {
-          $regex: descricao,
+          $regex: `^${descricao}`,
           $options: "i",
         },
         oficina,
