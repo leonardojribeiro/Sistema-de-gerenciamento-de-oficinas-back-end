@@ -48,10 +48,87 @@ export default class FornecedorServices {
       .create(informacoesDoFornecedor);
   }
 
-  async listarPorIdOficina(oficina: string) {
+  async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Fornecedor
       .find({
         oficina
+      })
+      .skip(pular)
+      .limit(limite);
+  }
+
+  async contarPorOficina(oficina: string) {
+    return await Fornecedor
+      .countDocuments({
+        oficina
+      });
+  }
+
+  async consultar(oficina: string, nome: string = "", cpfCnpj: string = "", email: string = "", telefone: string = "", pular: number, limite: number) {
+    return await Fornecedor
+      .find({
+        oficina,
+        nomeFantasia: {
+          $regex: `^${nome}`,
+          $options: "i",
+        },
+        cpfCnpj: {
+          $regex: `^${cpfCnpj}`,
+          $options: "i",
+        },
+        email: {
+          $regex: `^${email}`,
+          $options: "i",
+        },
+        $or: [
+          {
+            telefoneCelular: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+          {
+            telefoneFixo: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+        ]
+      })
+      .skip(pular)
+      .limit(limite);
+  }
+
+  async contarPorConsulta(oficina: string, nome: string = "", cpfCnpj: string = "", email: string = "", telefone: string = "") {
+    return await Fornecedor
+      .countDocuments({
+        oficina,
+        nomeFantasia: {
+          $regex: `^${nome}`,
+          $options: "i",
+        },
+        cpfCnpj: {
+          $regex: `^${cpfCnpj}`,
+          $options: "i",
+        },
+        email: {
+          $regex: `^${email}`,
+          $options: "i",
+        },
+        $or: [
+          {
+            telefoneCelular: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+          {
+            telefoneFixo: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+        ]
       });
   }
 

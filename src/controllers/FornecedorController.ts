@@ -3,6 +3,7 @@ import servicoValidacao from "../services/servicoValidacao";
 import { Request, Response } from "express";
 import { IEndereco } from "../models/Endereco";
 import { IFornecedor } from "../models/Fornecedor";
+import validacao from "../util/validacao";
 const fornecedorServices = new FornecedorServices();
 
 export default class FornecedorContoller {
@@ -60,16 +61,26 @@ export default class FornecedorContoller {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
     try {
-      const fornecedoesListados = await fornecedorServices.listarPorIdOficina(oficina);
-      if (!fornecedoesListados) {
+      if (!validacao.validarPaginacao(pagina, limite)) {
+        return resposta.status(400).send();
+      }
+      const pular = (pagina - 1) * limite;
+      const fornecedores = await fornecedorServices.listarPorOficina(oficina, pular, limite);
+      const total = await fornecedorServices.contarPorOficina(oficina);
+      if (!fornecedores) {
         return resposta
           .status(500)
           .json({
-            mensagem: "Erro ao listar fornecedor."
+            mensagem: "Erro ao listar fornecedores."
           });
       }
-      return resposta.json(fornecedoesListados);
+      return resposta.json({
+        fornecedores,
+        total
+      })
     }
     catch (erro) {
       console.log(erro);
