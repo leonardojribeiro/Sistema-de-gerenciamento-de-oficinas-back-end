@@ -3,7 +3,7 @@ import { Response, Request } from "express";
 import { IServico } from "../models/Servico";
 import servicoValidacao from "../services/servicoValidacao";
 const servicoServices = new ServicoServices();
-export default class ServicoController{
+export default class ServicoController {
   async inserirServico(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
@@ -50,23 +50,33 @@ export default class ServicoController{
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
+    const pular = Number(requisicao.query.pular);
+    const limite = Number(requisicao.query.limite);
     try {
-      const servicosListados = await servicoServices.listarPorIdOficina(oficina);
-      if (!servicosListados) {
+      const servicos = await servicoServices.listarPorOficina(oficina, pular, limite);
+      const total = await servicoServices.contarPorOficina(oficina);
+      if (!servicos) {
         return resposta
           .status(500)
           .json({
             mensagem: "Erro ao listar serviços."
           });
       }
-      return resposta.json(servicosListados)
+      return resposta.json({
+        servicos,
+        total,
+      })
     }
     catch (erro) {
       console.log(erro);
       return resposta.status(400).send();
     }
   }
-  
+  async consultar(requisicao: Request, resposta: Response) {
+
+  }
+
+
   async listarPorId(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;

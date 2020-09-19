@@ -1,28 +1,33 @@
 import validacao from "../util/validacao";
 import Veiculo, { IVeiculo } from "../models/Veiculo";
 import servicoValidacao from "./servicoValidacao";
-import  { Types } from "mongoose";
+import { Types } from "mongoose";
+import { ICliente } from "../models/Cliente";
+
+interface IIVeiculo extends IVeiculo {
+  cliente: ICliente['_id'];
+}
 
 export default class VeiculoServices {
-  validarVeliculoASerInserido(informacoesDoVeiculo: IVeiculo) {
+  validarVeliculoASerInserido(informacoesDoVeiculo: IIVeiculo) {
     const mensagens: string[] = []
     !validacao.validarTexto(informacoesDoVeiculo.placa) && mensagens.push("Placa é obrigatória.")
       || !validacao.validarPlaca(informacoesDoVeiculo.placa) && mensagens.push("Placa inválida.");
     !validacao.validarData(informacoesDoVeiculo.anoFabricacao) && mensagens.push("Ano de fabricacao é obrigatório.");
     !validacao.validarData(informacoesDoVeiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
     mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.modelo));
-    //mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.cliente));
+    mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.cliente));
     return mensagens;
   }
 
-  validarVeliculoASerAlterado(informacoesDoVeiculo: IVeiculo) {
+  validarVeliculoASerAlterado(informacoesDoVeiculo: IIVeiculo) {
     const mensagens: string[] = [];
     !validacao.validarTexto(informacoesDoVeiculo.placa) && mensagens.push("Placa é obrigatória.")
       || !validacao.validarPlaca(informacoesDoVeiculo.placa) && mensagens.push("Placa inválida.");
     !validacao.validarData(informacoesDoVeiculo.anoFabricacao) && mensagens.push("Ano de fabricacao é obrigatório.");
     !validacao.validarData(informacoesDoVeiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
     mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.modelo));
-    //mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.cliente));
+    mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.cliente));
     mensagens.push(...servicoValidacao.validarIdDoVeiculo(informacoesDoVeiculo._id));
     return mensagens;
   }
@@ -74,18 +79,28 @@ export default class VeiculoServices {
       })
       .unwind("modelo")
       .unwind("marca")
+      .unwind("cliente")
+      .replaceRoot({
+        $mergeObjects: [
+          "$$ROOT",
+          {
+            "modelo": {
+              $mergeObjects: [
+                "$modelo",
+                { "marca": "$marca" }
+              ]
+            }
+          }
+        ]
+      })
       .project({
         oficina: 0,
-        __v: 0,
+        marca: 0,
         vinculo: 0,
-        "cliente.__v": 0,
-        "cliente.endereco": 0,
-        "cliente.oficina": 0,
-        "modelo.oficina": 0,
-        "modelo.__v": 0,
-        "marca.oficina": 0,
-        "marca.__v": 0,
-      });
+        __v: 0,
+        "cliente.oficina": 0
+      })
+
   }
 
   async listarPorIdVeiculoEIdOficina(informacoesDoVeiculo: IVeiculo) {

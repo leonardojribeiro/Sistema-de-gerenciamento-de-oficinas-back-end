@@ -35,11 +35,20 @@ export default class ServicoServices {
       .create(informacoesDoServico)
   }
 
-  async listarPorIdOficina(oficina: string) {
+  async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Servico
       .find({
         oficina: oficina,
       })
+      .skip(pular)
+      .limit(limite);
+  }
+
+  async contarPorOficina(oficina: string ) {
+    return await Servico
+      .countDocuments({
+        oficina: oficina,
+      });
   }
 
   async listarPorIdServicoEIdOficina(informacoesDoFuncionario: IServico) {

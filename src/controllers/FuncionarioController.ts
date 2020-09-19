@@ -3,6 +3,8 @@ import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IFuncionario } from '../models/Funcionario';
 import { IEndereco } from '../models/Endereco';
+import validacao from '../util/validacao';
+import { replaceNoNumeric } from '../util/Replace';
 const funcionarioServices = new FuncionarioServices();
 
 export default class FuncionarioController {
@@ -21,10 +23,10 @@ export default class FuncionarioController {
       const funcionarioASerInserido = {
         nome,
         sexo,
-        cpf,
+        cpf: replaceNoNumeric(cpf),
         dataNascimento,
-        telefoneFixo,
-        telefoneCelular,
+        telefoneFixo: replaceNoNumeric(telefoneFixo),
+        telefoneCelular: replaceNoNumeric(telefoneCelular),
         email,
         especialidades,
         endereco,
@@ -65,16 +67,26 @@ export default class FuncionarioController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
     try {
-      const funcionariosListados = await funcionarioServices.listarPorIdOficina(oficina);
-      if (!funcionariosListados) {
+      if (!validacao.validarPaginacao(pagina, limite)) {
+        return resposta.status(400).send();
+      }
+      const pular = (pagina - 1) * limite;
+      const funcionarios = await funcionarioServices.listarPorOficina(oficina, pular, limite);
+      const total = await funcionarioServices.contarPorOficina(oficina);
+      if (!funcionarios) {
         return resposta
           .status(500)
           .json({
-            mensagem: "Erro ao listar clientes."
+            mensagem: "Erro ao listar funcionarios."
           });
       }
-      return resposta.json(funcionariosListados);
+      return resposta.json({
+        funcionarios,
+        total
+      })
     }
     catch (erro) {
       console.log(erro);
@@ -113,6 +125,42 @@ export default class FuncionarioController {
     }
   }
 
+  async consultar(requisicao: Request, resposta: Response) {
+    const oficina = requisicao.body.oficina as string;
+    const pagina = Number(requisicao.query.pagina);
+    const limite = Number(requisicao.query.limite);
+    const nome = requisicao.query.nome as string;
+    let cpf = requisicao.query.cpf as string | undefined;
+    const email = requisicao.query.email as string;
+    let telefone = requisicao.query.telefone as string | undefined;
+    try {
+      if (!validacao.validarPaginacao(pagina, limite)) {
+        return resposta.status(400).send();
+      }
+      const pular = (pagina - 1) * limite;
+      cpf = replaceNoNumeric(cpf);
+      telefone = replaceNoNumeric(telefone);
+      const funcionarios = await funcionarioServices.consultar(oficina, nome, cpf, email, telefone, pular, limite);
+      const total = await funcionarioServices.contarPorConsulta(oficina, nome, cpf, email, telefone);
+      console.log(funcionarios)
+      if (!funcionarios) {
+        return resposta
+          .status(500)
+          .json({
+            mensagem: "Erro ao listar funcionarios."
+          });
+      }
+      return resposta.json({
+        funcionarios,
+        total
+      })
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
+  }
+
   async alterarFuncionario(requisicao: Request, resposta: Response) {
     const _id = requisicao.body._id as string;
     const nome = requisicao.body.nome as string;
@@ -129,8 +177,8 @@ export default class FuncionarioController {
         nome,
         sexo,
         dataNascimento,
-        telefoneFixo,
-        telefoneCelular,
+        telefoneFixo: replaceNoNumeric(telefoneFixo),
+        telefoneCelular: replaceNoNumeric(telefoneCelular),
         email,
         endereco,
         especialidades,

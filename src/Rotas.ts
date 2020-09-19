@@ -13,6 +13,7 @@ import FornecedorContoller from "./controllers/FornecedorController";
 import VeiculoController from "./controllers/VeiculoController";
 import EspecialidadeController from './controllers/EspecialidadeController';
 import OrdemDeServicoContoller from "./controllers/OrdemDeServicoController";
+import validatePagination from "./Midllewares/ValidatePagination";
 
 const modeloController = new ModeloController();
 const pecaController = new PecaController();
@@ -82,10 +83,10 @@ rotas.put('/especialidade', Auth,  especialidadeController.alterarEspecialidade)
 
 //servicos
 rotas.post('/servico', Auth,  servicoController.inserirServico);
-rotas.get('/servico', Auth,  servicoController.listarTodos);
+rotas.get('/servico', Auth, validatePagination, servicoController.listarTodos);
 rotas.get('/servico/id', Auth,  servicoController.listarPorId);
 rotas.put('/servico', Auth,  servicoController.alterarServico);
-
+rotas.get('/servico/consulta', Auth, validatePagination, servicoController.consultar);
 // //fornecedores
 rotas.post('/fornecedor', Auth,  fornecedorController.inserirFornecedor)
 rotas.get('/fornecedor', Auth,  fornecedorController.listarTodos)
@@ -97,6 +98,7 @@ rotas.post('/funcionario', Auth,  funcionarioController.inserirFuncionario)
 rotas.get('/funcionario', Auth,  funcionarioController.listarTodos)
 rotas.get('/funcionario/id', Auth,  funcionarioController.listarPorId)
 rotas.put('/funcionario', Auth,  funcionarioController.alterarFuncionario)
+rotas.get('/funcionario/consulta', Auth,  funcionarioController.consultar);
 
 
 // rotas.post("/usuario", usuarioController.incluirDadosDeUsuario);

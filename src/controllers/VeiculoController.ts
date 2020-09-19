@@ -126,6 +126,7 @@ export default class VeiculoController{
       return resposta.status(400).send();
     }
   }
+
   
   async alterarVeiculo(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;

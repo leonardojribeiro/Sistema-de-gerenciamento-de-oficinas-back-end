@@ -137,9 +137,7 @@ export default class ClienteController {
       }
       const pular = (pagina - 1) * limite;
       cpfCnpj = replaceNoNumeric(cpfCnpj);
-      console.log(telefone)
       telefone = replaceNoNumeric(telefone);
-      console.log(telefone)
       const clientes = await clienteServices.consultar(oficina, nome, cpfCnpj, email, telefone, pular, limite);
       const total = await clienteServices.contarPorConsulta(oficina, nome, cpfCnpj, email, telefone);
       if (!clientes) {

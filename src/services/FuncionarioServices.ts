@@ -62,23 +62,93 @@ export default class FuncionarioServices {
       })
   }
 
-  async listarPorIdOficina(oficina: string) {
+ async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Funcionario
-      .aggregate()
-      .lookup({
-        from: 'especialidades',
-        localField: 'especialidades',
-        foreignField: '_id',
-        as: 'especialidades'
+      .find({
+        oficina
       })
-      .match({
-        oficina: Types.ObjectId(oficina),
+      .populate({
+        path: "especialidades"
       })
-      .project({
-        'especialidades.oficina': 0,
-        'especialidades.__v': 0,
-        oficina: 0,
-        __v: 0
+      .skip(pular)
+      .limit(limite);
+  }
+
+  async contarPorOficina(oficina: string) {
+    return await Funcionario
+      .countDocuments({
+        oficina
+      });
+  }
+
+  async consultar(oficina: string, nome: string = "", cpf: string = "", email: string = "", telefone: string = "", pular: number, limite: number) {
+    return await Funcionario
+      .find({
+        oficina,
+        nome: {
+          $regex: `^${nome}`,
+          $options: "i",
+        },
+        cpf: {
+          $regex: `^${cpf}`,
+          $options: "i",
+        },
+        email: {
+          $regex: `^${email}`,
+          $options: "i",
+        },
+        $or: [
+          {
+            telefoneCelular: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+          {
+            telefoneFixo: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+        ]
+      })
+      .populate({
+        path: "especialidades",
+      })
+      .skip(pular)
+      .limit(limite);
+  }
+
+  async contarPorConsulta(oficina: string, nome: string = "", cpfCnpj: string = "", email: string = "", telefone: string = "") {
+    return await Funcionario
+      .countDocuments({
+        oficina,
+        nome: {
+          $regex: `^${nome}`,
+          $options: "i",
+        },
+        cpfCnpj: {
+          $regex: `^${cpfCnpj}`,
+          $options: "i",
+        },
+        email: {
+          $regex: `^${email}`,
+          $options: "i",
+        },
+        $or: [
+          {
+            telefoneCelular: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+          {
+            telefoneFixo: {
+              $regex: `^${telefone}`,
+              $options: "i",
+            }
+          },
+        ]
       });
   }
 
