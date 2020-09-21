@@ -51,6 +51,30 @@ export default class ServicoServices {
       });
   }
 
+  async consultar(oficina: string, descricao: string, pular: number, limite: number ){
+    return await Servico
+    .find({
+      oficina,
+      descricao:{
+        $regex: `${descricao}`,
+        $options: "i",
+      }
+    })
+    .skip(pular)
+    .limit(limite);
+  }
+
+  async contarPorConsulta(oficina: string, descricao: string, ){
+    return await Servico
+    .countDocuments({
+      oficina,
+      descricao:{
+        $regex: `${descricao}`,
+        $options: "i",
+      }
+    });
+  }
+
   async listarPorIdServicoEIdOficina(informacoesDoFuncionario: IServico) {
     return await Servico
       .findOne({

@@ -80,6 +80,7 @@ rotas.get('/especialidade', Auth,  especialidadeController.listarTodos);
 rotas.post('/especialidade', Auth,  especialidadeController.inserirEspecialidade);
 rotas.get('/especialidade/id', Auth,  especialidadeController.listarEspecialidadePorId);
 rotas.put('/especialidade', Auth,  especialidadeController.alterarEspecialidade);
+rotas.get('/especialidade/consulta', Auth,  especialidadeController.consultar);
 
 //servicos
 rotas.post('/servico', Auth,  servicoController.inserirServico);

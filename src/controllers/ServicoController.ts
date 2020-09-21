@@ -73,7 +73,22 @@ export default class ServicoController {
     }
   }
   async consultar(requisicao: Request, resposta: Response) {
-
+    const pular = Number(requisicao.query.pular);
+    const limite = Number(requisicao.query.limite);
+    const oficina = requisicao.body.oficina as string;
+    const descricao = requisicao.query.descricao as string
+    try {
+      const servicos = await servicoServices.consultar(oficina, descricao, pular, limite);
+      const total = await servicoServices.contarPorConsulta(oficina, descricao);
+      return resposta.json({
+        servicos,
+        total,
+      });
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
   }
 
 

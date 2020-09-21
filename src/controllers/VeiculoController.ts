@@ -13,7 +13,7 @@ interface InformacoesDoVeiculo extends IVeiculo {
   cliente: ICliente['_id'];
 }
 
-export default class VeiculoController{
+export default class VeiculoController {
 
   async inserirVeiculo(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -87,7 +87,9 @@ export default class VeiculoController{
     const oficina = requisicao.body.oficina as string;
     try {
       const veiculos = await veiculoServices.listarPorIdOficina(oficina);
-      return resposta.json(veiculos);
+      return resposta.json({
+        veiculos
+      });
     }
     catch (erro) {
       console.log(erro);
@@ -127,7 +129,7 @@ export default class VeiculoController{
     }
   }
 
-  
+
   async alterarVeiculo(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const _id = requisicao.body._id as string;

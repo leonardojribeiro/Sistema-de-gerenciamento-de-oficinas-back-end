@@ -47,10 +47,35 @@ export default class EspecialidadeController {
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
+    const pular = Number(requisicao.query.pular);
+    const limite = Number(requisicao.query.limite);
+    const oficina = requisicao.body.oficina as string;
     try {
-      const oficina = requisicao.body.oficina as string;
-      const modelos = await especialidadeServices.listarPorIdOficina(oficina);
-      return resposta.json(modelos);
+      const especialidades = await especialidadeServices.listarPorOficina(oficina, pular, limite);
+      const total = await especialidadeServices.contarPorOficina(oficina);
+      return resposta.json({
+        especialidades,
+        total,
+      });
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
+  }
+
+  async consultar(requisicao: Request, resposta: Response) {
+    const pular = Number(requisicao.query.pular);
+    const limite = Number(requisicao.query.limite);
+    const oficina = requisicao.body.oficina as string;
+    const descricao = requisicao.query.descricao as string
+    try {
+      const especialidades = await especialidadeServices.consultar(oficina, descricao, pular, limite);
+      const total = await especialidadeServices.contarPorConsulta(oficina, descricao);
+      return resposta.json({
+        especialidades,
+        total,
+      });
     }
     catch (erro) {
       console.log(erro);

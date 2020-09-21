@@ -65,13 +65,9 @@ export default class ClienteController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const pagina = Number(requisicao.query.pagina);
+    const pular = Number(requisicao.query.pular);
     const limite = Number(requisicao.query.limite);
     try {
-      if (!validacao.validarPaginacao(pagina, limite)) {
-        return resposta.status(400).send();
-      }
-      const pular = (pagina - 1) * limite;
       const clientes = await clienteServices.listarPorOficina(oficina, pular, limite);
       const total = await clienteServices.contarPorOficina(oficina);
       if (!clientes) {
@@ -125,17 +121,13 @@ export default class ClienteController {
 
   async consultar(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const pagina = Number(requisicao.query.pagina);
+    const pular = Number(requisicao.query.pular);
     const limite = Number(requisicao.query.limite);
     const nome = requisicao.query.nome as string;
     let cpfCnpj = requisicao.query.cpfCnpj as string | undefined;
     const email = requisicao.query.email as string;
     let telefone = requisicao.query.telefone as string | undefined;
     try {
-      if (!validacao.validarPaginacao(pagina, limite)) {
-        return resposta.status(400).send();
-      }
-      const pular = (pagina - 1) * limite;
       cpfCnpj = replaceNoNumeric(cpfCnpj);
       telefone = replaceNoNumeric(telefone);
       const clientes = await clienteServices.consultar(oficina, nome, cpfCnpj, email, telefone, pular, limite);

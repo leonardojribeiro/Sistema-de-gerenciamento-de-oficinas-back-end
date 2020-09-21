@@ -31,9 +31,40 @@ export default class EspecialidadeServices {
       })
   }
 
-  async listarPorIdOficina(oficina: string) {
+  async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Especialidade
       .find({ oficina })
+      .skip(pular)
+      .limit(limite);
+  }
+
+  async contarPorOficina(oficina: string,) {
+    return await Especialidade
+      .countDocuments({ oficina });
+  }
+
+  async consultar(oficina: string, descricao: string, pular: number, limite: number ){
+    return await Especialidade
+    .find({
+      oficina,
+      descricao:{
+        $regex: `^${descricao}`,
+        $options: "i",
+      }
+    })
+    .skip(pular)
+    .limit(limite);
+  }
+
+  async contarPorConsulta(oficina: string, descricao: string, ){
+    return await Especialidade
+    .countDocuments({
+      oficina,
+      descricao:{
+        $regex: `^${descricao}`,
+        $options: "i",
+      }
+    });
   }
 
   async listarPorIdEspecialidadeEIdOficina(informacoesDaEspecialidade: IEspecialidade) {
