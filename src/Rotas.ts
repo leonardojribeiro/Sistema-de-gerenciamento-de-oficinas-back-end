@@ -40,6 +40,8 @@ rotas.get("/", (req: Request, res: Response) => {
 // );
 rotas.post('/ordemdeservico', Auth, ordemDeServicoController.incluirOrdemDeServico);
 rotas.get('/ordemdeservico', Auth, ordemDeServicoController.listarTodas);
+rotas.get('/ordemdeservico/id/', Auth, ordemDeServicoController.listarPorId);
+rotas.put('/ordemdeservico', Auth, ordemDeServicoController.alterarOrdemDeServico);
 
 //marcas 
 rotas.post('/marca',  multer(multerConfig).single("logomarca"), Auth, marcaController.inserirMarca);

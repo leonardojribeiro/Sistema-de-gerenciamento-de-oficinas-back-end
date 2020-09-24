@@ -53,6 +53,59 @@ export default class OrdemDeServicoContoller {
       return resposta.status(400).send();
     }
   }
+
+  async alterarOrdemDeServico(requisicao: Request, resposta: Response) {
+    const _id = requisicao.body._id as string;
+    const dataDeRegistro = requisicao.body.dataDeRegistro as Date;
+    const dataDeInicio = requisicao.body.dataDeInicio as Date;
+    const dataDeConclusao = requisicao.body.dataDeConclusao as Date;
+    const andamento = requisicao.body.andamento as number;
+    const valorTotalDosServicos = requisicao.body.valorTotalDosServicos as number;
+    const valorTotalDasPecas = requisicao.body.valorTotalDasPecas as number;
+    const desconto = requisicao.body.desconto as number;
+    const valorTotal = requisicao.body.valorTotal as number;
+    const categoria = requisicao.body.categoria as string;
+    const status = requisicao.body.status as string;
+    const sintoma = requisicao.body.sintoma as string;
+    const itensDeServico = requisicao.body.itensDeServico as IItemDeServico[];
+    const itensDePeca = requisicao.body.itensDePeca as IItemDePeca[];
+    const veiculo = requisicao.body.veiculo as string;
+    const oficina = requisicao.body.oficina as string;
+    try {
+      const informacoesDaOrdemDeServico = {
+        dataDeRegistro,
+        dataDeInicio,
+        dataDeConclusao,
+        andamento,
+        valorTotalDosServicos,
+        valorTotalDasPecas,
+        desconto,
+        categoria,
+        status,
+        sintoma,
+        valorTotal,
+        itensDeServico,
+        itensDePeca,
+        veiculo,
+        oficina,
+      } as IOrdemDeServico;
+
+      //const os = new OrdemDeServico(informacoesDaOrdemDeServico)
+      //await os.validate()
+      console.log(informacoesDaOrdemDeServico)
+      console.log(await OrdemDeServico.updateOne(
+        { _id: _id },
+        {
+          $set: informacoesDaOrdemDeServico
+        }));
+      return resposta.status(201).json({ mensagem: "Ordem de serviço alterada com sucesso!" })
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
+  }
+
   async listarTodas(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string
     try {
@@ -60,7 +113,7 @@ export default class OrdemDeServicoContoller {
         .find()
         .populate({
           path: "itensDePeca.peca",
-          populate:{
+          populate: {
             path: "marca",
           }
         })
@@ -76,7 +129,40 @@ export default class OrdemDeServicoContoller {
         .populate({
           path: "veiculo"
         })
-        
+
+      return resposta.json(ordemDeServico);
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
+  }
+
+  async listarPorId(requisicao: Request, resposta: Response) {
+    const oficina = requisicao.body.oficina as string
+    const _id = requisicao.query._id as string;
+    try {
+      const ordemDeServico = await OrdemDeServico
+        .findOne({
+          _id,
+          oficina
+        })
+        .populate({
+          path: "itensDePeca.peca",
+          populate: {
+            path: "marca",
+          }
+        })
+        .populate({
+          path: "itensDePeca.fornecedor"
+        })
+        .populate({
+          path: "itensDeServico.funcionario"
+        })
+        .populate({
+          path: "itensDeServico.servico"
+        })
+
       return resposta.json(ordemDeServico);
     }
     catch (erro) {
