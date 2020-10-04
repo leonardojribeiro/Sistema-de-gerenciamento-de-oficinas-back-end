@@ -141,8 +141,7 @@ export default class FuncionarioController {
       cpf = replaceNoNumeric(cpf);
       telefone = replaceNoNumeric(telefone);
       const funcionarios = await funcionarioServices.consultar(oficina, nome, cpf, email, telefone, pular, limite);
-      const total = await funcionarioServices.contarPorConsulta(oficina, nome, cpf, email, telefone);
-      console.log(funcionarios)
+      const total = await funcionarioServices.contarPorConsulta(oficina, nome, cpf, email, telefone); 
       if (!funcionarios) {
         return resposta
           .status(500)

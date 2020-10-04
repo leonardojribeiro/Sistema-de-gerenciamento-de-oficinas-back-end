@@ -92,13 +92,21 @@ export default class OrdemDeServicoContoller {
 
       //const os = new OrdemDeServico(informacoesDaOrdemDeServico)
       //await os.validate()
-      console.log(informacoesDaOrdemDeServico)
-      console.log(await OrdemDeServico.updateOne(
+      const result =await OrdemDeServico.updateOne(
         { _id: _id },
         {
           $set: informacoesDaOrdemDeServico
-        }));
-      return resposta.status(201).json({ mensagem: "Ordem de serviço alterada com sucesso!" })
+        })
+      if (!result.nModified) {
+        return resposta.status(500)
+          .json({
+            mensagem: "Serviço não alterado."
+          });
+      }
+      return resposta.status(201)
+        .json({
+          mensagem: "Ordem de serviço alterada com sucesso."
+        });
     }
     catch (erro) {
       console.log(erro);
