@@ -45,68 +45,68 @@ rotas.put('/ordemdeservico', Auth, ordemDeServicoController.alterarOrdemDeServic
 rotas.get('/ordemdeservico/veiculo', Auth, ordemDeServicoController.listarPorVeiculo);
 
 //marcas 
-rotas.post('/marca',  multer(multerConfig).single("logomarca"), Auth, marcaController.inserirMarca);
+rotas.post('/marca',  multer(multerConfig).single("logomarca"), Auth, marcaController.incluirMarca);
 rotas.get('/marca', Auth, marcaController.listarTodos);
-rotas.get('/marca/consulta/', Auth, marcaController.consultar);
+rotas.get('/marca/consulta/', Auth, marcaController.consultarMarcas);
 rotas.get('/marca/id/', Auth, marcaController.listarMarcaPorId);
 rotas.put('/marca',  multer(multerConfig).single("logomarca"), Auth, marcaController.alterarMarca);
 
 //modelo
 rotas.get('/modelo', Auth, modeloController.listarTodos);
-rotas.post('/modelo', Auth, modeloController.inserirModelo);
-rotas.get('/modelo/consulta', Auth, modeloController.consultar);
+rotas.post('/modelo', Auth, modeloController.incluirModelo);
+rotas.get('/modelo/consulta', Auth, modeloController.consultarModelos);
 rotas.get('/modelo/id', Auth, modeloController.listarModeloPorId);
 rotas.put('/modelo', Auth, modeloController.alterarModelo);
 
 // //peças
 rotas.get('/peca', Auth,  pecaController.listarTodos);
-rotas.post('/peca', Auth,  pecaController.inserirPeca);
-rotas.get('/peca/consulta', Auth,  pecaController.consultar);
+rotas.post('/peca', Auth,  pecaController.incluirPeca);
+rotas.get('/peca/consulta', Auth,  pecaController.consultarPecas);
 rotas.get('/peca/id', Auth,  pecaController.listarPecaPorId);
 rotas.put('/peca', Auth,  pecaController.alterarPeca);
 
 // //clientes
-rotas.post("/cliente", Auth,  clienteController.inserirCliente);
+rotas.post("/cliente", Auth,  clienteController.incluirCliente);
 rotas.get('/cliente', Auth,  clienteController.listarTodos);
-rotas.get('/cliente/consulta', Auth,  clienteController.consultar);
+rotas.get('/cliente/consulta', Auth,  clienteController.consultarClientes);
 rotas.get('/cliente/id', Auth,  clienteController.listarPorId);
 rotas.put('/cliente', Auth,  clienteController.alterarCliente);
 
 // //veiculos
 rotas.get('/veiculo', Auth,  veiculoController.listarTodos);
-rotas.post('/veiculo', Auth,  veiculoController.inserirVeiculo);
+rotas.post('/veiculo', Auth,  veiculoController.incluirVeiculo);
 rotas.get('/veiculo/id', Auth,  veiculoController.listarPorId);
 rotas.put('/veiculo', Auth,  veiculoController.alterarVeiculo);
-rotas.get('/veiculo/consultaVinculo', Auth,  veiculoController.consultarVinculo);
+rotas.get('/veiculo/consultaVinculo', Auth,  veiculoController.consultarVinculos);
 
 // //especialidades
 rotas.get('/especialidade', Auth,  especialidadeController.listarTodos);
-rotas.post('/especialidade', Auth,  especialidadeController.inserirEspecialidade);
+rotas.post('/especialidade', Auth,  especialidadeController.incluirEspecialidade);
 rotas.get('/especialidade/id', Auth,  especialidadeController.listarEspecialidadePorId);
 rotas.put('/especialidade', Auth,  especialidadeController.alterarEspecialidade);
-rotas.get('/especialidade/consulta', Auth,  especialidadeController.consultar);
+rotas.get('/especialidade/consulta', Auth,  especialidadeController.consultarEspecialidades);
 
 //servicos
-rotas.post('/servico', Auth,  servicoController.inserirServico);
+rotas.post('/servico', Auth,  servicoController.incluirServico);
 rotas.get('/servico', Auth, validatePagination, servicoController.listarTodos);
 rotas.get('/servico/id', Auth,  servicoController.listarPorId);
 rotas.put('/servico', Auth,  servicoController.alterarServico);
-rotas.get('/servico/consulta', Auth, validatePagination, servicoController.consultar);
+rotas.get('/servico/consulta', Auth, validatePagination, servicoController.consultarServicos);
 // //fornecedores
-rotas.post('/fornecedor', Auth,  fornecedorController.inserirFornecedor)
+rotas.post('/fornecedor', Auth,  fornecedorController.incluirFornecedor)
 rotas.get('/fornecedor', Auth,  fornecedorController.listarTodos)
 rotas.get('/fornecedor/id', Auth,  fornecedorController.listarPorId)
 rotas.put('/fornecedor', Auth,  fornecedorController.alterarFornecedor)
 
 // //funcionarios
-rotas.post('/funcionario', Auth,  funcionarioController.inserirFuncionario)
+rotas.post('/funcionario', Auth,  funcionarioController.incluirFuncionario)
 rotas.get('/funcionario', Auth,  funcionarioController.listarTodos)
 rotas.get('/funcionario/id', Auth,  funcionarioController.listarPorId)
 rotas.put('/funcionario', Auth,  funcionarioController.alterarFuncionario)
-rotas.get('/funcionario/consulta', Auth,  funcionarioController.consultar);
+rotas.get('/funcionario/consulta', Auth,  funcionarioController.consultarFuncionarios);
 
 
-rotas.post("/usuario", usuarioController.incluirDadosDeUsuario);
+rotas.post("/usuario", usuarioController.incluirUsuario);
 
 rotas.post("/usuario/login", usuarioController.efetuarLogin);
 

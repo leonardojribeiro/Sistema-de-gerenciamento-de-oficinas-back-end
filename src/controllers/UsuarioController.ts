@@ -1,4 +1,4 @@
-import UsuarioServices from "../services/UsuarioServices";
+import UsuarioServices from "../services/usuarioServices";
 import criptografia from "../util/Criptografia";
 import jwt from "jsonwebtoken";
 import { Response, Request, NextFunction } from "express";
@@ -8,7 +8,7 @@ const usuarioServices = new UsuarioServices()
 
 export default class UsuarioController {
 
-  async incluirDadosDeUsuario(requisicao: Request, resposta: Response) {
+  async incluirUsuario(requisicao: Request, resposta: Response) {
     const nomeUsuario = requisicao.body.nomeUsuario
     const senha = requisicao.body.senha;
     const perfil = requisicao.body.perfil;

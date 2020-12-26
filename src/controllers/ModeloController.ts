@@ -8,7 +8,7 @@ import { Types } from 'mongoose';
 const modeloServices = new ModeloServices();
 
 export default class ModeloController {
-  async inserirModelo(requisicao: Request, resposta: Response) {
+  async incluirModelo(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
     const marca = requisicao.body.marca as string;
@@ -108,7 +108,7 @@ export default class ModeloController {
     }
   }
 
-  async consultar(requisicao: Request, resposta: Response) {
+  async consultarModelos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.query.descricao as string;
     const marca = requisicao.query.marca as string;

@@ -9,7 +9,7 @@ import { replaceNoNumeric } from "../util/Replace";
 const clienteServices = new ClienteServices();
 
 export default class ClienteController {
-  async inserirCliente(requisicao: Request, resposta: Response) {
+  async incluirCliente(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const nome = requisicao.body.nome as string;
     const sexo = requisicao.body.sexo as string;
@@ -67,7 +67,6 @@ export default class ClienteController {
     const oficina = requisicao.body.oficina as string;
     const pular = Number(requisicao.query.pular);
     const limite = Number(requisicao.query.limite);
-
     try {
       const clientes = await clienteServices.listarPorOficina(oficina, pular, limite);
       const total = await clienteServices.contarPorOficina(oficina);
@@ -78,7 +77,6 @@ export default class ClienteController {
             mensagem: "Erro ao listar clientes."
           });
       }
-      console.log(pular)
       return resposta.json({
         clientes,
         total
@@ -121,7 +119,7 @@ export default class ClienteController {
     }
   }
 
-  async consultar(requisicao: Request, resposta: Response) {
+  async consultarClientes(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const pular = Number(requisicao.query.pular);
     const limite = Number(requisicao.query.limite);

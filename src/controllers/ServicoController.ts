@@ -2,9 +2,10 @@ import ServicoServices from "../services/ServicosServices";
 import { Response, Request } from "express";
 import { IServico } from "../models/Servico";
 import servicoValidacao from "../services/servicoValidacao";
+
 const servicoServices = new ServicoServices();
 export default class ServicoController {
-  async inserirServico(requisicao: Request, resposta: Response) {
+  async incluirServico(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
     const tempoDuracao = requisicao.body.tempoDuracao as number;
@@ -72,7 +73,7 @@ export default class ServicoController {
       return resposta.status(400).send();
     }
   }
-  async consultar(requisicao: Request, resposta: Response) {
+  async consultarServicos(requisicao: Request, resposta: Response) {
     const pular = Number(requisicao.query.pular);
     const limite = Number(requisicao.query.limite);
     const oficina = requisicao.body.oficina as string;

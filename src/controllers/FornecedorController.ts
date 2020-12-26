@@ -7,7 +7,7 @@ import validacao from "../util/validacao";
 const fornecedorServices = new FornecedorServices();
 
 export default class FornecedorContoller {
-  async inserirFornecedor(requisicao: Request, resposta: Response) {
+  async incluirFornecedor(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina;
     const nomeFantasia = requisicao.body.nomeFantasia as string;
     const razaoSocial = requisicao.body.razaoSocial as string;

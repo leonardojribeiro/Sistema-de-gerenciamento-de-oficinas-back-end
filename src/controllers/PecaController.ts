@@ -8,7 +8,7 @@ const pecaServices = new PecaServices();
 
 export default class PecaController {
 
-  async inserirPeca(requisicao: Request, resposta: Response) {
+  async incluirPeca(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
     const marca = requisicao.body.marca as string;
@@ -108,7 +108,7 @@ export default class PecaController {
     }
   }
 
-  async consultar(requisicao: Request, resposta: Response) {
+  async consultarPecas(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.query.descricao as string;
     const marca = requisicao.query.marca as string;

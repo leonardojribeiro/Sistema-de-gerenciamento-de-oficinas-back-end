@@ -8,7 +8,7 @@ import { replaceNoNumeric } from '../util/Replace';
 const funcionarioServices = new FuncionarioServices();
 
 export default class FuncionarioController {
-  async inserirFuncionario(requisicao: Request, resposta: Response) {
+  async incluirFuncionario(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const nome = requisicao.body.nome as string
     const sexo = requisicao.body.sexo as string
@@ -125,7 +125,7 @@ export default class FuncionarioController {
     }
   }
 
-  async consultar(requisicao: Request, resposta: Response) {
+  async consultarFuncionarios(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const pagina = Number(requisicao.query.pagina);
     const limite = Number(requisicao.query.limite);

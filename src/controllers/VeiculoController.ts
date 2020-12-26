@@ -15,7 +15,7 @@ interface InformacoesDoVeiculo extends IVeiculo {
 
 export default class VeiculoController {
 
-  async inserirVeiculo(requisicao: Request, resposta: Response) {
+  async incluirVeiculo(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const placa = requisicao.body.placa as string;
     const anoFabricacao = requisicao.body.anoFabricacao as Date;
@@ -206,7 +206,7 @@ export default class VeiculoController {
     }
   }
 
-  async consultarVinculo(requisicao: Request, resposta: Response) {
+  async consultarVinculos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const cliente = requisicao.query.cliente as String;
     try {

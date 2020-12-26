@@ -6,7 +6,7 @@ import { IEspecialidade } from '../models/Especialidade';
 const especialidadeServices = new EspecialidadeServices();
 
 export default class EspecialidadeController {
-  async inserirEspecialidade(requisicao: Request, resposta: Response) {
+  async incluirEspecialidade(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
     try {
@@ -64,7 +64,7 @@ export default class EspecialidadeController {
     }
   }
 
-  async consultar(requisicao: Request, resposta: Response) {
+  async consultarEspecialidades(requisicao: Request, resposta: Response) {
     const pular = Number(requisicao.query.pular);
     const limite = Number(requisicao.query.limite);
     const oficina = requisicao.body.oficina as string;

@@ -6,7 +6,7 @@ import validacao from '../util/validacao';
 const marcaServices = new MarcaServices();
 
 export default class MarcaController {
-  async inserirMarca(requisicao: Request, resposta: Response) {
+  async incluirMarca(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
     try {
@@ -116,7 +116,7 @@ export default class MarcaController {
     }
   }
 
-  async consultar(requisicao: Request, resposta: Response) {
+  async consultarMarcas(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.query.descricao as string;
     const pagina = Number(requisicao.query.pagina);
