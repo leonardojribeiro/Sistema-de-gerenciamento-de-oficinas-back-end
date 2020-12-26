@@ -122,21 +122,48 @@ export default class OrdemDeServicoContoller {
         .find()
         .populate({
           path: "itensDePeca.peca",
+          select: {
+            _id: 0,
+            __v: 0
+          },
           populate: {
             path: "marca",
+            select: {
+              _id: 0,
+              uriLogo: 0,
+              __v: 0,
+            },
           }
         })
         .populate({
-          path: "itensDePeca.fornecedor"
+          path: "itensDePeca.fornecedor",
+          select: {
+            nomeFantasia: 1,
+          },
         })
         .populate({
-          path: "itensDeServico.funcionario"
+          path: "itensDeServico.funcionario",
+          select: {
+            nome: 1,
+          }
         })
         .populate({
-          path: "itensDeServico.servico"
+          path: "itensDeServico.servico",
+          select: {
+            _id: 0,
+            __v: 0,
+          },
         })
         .populate({
-          path: "veiculo"
+          path: "veiculo",
+          select: {
+            __v: 0
+          }
+        })
+        .select({
+          "itensDeServico._id": 0,
+          "itensDePeca._id": 0,
+          __v: 0,
         })
 
       return resposta.json(ordemDeServico);
@@ -183,14 +210,14 @@ export default class OrdemDeServicoContoller {
     const oficina = requisicao.body.oficina as string
     const veiculo = requisicao.query.veiculo as string;
     try {
-      if(!validacao.validarId(veiculo)){
+      if (!validacao.validarId(veiculo)) {
         return resposta.status(406)
-        .json({
-          mensagem: ['Veículo inválido']
-        });
+          .json({
+            mensagem: ['Veículo inválido']
+          });
       }
       const ordensDeServico = await ordemDeServicoServices.listarPorVeiculo(oficina, veiculo);
-        return resposta.json({ordensDeServico});
+      return resposta.json({ ordensDeServico });
     }
     catch (erro) {
       console.log(erro);

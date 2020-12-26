@@ -77,6 +77,7 @@ rotas.get('/veiculo', Auth,  veiculoController.listarTodos);
 rotas.post('/veiculo', Auth,  veiculoController.inserirVeiculo);
 rotas.get('/veiculo/id', Auth,  veiculoController.listarPorId);
 rotas.put('/veiculo', Auth,  veiculoController.alterarVeiculo);
+rotas.get('/veiculo/consultaVinculo', Auth,  veiculoController.consultarVinculo);
 
 // //especialidades
 rotas.get('/especialidade', Auth,  especialidadeController.listarTodos);

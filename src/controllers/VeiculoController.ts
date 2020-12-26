@@ -204,4 +204,17 @@ export default class VeiculoController {
     }
   }
 
+  async consultarVinculo(requisicao: Request, resposta: Response) {
+    const oficina = requisicao.body.oficina as string;
+    const cliente = requisicao.query.cliente as String;
+    try {
+      const vinculos = await veiculoServices.consultarVeiculo(oficina, cliente);
+      return resposta.json({ vinculos });
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
+  }
+
 }

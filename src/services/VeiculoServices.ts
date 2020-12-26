@@ -3,6 +3,7 @@ import Veiculo, { IVeiculo } from "../models/Veiculo";
 import servicoValidacao from "./servicoValidacao";
 import { Types } from "mongoose";
 import { ICliente } from "../models/Cliente";
+import Vinculo from "../models/Vinculo";
 
 interface IIVeiculo extends IVeiculo {
   cliente: ICliente['_id'];
@@ -169,5 +170,38 @@ export default class VeiculoServices {
           $set: informacoesDoVeiculo
         }
       );
+  }
+
+  async consultarVeiculo(oficina: String, cliente: String) {
+    return await Vinculo
+      .find({
+        oficina,
+        cliente,
+      })
+      .populate({
+        path: "veiculo",
+        select: {
+          __v: 0
+        },
+        populate: {
+          path: "modelo",
+          select: {
+            _id: 0,
+            __v: 0
+          },
+          populate: {
+            path: "marca",
+            select: {
+              _id: 0,
+              __v: 0
+            },
+          }
+        }
+      })
+      .select({
+        __v: 0,
+        _id: 0,
+        cliente: 0,
+      })
   }
 }
