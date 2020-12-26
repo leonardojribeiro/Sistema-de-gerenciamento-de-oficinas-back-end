@@ -14,7 +14,7 @@ export default class MarcaController {
         descricao,
         oficina,
       } as IMarca;
-      const mensagens = marcaServices.validarMarcaASerInserida(marcaASerInserida);
+      const mensagens = marcaServices.validarMarcaASerIncluida(marcaASerInserida);
       if (mensagens.length) {
         return resposta
           .status(406)
@@ -42,7 +42,7 @@ export default class MarcaController {
         }
       }
       marcaASerInserida.uriLogo = uriLogo;
-      const marcaInserida = await marcaServices.inserir(marcaASerInserida);
+      const marcaInserida = await marcaServices.incluirMarca(marcaASerInserida);
       if (!marcaInserida) {
         return resposta
           .status(500)

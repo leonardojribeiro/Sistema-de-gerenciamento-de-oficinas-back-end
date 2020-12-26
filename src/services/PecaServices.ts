@@ -21,7 +21,7 @@ const agregacao = {
 
 export default class ModeloService {
 
-  validarPecaASerInserida(peca: IPeca) {
+  validarPecaASerIncluida(peca: IPeca) {
     const mensagens = [];
     !validacao.validarTexto(peca.descricao) && mensagens.push("Descrição é obrigatório.");
     mensagens.push(...servicoValidacao.validarIdDaMarca(peca.marca));
@@ -35,7 +35,7 @@ export default class ModeloService {
     return mensagens
   }
 
-  async inserir(peca: IPeca) {
+  async incluirPeca(peca: IPeca) {
     return await Peca
       .create(peca);
   }

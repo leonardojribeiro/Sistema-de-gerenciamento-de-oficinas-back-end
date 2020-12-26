@@ -29,7 +29,7 @@ export default class OrdemDeServicoServices {
     return mensagens
   }
 
-  validarOrdemDeServicoASerInserida(ordemDeServico: IOrdemDeServico) {
+  validarOrdemDeServico(ordemDeServico: IOrdemDeServico) {
     const mensagens: string[] = [];
     mensagens.push(...servicoValidacao.validarIdDoVeiculo(ordemDeServico.veiculo));
     !validacao.validarTexto(ordemDeServico.sintoma) && mensagens.push("Sintoma é obrigatório");
@@ -43,6 +43,11 @@ export default class OrdemDeServicoServices {
     );
     return mensagens;
   }
+
+  async incluirOrdemDeServico(informacoesDaOrdemDeServico: IOrdemDeServico) {
+    return await OrdemDeServico.create(informacoesDaOrdemDeServico);
+  }
+
 
   async listarPorVeiculo(oficina: string, veiculo: string) {
     return OrdemDeServico.find({

@@ -32,7 +32,7 @@ export default class FuncionarioController {
         endereco,
         oficina,
       } as IFuncionario;
-      const mensagens = funcionarioServices.validarFuncionarioASerInserido(funcionarioASerInserido);
+      const mensagens = funcionarioServices.validarFuncionarioASerIncluido(funcionarioASerInserido);
       if (mensagens.length) {
         return resposta.status(406)
           .json({
@@ -47,7 +47,7 @@ export default class FuncionarioController {
             mensagem: "Funcionário já cadastrado."
           });
       }
-      const clienteInserido = await funcionarioServices.inserirFuncionario(funcionarioASerInserido);
+      const clienteInserido = await funcionarioServices.incluirFuncionario(funcionarioASerInserido);
       if (!clienteInserido) {
         return resposta.status(500)
           .json({

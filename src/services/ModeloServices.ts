@@ -22,7 +22,7 @@ const agregacao = {
 
 export default class ModeloService {
 
-  validarModeloASerInserido(modelo: IModelo) {
+  validarModeloASerIncluido(modelo: IModelo) {
     const mensagens: string[] = [];
     !validacao.validarTexto(modelo.descricao) && mensagens.push("Descrição é obrigatório.");
     mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.marca));
@@ -43,7 +43,7 @@ export default class ModeloService {
     return mensagens;
   }
 
-  async inserir(modelo: IModelo) {
+  async incluirModelo(modelo: IModelo) {
     return await Modelo
       .create(modelo);
   }

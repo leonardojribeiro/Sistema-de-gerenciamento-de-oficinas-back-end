@@ -16,7 +16,7 @@ export default class ServicoController {
         valor,
         oficina,
       } as IServico
-      const mensagens = servicoServices.validarServico(informacoesDoServico);
+      const mensagens = servicoServices.validarServicoASerIncluido(informacoesDoServico);
       if (mensagens.length) {
         return resposta.status(406)
           .json({

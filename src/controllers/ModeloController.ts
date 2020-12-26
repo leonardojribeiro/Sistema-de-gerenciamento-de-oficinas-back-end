@@ -18,7 +18,7 @@ export default class ModeloController {
         marca,
         oficina,
       } as IModelo;
-      const mensagens = modeloServices.validarModeloASerInserido(modeloASerInserido);
+      const mensagens = modeloServices.validarModeloASerIncluido(modeloASerInserido);
       if (mensagens.length) {
         return resposta
           .status(406)
@@ -34,7 +34,7 @@ export default class ModeloController {
             mensagem: "Esse modelo já está cadastrado"
           });
       }
-      const modeloInserido = await modeloServices.inserir(modeloASerInserido);
+      const modeloInserido = await modeloServices.incluirModelo(modeloASerInserido);
       if (!modeloInserido) {
         return resposta
           .status(500)

@@ -4,7 +4,7 @@ import servicoValidacao from "./servicoValidacao";
 
 export default class EspecialidadeServices {
 
-  validarEspecialidadeASerInserida(especialidade: IEspecialidade) {
+  validarEspecialidadeASerIncluida(especialidade: IEspecialidade) {
     const mensagens: string[] = [];
     !validacao.validarTexto(especialidade.descricao) && mensagens.push("Descrição é obrigatório");
     return mensagens;
@@ -18,7 +18,7 @@ export default class EspecialidadeServices {
   }
 
 
-  async inserir(especialidade: IEspecialidade) {
+  async incluirEspecialidade(especialidade: IEspecialidade) {
     return await Especialidade
       .create(especialidade)
   }

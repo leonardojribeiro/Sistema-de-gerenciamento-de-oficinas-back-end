@@ -10,7 +10,7 @@ interface IIVeiculo extends IVeiculo {
 }
 
 export default class VeiculoServices {
-  validarVeliculoASerInserido(informacoesDoVeiculo: IIVeiculo) {
+  validarVeliculoASerIncluido(informacoesDoVeiculo: IIVeiculo) {
     const mensagens: string[] = []
     !validacao.validarTexto(informacoesDoVeiculo.placa) && mensagens.push("Placa é obrigatória.")
       || !validacao.validarPlaca(informacoesDoVeiculo.placa) && mensagens.push("Placa inválida.");
@@ -33,7 +33,7 @@ export default class VeiculoServices {
     return mensagens;
   }
 
-  async inserirVeiculo(informacoesDoVeiculo: IVeiculo) {
+  async incluirVeiculo(informacoesDoVeiculo: IVeiculo) {
     return await Veiculo
       .create(informacoesDoVeiculo);
   }

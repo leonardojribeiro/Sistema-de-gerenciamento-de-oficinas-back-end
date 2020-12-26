@@ -31,7 +31,7 @@ export default class VeiculoController {
         cliente,
         oficina,
       } as InformacoesDoVeiculo
-      const mensagens = veiculoServices.validarVeliculoASerInserido(veiculoASerInserido);
+      const mensagens = veiculoServices.validarVeliculoASerIncluido(veiculoASerInserido);
       if (mensagens.length) {
         return resposta
           .status(406)
@@ -47,7 +47,7 @@ export default class VeiculoController {
             mensagem: "Esse veículo já está cadastrado."
           });
       }
-      const veiculoInserido = await veiculoServices.inserirVeiculo(veiculoASerInserido);
+      const veiculoInserido = await veiculoServices.incluirVeiculo(veiculoASerInserido);
       if (!veiculoInserido) {
         return resposta
           .status(500)
@@ -163,7 +163,6 @@ export default class VeiculoController {
       } as IVinculo;
       //conta os vinculos que tem o mesmo ids e que não estão com vínculo final
       const vinculoExistente = await vinculoServices.contarPorIdClienteIdVeiculoEIdOficina(informacoesDoVinculo);
-      console.log(vinculoExistente)
       if (!vinculoExistente) {//se existe um vínculo, nada é alterado nos vínculos, mas se não existir, ele é criado
         //lista o último vínculo, que está sem data final
         const vinculoAnterior = await vinculoServices.listarPorIdVeiculoEIdOficina(informacoesDoVinculo);

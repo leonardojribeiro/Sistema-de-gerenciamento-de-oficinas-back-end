@@ -4,7 +4,7 @@ import servicoValidacao from "./servicoValidacao";
 import Fornecedor from '../models/Fornecedor';
 
 export default class FornecedorServices {
-  validarFornecedorASerInserido(informacoesDoFornecedor: IFornecedor) {
+  validarFornecedorASerIncluido(informacoesDoFornecedor: IFornecedor) {
     const mensagens: string[] = [];
     !validacao.validarTexto(informacoesDoFornecedor.nomeFantasia) && mensagens.push("Nome fantasia é obrigatório.");
     !validacao.validarTexto(informacoesDoFornecedor.cpfCnpj) && mensagens.push("CPF / CNPJ é obrigatório.");
@@ -43,7 +43,7 @@ export default class FornecedorServices {
       });
   }
 
-  async inserirFornecedor(informacoesDoFornecedor: IFornecedor) {
+  async incluirFornecedor(informacoesDoFornecedor: IFornecedor) {
     return await Fornecedor
       .create(informacoesDoFornecedor);
   }

@@ -14,7 +14,7 @@ export default class EspecialidadeController {
         descricao,
         oficina,
       } as IEspecialidade;
-      const mensagens = especialidadeServices.validarEspecialidadeASerInserida(especialidadeASerInserida);
+      const mensagens = especialidadeServices.validarEspecialidadeASerIncluida(especialidadeASerInserida);
       if (mensagens.length) {
         return resposta.status(406)
           .json({
@@ -28,7 +28,7 @@ export default class EspecialidadeController {
             mensagem: "Especialidade já cadastrada."
           });
       }
-      const especialidadeInserida = await especialidadeServices.inserir(especialidadeASerInserida);
+      const especialidadeInserida = await especialidadeServices.incluirEspecialidade(especialidadeASerInserida);
       if (!especialidadeInserida) {
         return resposta.status(500)
           .json({

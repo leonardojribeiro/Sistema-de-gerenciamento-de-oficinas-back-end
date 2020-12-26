@@ -27,7 +27,7 @@ export default class FornecedorContoller {
         endereco,
         oficina,
       } as IFornecedor
-      const mensagens = fornecedorServices.validarFornecedorASerInserido(fornecedorASerInserido);
+      const mensagens = fornecedorServices.validarFornecedorASerIncluido(fornecedorASerInserido);
       if (mensagens.length) {
         return resposta.status(406)
           .json({
@@ -41,7 +41,7 @@ export default class FornecedorContoller {
             mensagem: "Fornecedor já cadastrado."
           });
       }
-      const fornecedorInserido = await fornecedorServices.inserirFornecedor(fornecedorASerInserido);
+      const fornecedorInserido = await fornecedorServices.incluirFornecedor(fornecedorASerInserido);
       if (!fornecedorInserido) {
         return resposta.status(500)
           .json({

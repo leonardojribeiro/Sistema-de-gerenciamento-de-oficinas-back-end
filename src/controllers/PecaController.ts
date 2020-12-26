@@ -34,7 +34,7 @@ export default class PecaController {
             mensagem: "Essa peça já está cadastrada"
           });
       }
-      const pecaInserida = await pecaServices.inserir(pecaASerInserida);
+      const pecaInserida = await pecaServices.incluirPeca(pecaASerInserida);
       if (!pecaInserida) {
         return resposta
           .status(500)

@@ -5,7 +5,7 @@ import Cliente from "../models/Cliente";
 import servicoValidacao from "./servicoValidacao";
 
 export default class ClienteServices {
-  validarClienteASerInserido(informacoesDoCliente: ICliente) {
+  validarClienteASerIncluido(informacoesDoCliente: ICliente) {
     const mensagens: string[] = [];
     !validacao.validarTexto(informacoesDoCliente.nome) && mensagens.push("Nome é obrigatório.");
     !validacao.validarData(informacoesDoCliente.dataNascimento) && mensagens.push("Data de nascimento é obrigatória.");
@@ -35,7 +35,7 @@ export default class ClienteServices {
     return mensagens;
   }
 
-  async inserirCliente(informacoesDoCliente: ICliente) {
+  async incluirCliente(informacoesDoCliente: ICliente) {
     return await Cliente
       .create(informacoesDoCliente);
   }

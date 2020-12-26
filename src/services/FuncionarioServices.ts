@@ -22,7 +22,7 @@ export default class FuncionarioServices {
     return mensagens;
   }
 
-  validarFuncionarioASerInserido(informacoesDoFuncionario: IFuncionario) {
+  validarFuncionarioASerIncluido(informacoesDoFuncionario: IFuncionario) {
     const mensagens: string[] = [];
     !validacao.validarTexto(informacoesDoFuncionario.nome) && mensagens.push("Nome é obrigatório.");
     !validacao.validarData(informacoesDoFuncionario.dataNascimento) && mensagens.push("Data de nascimento é obrigatória.");
@@ -173,7 +173,7 @@ export default class FuncionarioServices {
       });
   }
 
-  async inserirFuncionario(informacoesDoFuncionario: IFuncionario) {
+  async incluirFuncionario(informacoesDoFuncionario: IFuncionario) {
     return await Funcionario
       .create(informacoesDoFuncionario)
   }

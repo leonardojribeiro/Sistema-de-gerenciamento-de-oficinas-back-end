@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 export default class UsuarioServices {
 
-  validarUsuarioASerInserido(informacoesDoUsuario: IUsuario) {
+  validarUsuarioASerIncluido(informacoesDoUsuario: IUsuario) {
     const mensagens: string[] = []
     !validacao.validarTexto(informacoesDoUsuario.nomeUsuario) && mensagens.push("Usuário é obrigatório.");
     !validacao.validarTexto(informacoesDoUsuario.senha) && mensagens.push("Senha é obrigatória.")
@@ -22,7 +22,7 @@ export default class UsuarioServices {
     return mensagens;
   }
 
-  async inserir(informacoesDoUsuario: IUsuario) {
+  async incluirUsuario(informacoesDoUsuario: IUsuario) {
     return await Usuario
       .create(informacoesDoUsuario)
       .catch(erro => {

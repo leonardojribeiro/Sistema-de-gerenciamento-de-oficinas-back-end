@@ -8,7 +8,7 @@ export default class MarcaServices {
     await GoogleStorage.apagar(uriLogomarca);
   }
 
-  validarMarcaASerInserida(marca: IMarca) {
+  validarMarcaASerIncluida(marca: IMarca) {
     const mensagens: string[] = [];
     !validacao.validarTexto(marca.descricao) && mensagens.push("Descrição é obrigatório.");
     return mensagens;
@@ -33,7 +33,7 @@ export default class MarcaServices {
     }
   }
 
-  async inserir(marca: IMarca) {
+  async incluirMarca(marca: IMarca) {
     return await Marca
       .create(marca);
   }

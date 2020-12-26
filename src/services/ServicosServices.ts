@@ -5,7 +5,7 @@ import Servico from "../models/Servico";
 import servicoValidacao from "./servicoValidacao";
 
 export default class ServicoServices {
-  validarServico(informacoesDoServico: IServico) {
+  validarServicoASerIncluido(informacoesDoServico: IServico) {
     const mensagens : string[] = [];
     !validacao.validarTexto(informacoesDoServico.descricao) && mensagens.push('Descricao é obrigatório.');
     !validacao.validarNumero(informacoesDoServico.tempoDuracao) && mensagens.push('Tempo de duração é obrigatório');

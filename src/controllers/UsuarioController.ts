@@ -1,4 +1,4 @@
-import UsuarioServices from "../services/usuarioServices";
+import UsuarioServices from "../services/UsuarioServices";
 import criptografia from "../util/Criptografia";
 import jwt from "jsonwebtoken";
 import { Response, Request, NextFunction } from "express";
@@ -20,7 +20,7 @@ export default class UsuarioController {
         perfil,
         idOficina,
       } as IUsuario
-      const mensagens = usuarioServices.validarUsuarioASerInserido(usuarioASerInserido);
+      const mensagens = usuarioServices.validarUsuarioASerIncluido(usuarioASerInserido);
       if (mensagens.length) {
         return resposta
           .status(406)
@@ -37,7 +37,7 @@ export default class UsuarioController {
           });
       }
       usuarioASerInserido.senha = criptografia.criptografar(usuarioASerInserido.senha);
-      const usuarioInserido = await usuarioServices.inserir(usuarioASerInserido);
+      const usuarioInserido = await usuarioServices.incluirUsuario(usuarioASerInserido);
       if (!usuarioInserido) {
         return resposta
           .status(500)

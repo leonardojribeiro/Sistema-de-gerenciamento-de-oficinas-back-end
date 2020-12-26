@@ -31,7 +31,7 @@ export default class ClienteController {
         endereco,
         oficina,
       } as ICliente;
-      const mensagens = clienteServices.validarClienteASerInserido(clienteASerInserido);
+      const mensagens = clienteServices.validarClienteASerIncluido(clienteASerInserido);
       if (mensagens.length) {
         return resposta.status(406)
           .json({
@@ -45,7 +45,7 @@ export default class ClienteController {
             mensagem: "Cliente já cadastrado."
           });
       }
-      const clienteInserido = await clienteServices.inserirCliente(clienteASerInserido);
+      const clienteInserido = await clienteServices.incluirCliente(clienteASerInserido);
       if (!clienteInserido) {
         return resposta.status(500)
           .json({
