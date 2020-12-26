@@ -15,9 +15,7 @@ export default class ServicoServices {
 
   validarServicoASerAlterado(informacoesDoServico: IServico) {
     const mensagens: string[] = [];
-    !validacao.validarTexto(informacoesDoServico.descricao) && mensagens.push('Descricao é obrigatório.');
-    !validacao.validarNumero(informacoesDoServico.tempoDuracao) && mensagens.push('Tempo de duração é obrigatório');
-    !validacao.validarNumero(informacoesDoServico.valor) && mensagens.push("Valor é obrigatório.");
+    mensagens.push(...this.validarServicoASerIncluido(informacoesDoServico));
     mensagens.push(...servicoValidacao.validarIdDoServico(informacoesDoServico._id));
     return mensagens;
   }
@@ -75,11 +73,11 @@ export default class ServicoServices {
     });
   }
 
-  async listarPorIdServicoEIdOficina(informacoesDoFuncionario: IServico) {
+  async listarPorIdServicoEIdOficina(informacoesDoServico: IServico) {
     return await Servico
       .findOne({
-        _id: informacoesDoFuncionario._id,
-        oficina: informacoesDoFuncionario.oficina,
+        _id: informacoesDoServico._id,
+        oficina: informacoesDoServico.oficina,
       })
   }
 

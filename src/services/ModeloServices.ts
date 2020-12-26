@@ -1,38 +1,21 @@
 import { IModelo } from "../models/Modelo";
-
 import validacao from "../util/validacao";
 import Modelo from "../models/Modelo";
-import { Types } from "mongoose";
 import servicoValidacao from "./servicoValidacao";
-
-const selecaoCampos = {
-  idMarca: 0,
-  oficina: 0,
-  __v: 0,
-  "marca.oficina": 0,
-  "marca.__v": 0
-};
-
-const agregacao = {
-  from: "marcas",
-  localField: "marca",
-  foreignField: "_id",
-  as: "marca",
-};
 
 export default class ModeloService {
 
-  validarModeloASerIncluido(modelo: IModelo) {
+  validarModeloASerIncluido(informacoesDoModelo: IModelo) {
     const mensagens: string[] = [];
-    !validacao.validarTexto(modelo.descricao) && mensagens.push("Descrição é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.marca));
+    !validacao.validarTexto(informacoesDoModelo.descricao) && mensagens.push("Descrição é obrigatório.");
+    mensagens.push(...servicoValidacao.validarIdDaMarca(informacoesDoModelo.marca));
     return mensagens
   }
 
-  validarModeloASerAlterado(modelo: IModelo) {
+  validarModeloASerAlterado(informacoesDoModelo: IModelo) {
     const mensagens: string[] = [];
-    !validacao.validarTexto(modelo.descricao) && mensagens.push("Descrição é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDaMarca(modelo.marca));
+    mensagens.push(...this.validarModeloASerIncluido(informacoesDoModelo));
+    mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoModelo._id));
     return mensagens
   }
 
@@ -43,17 +26,17 @@ export default class ModeloService {
     return mensagens;
   }
 
-  async incluirModelo(modelo: IModelo) {
+  async incluirModelo(informacoesDoModelo: IModelo) {
     return await Modelo
-      .create(modelo);
+      .create(informacoesDoModelo);
   }
 
-  async contarPorDescricaoDoModeloEIdOficina(modelo: IModelo) {
+  async contarPorDescricaoDoModeloEIdOficina(informacoesDoModelo: IModelo) {
     return await Modelo
       .countDocuments({
-        descricao: modelo.descricao,
-        idMarca: modelo.marca,
-        idOficina: modelo.oficina
+        descricao: informacoesDoModelo.descricao,
+        idMarca: informacoesDoModelo.marca,
+        idOficina: informacoesDoModelo.oficina
       });
   }
 
@@ -74,9 +57,9 @@ export default class ModeloService {
       })
   }
 
-  async listarPorIdModeloEIdOficina(modelo: IModelo) {
+  async listarPorIdModeloEIdOficina(informacoesDoModelo: IModelo) {
     return await Modelo
-      .findOne(modelo);
+      .findOne(informacoesDoModelo);
   }
 
   async consultar(oficina: string, descricao: string, marca: string, pular: number, limite: number) {
@@ -134,14 +117,14 @@ export default class ModeloService {
       .countDocuments(match);
   }
 
-  async alterarModelo(modelo: IModelo) {
+  async alterarModelo(informacoesDoModelo: IModelo) {
     return await Modelo
       .updateOne(
         {
-          _id: modelo._id,
+          _id: informacoesDoModelo._id,
         },
         {
-          $set: modelo
+          $set: informacoesDoModelo
         }
       );
   }

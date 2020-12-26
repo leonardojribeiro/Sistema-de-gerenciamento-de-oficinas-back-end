@@ -1,51 +1,34 @@
 import validacao from "../util/validacao";
 import Peca, { IPeca } from "../models/Peca";
-import { Types } from "mongoose";
 import servicoValidacao from "./servicoValidacao";
-import Marca from "../models/Marca";
-
-const selecaoCampos = {
-
-  oficina: 0,
-  __v: 0,
-  "marca.oficina": 0,
-  "marca.__v": 0
-};
-
-const agregacao = {
-  from: "marcas",
-  localField: "marca",
-  foreignField: "_id",
-  as: "marca",
-};
 
 export default class ModeloService {
 
-  validarPecaASerIncluida(peca: IPeca) {
+  validarPecaASerIncluida(informacoesDaPeca: IPeca) {
     const mensagens = [];
-    !validacao.validarTexto(peca.descricao) && mensagens.push("Descrição é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDaMarca(peca.marca));
+    !validacao.validarTexto(informacoesDaPeca.descricao) && mensagens.push("Descrição é obrigatório.");
+    mensagens.push(...servicoValidacao.validarIdDaMarca(informacoesDaPeca.marca));
     return mensagens
   }
 
-  validarPecaASerAlterada(peca: IPeca) {
+  validarPecaASerAlterada(informacoesDaPeca: IPeca) {
     const mensagens: string[] = [];
-    !validacao.validarTexto(peca.descricao) && mensagens.push("Descrição é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDaMarca(peca.marca));
+    mensagens.push(...this.validarPecaASerIncluida(informacoesDaPeca));
+    mensagens.push(...servicoValidacao.validarIdDaPeca(informacoesDaPeca._id));
     return mensagens
   }
 
-  async incluirPeca(peca: IPeca) {
+  async incluirPeca(informacoesDaPeca: IPeca) {
     return await Peca
-      .create(peca);
+      .create(informacoesDaPeca);
   }
 
-  async contarPorDescricaoDaPecaIdMarcaEIdOficina(peca: IPeca) {
+  async contarPorDescricaoDaPecaIdMarcaEIdOficina(informacoesDaPeca: IPeca) {
     return await Peca
       .countDocuments({
-        descricao: peca.descricao,
-        marca: peca.marca,
-        oficina: peca.oficina
+        descricao: informacoesDaPeca.descricao,
+        marca: informacoesDaPeca.marca,
+        oficina: informacoesDaPeca.oficina
       });
   }
 
@@ -68,12 +51,10 @@ export default class ModeloService {
       .skip(skip)
   }
 
-  async listarPorIdOficinaEIdPeca(peca: IPeca) {
+  async listarPorIdOficinaEIdPeca(informacoesDaPeca: IPeca) {
     return await Peca
-      .findOne(peca);
+      .findOne(informacoesDaPeca);
   }
-
-
 
   async consultar(oficina: string, descricao: string, marca: string, skip: number, limit: number,) {
     let match;
@@ -137,14 +118,14 @@ export default class ModeloService {
       .countDocuments(match);
   }
 
-  async alterarPeca(peca: IPeca) {
+  async alterarPeca(informacoesDaPeca: IPeca) {
     return await Peca
       .updateOne(
         {
-          _id: peca._id,
+          _id: informacoesDaPeca._id,
         },
         {
-          $set: peca
+          $set: informacoesDaPeca
         }
       )
   }

@@ -4,30 +4,30 @@ import servicoValidacao from "./servicoValidacao";
 
 export default class EspecialidadeServices {
 
-  validarEspecialidadeASerIncluida(especialidade: IEspecialidade) {
+  validarEspecialidadeASerIncluida(informacoesDaEspecialidade: IEspecialidade) {
     const mensagens: string[] = [];
-    !validacao.validarTexto(especialidade.descricao) && mensagens.push("Descrição é obrigatório");
+    !validacao.validarTexto(informacoesDaEspecialidade.descricao) && mensagens.push("Descrição é obrigatório");
     return mensagens;
   }
 
-  validarEspecialidadeASerAlterada(especialidade: IEspecialidade) {
+  validarEspecialidadeASerAlterada(informacoesDaEspecialidade: IEspecialidade) {
     const mensagens: string[] = [];
-    !validacao.validarTexto(especialidade.descricao) && mensagens.push("Descrição é obrigatório");
-    mensagens.push(...servicoValidacao.validarIdDaEspecialidade(especialidade._id));
+    mensagens.push(...this.validarEspecialidadeASerIncluida(informacoesDaEspecialidade));
+    mensagens.push(...servicoValidacao.validarIdDaEspecialidade(informacoesDaEspecialidade._id));
     return mensagens;
   }
 
 
-  async incluirEspecialidade(especialidade: IEspecialidade) {
+  async incluirEspecialidade(informacoesDaEspecialidade: IEspecialidade) {
     return await Especialidade
-      .create(especialidade)
+      .create(informacoesDaEspecialidade)
   }
 
-  async contarPorDescricaoEIdOficina(especialidade: IEspecialidade) {
+  async contarPorDescricaoEIdOficina(informacoesDaEspecialidade: IEspecialidade) {
     return await Especialidade
       .countDocuments({
-        descricao: especialidade.descricao,
-        oficina: especialidade.oficina,
+        descricao: informacoesDaEspecialidade.descricao,
+        oficina: informacoesDaEspecialidade.oficina,
       })
   }
 
@@ -43,28 +43,28 @@ export default class EspecialidadeServices {
       .countDocuments({ oficina });
   }
 
-  async consultar(oficina: string, descricao: string, pular: number, limite: number ){
+  async consultar(oficina: string, descricao: string, pular: number, limite: number) {
     return await Especialidade
-    .find({
-      oficina,
-      descricao:{
-        $regex: `^${descricao}`,
-        $options: "i",
-      }
-    })
-    .skip(pular)
-    .limit(limite);
+      .find({
+        oficina,
+        descricao: {
+          $regex: `^${descricao}`,
+          $options: "i",
+        }
+      })
+      .skip(pular)
+      .limit(limite);
   }
 
-  async contarPorConsulta(oficina: string, descricao: string, ){
+  async contarPorConsulta(oficina: string, descricao: string,) {
     return await Especialidade
-    .countDocuments({
-      oficina,
-      descricao:{
-        $regex: `^${descricao}`,
-        $options: "i",
-      }
-    });
+      .countDocuments({
+        oficina,
+        descricao: {
+          $regex: `^${descricao}`,
+          $options: "i",
+        }
+      });
   }
 
   async listarPorIdEspecialidadeEIdOficina(informacoesDaEspecialidade: IEspecialidade) {
@@ -72,14 +72,14 @@ export default class EspecialidadeServices {
       .findOne(informacoesDaEspecialidade)
   }
 
-  async alterarEspecialidade(especialidade: IEspecialidade) {
+  async alterarEspecialidade(informacoesDaEspecialidade: IEspecialidade) {
     return await Especialidade
       .updateOne(
         {
-          _id: especialidade._id
+          _id: informacoesDaEspecialidade._id
         },
         {
-          $set: especialidade
+          $set: informacoesDaEspecialidade
         }
       )
   }

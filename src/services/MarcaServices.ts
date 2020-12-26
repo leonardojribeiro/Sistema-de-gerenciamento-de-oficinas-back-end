@@ -2,23 +2,23 @@ import Marca, { IMarca } from "../models/Marca";
 import validacao from "../util/validacao";
 import GoogleStorage from "../util/GoogleStorage";
 import crypto from "crypto";
+import servicoValidacao from "./servicoValidacao";
 
 export default class MarcaServices {
   async apagarLogomarca(uriLogomarca: string) {
     await GoogleStorage.apagar(uriLogomarca);
   }
 
-  validarMarcaASerIncluida(marca: IMarca) {
+  validarMarcaASerIncluida(informacoesDaMarca: IMarca) {
     const mensagens: string[] = [];
-    !validacao.validarTexto(marca.descricao) && mensagens.push("Descrição é obrigatório.");
+    !validacao.validarTexto(informacoesDaMarca.descricao) && mensagens.push("Descrição é obrigatório.");
     return mensagens;
   }
 
-  validarMarcaASerAlterada(marca: IMarca) {
+  validarMarcaASerAlterada(informacoesDaMarca: IMarca) {
     const mensagens: string[] = [];
-    !validacao.validarTexto(marca._id) && mensagens.push("Id da marca é obrigatório.")
-      || !validacao.validarId(marca._id) && mensagens.push("Id da marca inválido.");
-    !validacao.validarTexto(marca.descricao) && mensagens.push("Descrição é obrigatório.");
+    mensagens.push(...this.validarMarcaASerIncluida(informacoesDaMarca));
+    mensagens.push(...servicoValidacao.validarIdDaMarca(informacoesDaMarca._id));
     return mensagens;
   }
 
@@ -33,16 +33,16 @@ export default class MarcaServices {
     }
   }
 
-  async incluirMarca(marca: IMarca) {
+  async incluirMarca(informacoesDaMarca: IMarca) {
     return await Marca
-      .create(marca);
+      .create(informacoesDaMarca);
   }
 
-  async contarPorDescricaoEIdOficina(marca: IMarca) {
+  async contarPorDescricaoEIdOficina(informacoesDaMarca: IMarca) {
     return await Marca
       .countDocuments({
-        descricao: marca.descricao,
-        idOficina: marca.oficina,
+        descricao: informacoesDaMarca.descricao,
+        idOficina: informacoesDaMarca.oficina,
       });
   }
 
@@ -66,9 +66,9 @@ export default class MarcaServices {
   }
 
 
-  async listarPorIdMarcaEIdOficina(marca: IMarca) {
+  async listarPorIdMarcaEIdOficina(informacoesDaMarca: IMarca) {
     return await Marca
-      .findOne(marca)
+      .findOne(informacoesDaMarca)
       .select({
         __v: 0,
         oficina: 0
@@ -102,14 +102,14 @@ export default class MarcaServices {
       })
   }
 
-  async alterarMarca(marca: IMarca) {
+  async alterarMarca(informacoesDaMarca: IMarca) {
     return await Marca
       .updateOne(
         {
-          _id: marca._id,
+          _id: informacoesDaMarca._id,
         },
         {
-          $set: marca
+          $set: informacoesDaMarca
         }
       );
   }

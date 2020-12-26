@@ -114,14 +114,17 @@ export default class VeiculoController {
           });
       }
       const veiculoListado = await veiculoServices.listarPorIdVeiculoEIdOficina(informacoesDoVeiculo);
-      if (!veiculoListado || !veiculoListado.length) {
+      if (!veiculoListado) {
         return resposta
           .status(500)
           .json({
             mensagem: "Erro ao listar veículo."
           });
       }
-      return resposta.json(veiculoListado[0])
+      return resposta.json({
+        cliente: veiculoListado.cliente,
+        ...veiculoListado.veiculo._doc
+      });
     }
     catch (erro) {
       console.log(erro);

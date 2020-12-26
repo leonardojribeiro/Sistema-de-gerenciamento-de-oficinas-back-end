@@ -41,16 +41,8 @@ export default class FuncionarioServices {
 
   validarClienteASerAlterado(informacoesDoFuncionario: IFuncionario) {
     const mensagens: string[] = [];
-    !validacao.validarTexto(informacoesDoFuncionario.nome) && mensagens.push("Nome é obrigatório.");
-    !validacao.validarData(informacoesDoFuncionario.dataNascimento) && mensagens.push("Data de nascimento é obrigatória.");
-    validacao.validarTexto(informacoesDoFuncionario.telefoneFixo) &&
-      !validacao.validarTelefone(informacoesDoFuncionario.telefoneFixo) && mensagens.push("Telefone fixo inválido");
-    !validacao.validarTexto(informacoesDoFuncionario.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
-      || !validacao.validarTelefone(informacoesDoFuncionario.telefoneCelular) && mensagens.push("Telefone celular inválido.");
-    validacao.validarTexto(informacoesDoFuncionario.email) &&
-      !validacao.validarTexto(informacoesDoFuncionario.email) && !validacao.validarEmail(informacoesDoFuncionario.email) && mensagens.push("E-mail inválido.");
-    mensagens.push(...this.validarIdsEspecialidades(informacoesDoFuncionario.especialidades));
-    mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFuncionario.endereco));
+    mensagens.push(...this.validarFuncionarioASerIncluido(informacoesDoFuncionario));
+    mensagens.push(...servicoValidacao.validarIdDoFuncionario(informacoesDoFuncionario._id));
     return mensagens;
   }
 
@@ -62,7 +54,7 @@ export default class FuncionarioServices {
       })
   }
 
- async listarPorOficina(oficina: string, pular: number, limite: number) {
+  async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Funcionario
       .find({
         oficina

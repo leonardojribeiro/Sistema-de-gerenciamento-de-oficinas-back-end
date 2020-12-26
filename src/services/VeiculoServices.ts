@@ -23,12 +23,7 @@ export default class VeiculoServices {
 
   validarVeliculoASerAlterado(informacoesDoVeiculo: IIVeiculo) {
     const mensagens: string[] = [];
-    !validacao.validarTexto(informacoesDoVeiculo.placa) && mensagens.push("Placa é obrigatória.")
-      || !validacao.validarPlaca(informacoesDoVeiculo.placa) && mensagens.push("Placa inválida.");
-    !validacao.validarData(informacoesDoVeiculo.anoFabricacao) && mensagens.push("Ano de fabricacao é obrigatório.");
-    !validacao.validarData(informacoesDoVeiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
-    mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.modelo));
-    mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.cliente));
+    mensagens.push(...this.validarVeliculoASerAlterado(informacoesDoVeiculo));
     mensagens.push(...servicoValidacao.validarIdDoVeiculo(informacoesDoVeiculo._id));
     return mensagens;
   }
@@ -48,116 +43,47 @@ export default class VeiculoServices {
 
   async listarPorIdOficina(oficina: string) {
     return await Veiculo
-      .aggregate()
-      .lookup({
-        from: 'vinculos',
-        localField: "_id",
-        foreignField: "veiculo",
-        as: "vinculo",
+      .find({
+        oficina,
       })
-      .unwind("vinculo")
-      .match({
-        oficina: Types.ObjectId(oficina),
-        "vinculo.vinculoFinal": { $exists: false }
+      .populate({
+        path: "modelo",
+        select: {
+          _id: 0,
+          __v: 0
+        },
+        populate: {
+          path: "marca",
+          select: {
+            _id: 0,
+            __v: 0
+          },
+        }
       })
-      .lookup({
-        from: "clientes",
-        localField: "vinculo.cliente",
-        foreignField: "_id",
-        as: "cliente"
-      })
-      .lookup({
-        from: "modelos",
-        localField: "modelo",
-        foreignField: "_id",
-        as: "modelo"
-      })
-      .lookup({
-        from: "marcas",
-        localField: "modelo.marca",
-        foreignField: "_id",
-        as: "marca"
-      })
-      .unwind("modelo")
-      .unwind("marca")
-      .unwind("cliente")
-      .replaceRoot({
-        $mergeObjects: [
-          "$$ROOT",
-          {
-            "modelo": {
-              $mergeObjects: [
-                "$modelo",
-                { "marca": "$marca" }
-              ]
-            }
-          }
-        ]
-      })
-      .project({
-        oficina: 0,
-        marca: 0,
-        vinculo: 0,
+      .select({
         __v: 0,
-        "cliente.oficina": 0
       })
 
   }
 
   async listarPorIdVeiculoEIdOficina(informacoesDoVeiculo: IVeiculo) {
-    return await Veiculo
-      .aggregate()
-      .lookup({
-        from: 'vinculos',
-        localField: "_id",
-        foreignField: "veiculo",
-        as: "vinculo",
+    return await Vinculo
+      .findOne({
+        oficina: informacoesDoVeiculo.oficina,
+        veiculo: informacoesDoVeiculo._id,
       })
-      .unwind("vinculo")
-      .match({
-        _id: Types.ObjectId(informacoesDoVeiculo._id),
-        oficina: Types.ObjectId(informacoesDoVeiculo.oficina),
-        "vinculo.vinculoFinal": { $exists: false }
-      })
-      .lookup({
-        from: "clientes",
-        localField: "vinculo.cliente",
-        foreignField: "_id",
-        as: "cliente"
-      })
-      .lookup({
-        from: "modelos",
-        localField: "modelo",
-        foreignField: "_id",
-        as: "modelo"
-      })
-      .lookup({
-        from: "marcas",
-        localField: "modelo.marca",
-        foreignField: "_id",
-        as: "marca"
-      })
-      .unwind("cliente")
-      .unwind("modelo")
-      .unwind("marca")
-      .group({
-        _id: "$_id",
-        cliente: {
-          $first: "$cliente._id"
-        },
-        modelo: {
-          $first: "$modelo._id"
-        },
-        placa: {
-          $first: "$placa"
-        },
-        anoFabricacao: {
-          $first: "$anoFabricacao"
-        },
-        anoModelo: {
-          $first: "$anoModelo"
+      .populate({
+        path: "veiculo",
+        select: {
+          __v: 0,
         }
-      });
+      })
+      .select({
+        _id: 0,
+        vinculoInicial: 0,
+        vinculoFinal: 0,
+        __v: 0,
+      })
   }
 
   async alterarVeiculo(informacoesDoVeiculo: IVeiculo) {
