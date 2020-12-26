@@ -128,7 +128,7 @@ function validarCep(cep: string) {
 }
 
 function validarNumero(numero: number) {
-  return numero && numero != null;
+  return numero !== undefined && numero != null;
 }
 
 function validarSenha(senha: string) {

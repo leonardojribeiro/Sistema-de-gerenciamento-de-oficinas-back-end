@@ -14,8 +14,6 @@ export default class OrdemDeServicoContoller {
     const dataDeInicio = requisicao.body.dataDeInicio as Date;
     const dataDeConclusao = requisicao.body.dataDeConclusao as Date;
     const andamento = requisicao.body.andamento as number;
-    const valorTotalDosServicos = requisicao.body.valorTotalDosServicos as number;
-    const valorTotalDasPecas = requisicao.body.valorTotalDasPecas as number;
     const desconto = requisicao.body.desconto as number;
     const valorTotal = requisicao.body.valorTotal as number;
     const categoria = requisicao.body.categoria as string;
@@ -31,21 +29,35 @@ export default class OrdemDeServicoContoller {
         dataDeInicio,
         dataDeConclusao,
         andamento,
-        valorTotalDosServicos,
-        valorTotalDasPecas,
         desconto,
         categoria,
         status,
         sintoma,
-        valorTotal,
         itensDeServico,
         itensDePeca,
         veiculo,
         oficina,
       } as IOrdemDeServico;
-
-      //const os = new OrdemDeServico(informacoesDaOrdemDeServico)
-      //await os.validate()
+      const mensagens = ordemDeServicoServices.validarOrdemDeServicoASerInserida(informacoesDaOrdemDeServico);
+      if (mensagens.length) {
+        return resposta.status(406)
+          .json({
+            mensagem: mensagens
+          });
+      }
+      let valorTotal = 0.00;
+      let valorTotalDasPecas = 0.00;
+      let valorTotalDosServicos = 0.00;
+      informacoesDaOrdemDeServico.itensDePeca.forEach((itemDePeca) => {
+        valorTotalDasPecas += (itemDePeca.valorUnitario * itemDePeca.quantidade)
+      });
+      informacoesDaOrdemDeServico.itensDeServico.forEach((itemDeServico) => {
+        valorTotalDosServicos += (itemDeServico.valorUnitario * itemDeServico.quantidade)
+      });
+      valorTotal = valorTotalDasPecas + valorTotalDosServicos;
+      informacoesDaOrdemDeServico.valorTotalDasPecas = valorTotalDasPecas;
+      informacoesDaOrdemDeServico.valorTotalDosServicos = valorTotalDosServicos;
+      informacoesDaOrdemDeServico.valorTotal = valorTotal;
       await OrdemDeServico.create(informacoesDaOrdemDeServico);
       return resposta.status(201).json({ mensagem: "Ordem de serviço cadastrada com sucesso!" })
     }

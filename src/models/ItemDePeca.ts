@@ -7,6 +7,7 @@ export interface IItemDePeca extends Document {
   fornecedor: IFornecedor['_id'];
   unidadeDeGarantia: string;
   valorUnitario: number;
+  garantia: number;
   quantidade: number;
   valorTotal: number;
 }
