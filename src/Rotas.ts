@@ -42,6 +42,7 @@ rotas.post('/ordemdeservico', Auth, ordemDeServicoController.incluirOrdemDeServi
 rotas.get('/ordemdeservico', Auth, ordemDeServicoController.listarTodas);
 rotas.get('/ordemdeservico/id/', Auth, ordemDeServicoController.listarPorId);
 rotas.put('/ordemdeservico', Auth, ordemDeServicoController.alterarOrdemDeServico);
+rotas.get('/ordemdeservico/veiculo', Auth, ordemDeServicoController.listarPorVeiculo);
 
 //marcas 
 rotas.post('/marca',  multer(multerConfig).single("logomarca"), Auth, marcaController.inserirMarca);
@@ -104,7 +105,7 @@ rotas.put('/funcionario', Auth,  funcionarioController.alterarFuncionario)
 rotas.get('/funcionario/consulta', Auth,  funcionarioController.consultar);
 
 
-// rotas.post("/usuario", usuarioController.incluirDadosDeUsuario);
+rotas.post("/usuario", usuarioController.incluirDadosDeUsuario);
 
 rotas.post("/usuario/login", usuarioController.efetuarLogin);
 

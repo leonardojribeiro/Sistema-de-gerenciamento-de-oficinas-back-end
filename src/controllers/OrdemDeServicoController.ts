@@ -2,11 +2,13 @@ import { Request, Response } from "express";
 import { IItemDeServico } from "../models/ItemDeServico";
 import ItemDePeca, { IItemDePeca } from "../models/ItemDePeca";
 import OrdemDeServico, { IOrdemDeServico } from "../models/OrdemDeServico";
-import Marca from "../models/Marca";
-import { Aggregate } from "mongoose";
+import OrdemDeServicoServices from "../services/OrdemDeServicoServices";
+import validacao from "../util/validacao";
 
+const ordemDeServicoServices = new OrdemDeServicoServices();
 
 export default class OrdemDeServicoContoller {
+
   async incluirOrdemDeServico(requisicao: Request, resposta: Response) {
     const dataDeRegistro = requisicao.body.dataDeRegistro as Date;
     const dataDeInicio = requisicao.body.dataDeInicio as Date;
@@ -23,7 +25,6 @@ export default class OrdemDeServicoContoller {
     const itensDePeca = requisicao.body.itensDePeca as IItemDePeca[];
     const veiculo = requisicao.body.veiculo as string;
     const oficina = requisicao.body.oficina as string;
-    console.log(requisicao.body)
     try {
       const informacoesDaOrdemDeServico = {
         dataDeRegistro,
@@ -92,7 +93,7 @@ export default class OrdemDeServicoContoller {
 
       //const os = new OrdemDeServico(informacoesDaOrdemDeServico)
       //await os.validate()
-      const result =await OrdemDeServico.updateOne(
+      const result = await OrdemDeServico.updateOne(
         { _id: _id },
         {
           $set: informacoesDaOrdemDeServico
@@ -172,6 +173,24 @@ export default class OrdemDeServicoContoller {
         })
 
       return resposta.json(ordemDeServico);
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
+  }
+  async listarPorVeiculo(requisicao: Request, resposta: Response) {
+    const oficina = requisicao.body.oficina as string
+    const veiculo = requisicao.query.veiculo as string;
+    try {
+      if(!validacao.validarId(veiculo)){
+        return resposta.status(406)
+        .json({
+          mensagem: ['Veículo inválido']
+        });
+      }
+      const ordensDeServico = await ordemDeServicoServices.listarPorVeiculo(oficina, veiculo);
+        return resposta.json({ordensDeServico});
     }
     catch (erro) {
       console.log(erro);
