@@ -1,7 +1,6 @@
 import validacao from "../util/validacao";
 import Veiculo, { IVeiculo } from "../models/Veiculo";
 import servicoValidacao from "./servicoValidacao";
-import { Types } from "mongoose";
 import { ICliente } from "../models/Cliente";
 import Vinculo from "../models/Vinculo";
 
@@ -11,7 +10,7 @@ interface IIVeiculo extends IVeiculo {
 
 export default class VeiculoServices {
   validarVeliculoASerIncluido(informacoesDoVeiculo: IIVeiculo) {
-    const mensagens: string[] = []
+    const mensagens: String[] = []
     !validacao.validarTexto(informacoesDoVeiculo.placa) && mensagens.push("Placa é obrigatória.")
       || !validacao.validarPlaca(informacoesDoVeiculo.placa) && mensagens.push("Placa inválida.");
     !validacao.validarData(informacoesDoVeiculo.anoFabricacao) && mensagens.push("Ano de fabricacao é obrigatório.");
@@ -22,8 +21,13 @@ export default class VeiculoServices {
   }
 
   validarVeliculoASerAlterado(informacoesDoVeiculo: IIVeiculo) {
-    const mensagens: string[] = [];
-    mensagens.push(...this.validarVeliculoASerAlterado(informacoesDoVeiculo));
+    const mensagens: String[] = [];
+    !validacao.validarTexto(informacoesDoVeiculo.placa) && mensagens.push("Placa é obrigatória.")
+      || !validacao.validarPlaca(informacoesDoVeiculo.placa) && mensagens.push("Placa inválida.");
+    !validacao.validarData(informacoesDoVeiculo.anoFabricacao) && mensagens.push("Ano de fabricacao é obrigatório.");
+    !validacao.validarData(informacoesDoVeiculo.anoModelo) && mensagens.push("Ano de modelo é obrigatório.");
+    mensagens.push(...servicoValidacao.validarIdDoModelo(informacoesDoVeiculo.modelo));
+    mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoVeiculo.cliente));
     mensagens.push(...servicoValidacao.validarIdDoVeiculo(informacoesDoVeiculo._id));
     return mensagens;
   }
@@ -98,36 +102,36 @@ export default class VeiculoServices {
       );
   }
 
-  async consultarVeiculo(oficina: String, cliente: String) {
+  async consultarVinculos(oficina: String, cliente: String, veiculo: String) {
     return await Vinculo
       .find({
         oficina,
-        cliente,
+        ...(cliente !== undefined ? { cliente } : { veiculo }),
       })
-      .populate({
-        path: "veiculo",
-        select: {
-          __v: 0
-        },
-        populate: {
-          path: "modelo",
+      .populate(
+        cliente !== undefined ? {
+          path: "veiculo",
           select: {
-            _id: 0,
             __v: 0
           },
           populate: {
-            path: "marca",
+            path: "modelo",
             select: {
               _id: 0,
               __v: 0
             },
+            populate: {
+              path: "marca",
+              select: {
+                _id: 0,
+                __v: 0
+              },
+            }
           }
-        }
-      })
+        } : {
+            path: "cliente"
+          })
       .select({
-        __v: 0,
-        _id: 0,
-        cliente: 0,
       })
   }
 }

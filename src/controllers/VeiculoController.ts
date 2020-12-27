@@ -172,6 +172,7 @@ export default class VeiculoController {
         console.log(vinculoAnterior);
 
         if (vinculoAnterior) {
+          vinculoAnterior.oficina = oficina;
           vinculoAnterior.vinculoFinal = getDataAtual();//adiciona a data atual como vinculo final
           await vinculoServices.alterarVinculo(vinculoAnterior);//salva o vínculo anterior
         }
@@ -208,9 +209,19 @@ export default class VeiculoController {
 
   async consultarVinculos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const cliente = requisicao.query.cliente as String;
+    const cliente = requisicao.query.cliente as string;
+    const veiculo = requisicao.query.veiculo as string
     try {
-      const vinculos = await veiculoServices.consultarVeiculo(oficina, cliente);
+      // const mensagens = servicoValidacao.validarIdDoCliente(cliente);
+      // mensagens.push(...servicoValidacao.validarIdDoVeiculo(veiculo));
+      // if (mensagens.length) {
+      //   return resposta
+      //     .status(406)
+      //     .json({
+      //       mensagem: mensagens
+      //     });
+      // }
+      const vinculos = await veiculoServices.consultarVinculos(oficina, cliente, veiculo);
       return resposta.json({ vinculos });
     }
     catch (erro) {
