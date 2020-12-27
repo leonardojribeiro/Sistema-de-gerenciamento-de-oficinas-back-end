@@ -2,7 +2,6 @@ import MarcaServices from '../services/MarcaServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IMarca } from '../models/Marca';
-import validacao from '../util/validacao';
 const marcaServices = new MarcaServices();
 
 export default class MarcaController {
@@ -64,13 +63,9 @@ export default class MarcaController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const pagina = Number(requisicao.query.pagina);
+    const pular = Number(requisicao.query.pular)
     const limite = Number(requisicao.query.limite);
-    try {
-      if (!validacao.validarPaginacao(pagina, limite)) {
-        return resposta.status(400).send();
-      }
-      const pular = (pagina - 1) * limite;
+    try { 
       const marcas = await marcaServices.listarPorOficina(oficina, pular, limite);
       const total = await marcaServices.contarPorOficina(oficina);
       return resposta.json({
@@ -119,13 +114,9 @@ export default class MarcaController {
   async consultarMarcas(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.query.descricao as string;
-    const pagina = Number(requisicao.query.pagina);
+    const pular = Number(requisicao.query.pular)
     const limite = Number(requisicao.query.limite);
     try {
-      if (!validacao.validarPaginacao(pagina, limite)) {
-        return resposta.status(400).send();
-      }
-      const pular = (pagina - 1) * limite;
       const marcas = await marcaServices.consultar(oficina, descricao, pular, limite);
       const total = await marcaServices.contarPorConsulta(oficina, descricao,);
       return resposta

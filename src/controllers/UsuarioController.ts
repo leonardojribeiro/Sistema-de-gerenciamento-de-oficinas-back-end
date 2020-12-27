@@ -1,7 +1,7 @@
-import UsuarioServices from "../services/usuarioServices";
+import UsuarioServices from "../services/UsuarioServices";
 import criptografia from "../util/Criptografia";
 import jwt from "jsonwebtoken";
-import { Response, Request, NextFunction } from "express";
+import { Response, Request } from "express";
 import { IUsuario } from "../models/Usuario";
 
 const usuarioServices = new UsuarioServices()

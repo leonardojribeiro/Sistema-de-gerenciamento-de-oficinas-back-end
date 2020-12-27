@@ -3,7 +3,6 @@ import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IFuncionario } from '../models/Funcionario';
 import { IEndereco } from '../models/Endereco';
-import validacao from '../util/validacao';
 import { replaceNoNumeric } from '../util/Replace';
 const funcionarioServices = new FuncionarioServices();
 
@@ -67,13 +66,9 @@ export default class FuncionarioController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const pagina = Number(requisicao.query.pagina);
     const limite = Number(requisicao.query.limite);
+    const pular = Number(requisicao.query.pular)
     try {
-      if (!validacao.validarPaginacao(pagina, limite)) {
-        return resposta.status(400).send();
-      }
-      const pular = (pagina - 1) * limite;
       const funcionarios = await funcionarioServices.listarPorOficina(oficina, pular, limite);
       const total = await funcionarioServices.contarPorOficina(oficina);
       if (!funcionarios) {
@@ -127,21 +122,17 @@ export default class FuncionarioController {
 
   async consultarFuncionarios(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const pagina = Number(requisicao.query.pagina);
+    const pular = Number(requisicao.query.pular)
     const limite = Number(requisicao.query.limite);
     const nome = requisicao.query.nome as string;
     let cpf = requisicao.query.cpf as string | undefined;
     const email = requisicao.query.email as string;
     let telefone = requisicao.query.telefone as string | undefined;
     try {
-      if (!validacao.validarPaginacao(pagina, limite)) {
-        return resposta.status(400).send();
-      }
-      const pular = (pagina - 1) * limite;
       cpf = replaceNoNumeric(cpf);
       telefone = replaceNoNumeric(telefone);
       const funcionarios = await funcionarioServices.consultar(oficina, nome, cpf, email, telefone, pular, limite);
-      const total = await funcionarioServices.contarPorConsulta(oficina, nome, cpf, email, telefone); 
+      const total = await funcionarioServices.contarPorConsulta(oficina, nome, cpf, email, telefone);
       if (!funcionarios) {
         return resposta
           .status(500)

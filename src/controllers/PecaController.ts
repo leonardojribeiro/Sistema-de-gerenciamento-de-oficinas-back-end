@@ -56,13 +56,9 @@ export default class PecaController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const pagina = Number(requisicao.query.pagina);
+    const pular = Number(requisicao.query.pular)
     const limite = Number(requisicao.query.limite);
     try {
-      if (!validacao.validarPaginacao(pagina, limite)) {
-        return resposta.status(400).send();
-      }
-      const pular = (pagina - 1) * limite;
       const total = await pecaServices.contarPorOficina(oficina);
       const pecas = await pecaServices.listarPorOficina(oficina, pular, limite);
       return resposta.json({
@@ -112,13 +108,12 @@ export default class PecaController {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.query.descricao as string;
     const marca = requisicao.query.marca as string;
-    const pagina = Number(requisicao.query.pagina);
+    const pular = Number(requisicao.query.pular)
     const limite = Number(requisicao.query.limite);
     try {
-      if (!validacao.validarPaginacao(pagina, limite) || (marca && !Types.ObjectId.isValid(marca))) {
+      if ((marca && !Types.ObjectId.isValid(marca))) {
         return resposta.status(400).send();
       }
-      const pular = (pagina - 1) * limite;
       const pecas = await pecaServices.consultar(oficina, descricao, marca, pular, limite,);
       const total = await pecaServices.contarPorConsulta(oficina, descricao, marca,);
       if (!pecas) {
