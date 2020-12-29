@@ -41,7 +41,16 @@ export default class FuncionarioServices {
 
   validarClienteASerAlterado(informacoesDoFuncionario: IFuncionario) {
     const mensagens: string[] = [];
-    mensagens.push(...this.validarFuncionarioASerIncluido(informacoesDoFuncionario));
+    !validacao.validarTexto(informacoesDoFuncionario.nome) && mensagens.push("Nome é obrigatório.");
+    !validacao.validarData(informacoesDoFuncionario.dataNascimento) && mensagens.push("Data de nascimento é obrigatória.");
+    validacao.validarTexto(informacoesDoFuncionario.telefoneFixo) &&
+      !validacao.validarTelefone(informacoesDoFuncionario.telefoneFixo) && mensagens.push("Telefone fixo inválido");
+    !validacao.validarTexto(informacoesDoFuncionario.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
+      || !validacao.validarTelefone(informacoesDoFuncionario.telefoneCelular) && mensagens.push("Telefone celular inválido.");
+    validacao.validarTexto(informacoesDoFuncionario.email) &&
+      !validacao.validarTexto(informacoesDoFuncionario.email) && !validacao.validarEmail(informacoesDoFuncionario.email) && mensagens.push("E-mail inválido.");
+    mensagens.push(...this.validarIdsEspecialidades(informacoesDoFuncionario.especialidades));
+    mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFuncionario.endereco));
     mensagens.push(...servicoValidacao.validarIdDoFuncionario(informacoesDoFuncionario._id));
     return mensagens;
   }

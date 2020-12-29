@@ -21,7 +21,13 @@ export default class FornecedorServices {
 
   validarFornecedorASerAlterado(informacoesDoFornecedor: IFornecedor) {
     const mensagens: string[] = [];
-    mensagens.push(...this.validarFornecedorASerIncluido(informacoesDoFornecedor));
+    !validacao.validarTexto(informacoesDoFornecedor.nomeFantasia) && mensagens.push("Nome fantasia é obrigatório.");
+    validacao.validarTexto(informacoesDoFornecedor.telefoneFixo) &&
+      !validacao.validarTelefone(informacoesDoFornecedor.telefoneFixo) && mensagens.push("Telefone fixo inválido");
+    !validacao.validarTexto(informacoesDoFornecedor.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
+      || !validacao.validarTelefone(informacoesDoFornecedor.telefoneCelular) && mensagens.push("Telefone celular inválido.");
+    validacao.validarTexto(informacoesDoFornecedor.email) &&
+      !validacao.validarEmail(informacoesDoFornecedor.email) && mensagens.push("E-mail inválido.");
     mensagens.push(...servicoValidacao.validarIdDoFornecedor(informacoesDoFornecedor._id));
     return mensagens;
   }

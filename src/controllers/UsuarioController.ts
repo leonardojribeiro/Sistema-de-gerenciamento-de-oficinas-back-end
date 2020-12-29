@@ -3,6 +3,7 @@ import criptografia from "../util/Criptografia";
 import jwt from "jsonwebtoken";
 import { Response, Request } from "express";
 import { IUsuario } from "../models/Usuario";
+import {} from 'mongoose';
 
 const usuarioServices = new UsuarioServices()
 

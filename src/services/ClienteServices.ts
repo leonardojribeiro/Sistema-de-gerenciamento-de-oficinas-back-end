@@ -22,8 +22,15 @@ export default class ClienteServices {
 
   validarClienteASerAlterado(informacoesDoCliente: ICliente) {
     const mensagens: string[] = [];
-    mensagens.push(...this.validarClienteASerIncluido(informacoesDoCliente));
-    mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoCliente._id));
+    !validacao.validarTexto(informacoesDoCliente.nome) && mensagens.push("Nome é obrigatório.");
+    !validacao.validarData(informacoesDoCliente.dataNascimento) && mensagens.push("Data de nascimento é obrigatória.");
+    validacao.validarTexto(informacoesDoCliente.telefoneFixo) &&
+      !validacao.validarTelefone(informacoesDoCliente.telefoneFixo) && mensagens.push("Telefone fixo inválido");
+    !validacao.validarTexto(informacoesDoCliente.telefoneCelular) && mensagens.push("Telefone celular é obrigatório")
+      || !validacao.validarTelefone(informacoesDoCliente.telefoneCelular) && mensagens.push("Telefone celular inválido.");
+    validacao.validarTexto(informacoesDoCliente.email) &&
+      !validacao.validarEmail(informacoesDoCliente.email) && mensagens.push("E-mail inválido.");
+    mensagens.push(...servicoValidacao.validarEndereco(informacoesDoCliente.endereco)); mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoCliente._id));
     return mensagens;
   }
 

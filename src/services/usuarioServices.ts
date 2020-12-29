@@ -1,5 +1,4 @@
 import Usuario, { IUsuario } from "../models/Usuario";
-import jwt from "jsonwebtoken";
 import validacao from "../util/validacao";
 import mongoose from "mongoose";
 
