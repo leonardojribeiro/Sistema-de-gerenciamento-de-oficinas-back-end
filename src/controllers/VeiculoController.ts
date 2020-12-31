@@ -166,15 +166,17 @@ export default class VeiculoController {
       } as IVinculo;
       //conta os vinculos que tem o mesmo ids e que não estão com vínculo final
       const vinculoExistente = await vinculoServices.contarPorIdClienteIdVeiculoEIdOficina(informacoesDoVinculo);
+      console.log(vinculoExistente)
       if (!vinculoExistente) {//se existe um vínculo, nada é alterado nos vínculos, mas se não existir, ele é criado
         //lista o último vínculo, que está sem data final
+        console.log('entrou aqui')
         const vinculoAnterior = await vinculoServices.listarPorIdVeiculoEIdOficina(informacoesDoVinculo);
         console.log(vinculoAnterior);
 
         if (vinculoAnterior) {
           vinculoAnterior.oficina = oficina;
           vinculoAnterior.vinculoFinal = getDataAtual();//adiciona a data atual como vinculo final
-          await vinculoServices.alterarVinculo(vinculoAnterior);//salva o vínculo anterior
+          console.log(await vinculoServices.alterarVinculo(vinculoAnterior));//salva o vínculo anterior
         }
 
         informacoesDoVinculo.vinculoInicial = getDataAtual();

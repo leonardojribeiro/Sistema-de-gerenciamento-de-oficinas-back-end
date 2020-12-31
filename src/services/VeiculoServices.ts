@@ -75,6 +75,7 @@ export default class VeiculoServices {
       .findOne({
         oficina: informacoesDoVeiculo.oficina,
         veiculo: informacoesDoVeiculo._id,
+        vinculoFinal: undefined,
       })
       .populate({
         path: "veiculo",

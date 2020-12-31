@@ -18,7 +18,7 @@ export default class PecaController {
         marca,
         oficina,
       } as IPeca;
-      const mensagens = pecaServices.validarPecaASerAlterada(pecaASerInserida);
+      const mensagens = pecaServices.validarPecaASerIncluida(pecaASerInserida);
       if (mensagens.length) {
         return resposta
           .status(406)
