@@ -46,22 +46,22 @@ rotas.get('/ordemdeservico/veiculo', Auth, ordemDeServicoController.listarPorVei
 
 //marcas 
 rotas.post('/marca', multer(multerConfig).single("logomarca"), Auth, marcaController.incluirMarca);
-rotas.get('/marca', Auth, marcaController.listarTodos);
-rotas.get('/marca/consulta/', Auth, marcaController.consultarMarcas);
+rotas.get('/marca', Auth, validatePagination, marcaController.listarTodos);
+rotas.get('/marca/consulta/', Auth, validatePagination, marcaController.consultarMarcas);
 rotas.get('/marca/id/', Auth, marcaController.listarMarcaPorId);
 rotas.put('/marca', multer(multerConfig).single("logomarca"), Auth, marcaController.alterarMarca);
 
 //modelo
-rotas.get('/modelo', Auth, modeloController.listarTodos);
+rotas.get('/modelo', Auth, validatePagination, modeloController.listarTodos);
 rotas.post('/modelo', Auth, modeloController.incluirModelo);
-rotas.get('/modelo/consulta', Auth, modeloController.consultarModelos);
+rotas.get('/modelo/consulta', validatePagination, Auth, modeloController.consultarModelos);
 rotas.get('/modelo/id', Auth, modeloController.listarModeloPorId);
 rotas.put('/modelo', Auth, modeloController.alterarModelo);
 
 // //peças
-rotas.get('/peca', Auth, pecaController.listarTodos);
+rotas.get('/peca', Auth, validatePagination, pecaController.listarTodos);
 rotas.post('/peca', Auth, pecaController.incluirPeca);
-rotas.get('/peca/consulta', Auth, pecaController.consultarPecas);
+rotas.get('/peca/consulta', Auth, validatePagination, pecaController.consultarPecas);
 rotas.get('/peca/id', Auth, pecaController.listarPecaPorId);
 rotas.put('/peca', Auth, pecaController.alterarPeca);
 
