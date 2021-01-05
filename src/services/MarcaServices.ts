@@ -66,9 +66,12 @@ export default class MarcaServices {
   }
 
 
-  async listarPorIdMarcaEIdOficina(informacoesDaMarca: IMarca) {
+  async listarPorIdMarcaEIdOficina(oficina: string, _id: string) {
     return await Marca
-      .findOne(informacoesDaMarca)
+      .findOne({
+        oficina,
+        _id,
+      })
       .select({
         __v: 0,
         oficina: 0

@@ -92,10 +92,6 @@ export default class FornecedorContoller {
     const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
-      const informacoesDoFornecedor = {
-        oficina,
-        _id
-      } as IFornecedor;
       const mensagens = servicoValidacao.validarIdDoFornecedor(_id)
       if (mensagens.length) {
         return resposta.status(406)
@@ -103,7 +99,7 @@ export default class FornecedorContoller {
             mensagem: mensagens
           });
       }
-      const fornecedorListado = await fornecedorServices.listarPorIdFornecedorEIdOficina(informacoesDoFornecedor);
+      const fornecedorListado = await fornecedorServices.listarPorIdFornecedorEIdOficina(oficina, _id);
       if (!fornecedorListado) {
         return resposta
           .status(500)

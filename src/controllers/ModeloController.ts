@@ -58,7 +58,7 @@ export default class ModeloController {
     const oficina = requisicao.body.oficina as string;
     const pular = Number(requisicao.query.pular)
     const limite = Number(requisicao.query.limite);
-    try { 
+    try {
       const modelos = await modeloServices.listarPorOficina(oficina, pular, limite);
       const total = await modeloServices.contarPorOficina(oficina);
       return resposta.json({
@@ -76,10 +76,6 @@ export default class ModeloController {
     const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
-      const informacoesDoModelo = {
-        _id,
-        oficina,
-      } as IModelo;
       const mensagens = servicoValidacao.validarIdDoModelo(_id);
       if (mensagens.length) {
         return resposta
@@ -88,7 +84,7 @@ export default class ModeloController {
             mensagem: mensagens
           });
       }
-      const modeloListado = await modeloServices.listarPorIdModeloEIdOficina(informacoesDoModelo);
+      const modeloListado = await modeloServices.listarPorIdModeloEIdOficina(oficina, _id);
       if (!modeloListado) {
         return resposta
           .status(500)
@@ -111,7 +107,7 @@ export default class ModeloController {
     const pular = Number(requisicao.query.pular)
     const limite = Number(requisicao.query.limite);
     try {
-      if (! (marca && !Types.ObjectId.isValid(marca))) {
+      if (!(marca && !Types.ObjectId.isValid(marca))) {
         return resposta.status(400).send();
       }
       const modelos = await modeloServices.consultar(oficina, descricao, marca, pular, limite);

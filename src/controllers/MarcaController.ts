@@ -83,10 +83,6 @@ export default class MarcaController {
     const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
-      const informacoesDaMarca = {
-        _id,
-        oficina,
-      } as IMarca;
       const mensagens = servicoValidacao.validarIdDaMarca(_id);
       if (mensagens.length) {
         return resposta
@@ -95,7 +91,7 @@ export default class MarcaController {
             mensagem: mensagens
           });
       }
-      const marcaListada = await marcaServices.listarPorIdMarcaEIdOficina(informacoesDaMarca);
+      const marcaListada = await marcaServices.listarPorIdMarcaEIdOficina(oficina, _id);
       if (!marcaListada) {
         return resposta
           .status(500)

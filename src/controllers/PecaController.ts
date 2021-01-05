@@ -88,7 +88,7 @@ export default class PecaController {
             mensagem: mensagens
           });
       }
-      const pecaListada = await pecaServices.listarPorIdOficinaEIdPeca(informacoesDaPeca);
+      const pecaListada = await pecaServices.listarPorIdOficinaEIdPeca(oficina, _id);
       if (!pecaListada) {
         return resposta
           .status(500)

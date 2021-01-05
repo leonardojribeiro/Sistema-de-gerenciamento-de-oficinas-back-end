@@ -57,9 +57,12 @@ export default class ModeloService {
       })
   }
 
-  async listarPorIdModeloEIdOficina(informacoesDoModelo: IModelo) {
+  async listarPorIdModeloEIdOficina(oficina: string, _id: string) {
     return await Modelo
-      .findOne(informacoesDoModelo);
+      .findOne({
+        oficina,
+        _id,
+      });
   }
 
   async consultar(oficina: string, descricao: string, marca: string, pular: number, limite: number) {

@@ -51,9 +51,12 @@ export default class ModeloService {
       .skip(skip)
   }
 
-  async listarPorIdOficinaEIdPeca(informacoesDaPeca: IPeca) {
+  async listarPorIdOficinaEIdPeca(oficina: string, _id: string) {
     return await Peca
-      .findOne(informacoesDaPeca);
+      .findOne({
+        oficina,
+        _id
+      });
   }
 
   async consultar(oficina: string, descricao: string, marca: string, skip: number, limit: number,) {

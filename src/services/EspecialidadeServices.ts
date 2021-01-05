@@ -67,9 +67,12 @@ export default class EspecialidadeServices {
       });
   }
 
-  async listarPorIdEspecialidadeEIdOficina(informacoesDaEspecialidade: IEspecialidade) {
+  async listarPorIdEspecialidadeEIdOficina(oficina: string, _id: string) {
     return await Especialidade
-      .findOne(informacoesDaEspecialidade)
+      .findOne({
+        oficina,
+        _id,
+      })
   }
 
   async alterarEspecialidade(informacoesDaEspecialidade: IEspecialidade) {

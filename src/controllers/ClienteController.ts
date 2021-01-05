@@ -90,12 +90,9 @@ export default class ClienteController {
 
   async listarPorId(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const _id = requisicao.query._id as string;
+    const
+      _id = requisicao.query._id as string;
     try {
-      const informacoesDoCliente = {
-        oficina,
-        _id
-      } as ICliente;
       const mensagens = servicoValidacao.validarIdDoCliente(_id);
       if (mensagens.length) {
         return resposta.status(406)
@@ -103,7 +100,7 @@ export default class ClienteController {
             mensagem: mensagens
           });
       }
-      const clienteListado = await clienteServices.listarPorIdClienteEIdOficina(informacoesDoCliente);
+      const clienteListado = await clienteServices.listarPorIdClienteEIdOficina(oficina, _id);
       if (!clienteListado) {
         return resposta
           .status(500)

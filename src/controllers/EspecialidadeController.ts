@@ -87,10 +87,6 @@ export default class EspecialidadeController {
     const oficina = requisicao.body.oficina as string;
     const _id = requisicao.query._id as string;
     try {
-      const informacoesDaEspecialidade = {
-        _id,
-        oficina,
-      } as IEspecialidade
       const mensagens = servicoValidacao.validarIdDaEspecialidade(_id)
       if (mensagens.length) {
         return resposta
@@ -99,7 +95,7 @@ export default class EspecialidadeController {
             mensagem: mensagens
           });
       }
-      const especialidadeListada = await especialidadeServices.listarPorIdEspecialidadeEIdOficina(informacoesDaEspecialidade);
+      const especialidadeListada = await especialidadeServices.listarPorIdEspecialidadeEIdOficina(oficina, _id);
       if (!especialidadeListada) {
         return resposta
           .status(500)

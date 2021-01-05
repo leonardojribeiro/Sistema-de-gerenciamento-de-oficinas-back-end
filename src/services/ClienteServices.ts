@@ -131,9 +131,12 @@ export default class ClienteServices {
       });
   }
 
-  async listarPorIdClienteEIdOficina(informacoesDoCliente: ICliente) {
+  async listarPorIdClienteEIdOficina(oficina: string, _id: string) {
     return await Cliente
-      .findOne(informacoesDoCliente)
+      .findOne({
+        oficina,
+        _id,
+      })
       .select({
         oficina: 0,
         __v: 0,

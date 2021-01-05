@@ -129,9 +129,12 @@ export default class FornecedorServices {
       });
   }
 
-  async listarPorIdFornecedorEIdOficina(informacoesDoFornecedor: IFornecedor) {
+  async listarPorIdFornecedorEIdOficina(oficina: string, _id: string) {
     return await Fornecedor
-      .findOne(informacoesDoFornecedor);
+      .findOne({
+        oficina,
+        _id,
+      });
   }
 
   async alterarFornecedor(informacoesDoFornecedor: IFornecedor) {
