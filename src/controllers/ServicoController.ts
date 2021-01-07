@@ -2,6 +2,7 @@ import ServicoServices from "../services/ServicosServices";
 import { Response, Request } from "express";
 import { IServico } from "../models/Servico";
 import servicoValidacao from "../services/servicoValidacao";
+import { io } from "../server";
 
 const servicoServices = new ServicoServices();
 export default class ServicoController {
@@ -38,6 +39,7 @@ export default class ServicoController {
             mensagem: "Serviço não cadastrado."
           });
       }
+      io.emit("servicoIncluido", servicoInserido);
       return resposta.status(201)
         .json({
           mensagem: "Serviço cadastrado com sucesso."

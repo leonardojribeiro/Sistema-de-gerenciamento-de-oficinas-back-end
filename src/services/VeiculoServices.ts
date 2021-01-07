@@ -107,7 +107,7 @@ export default class VeiculoServices {
     return await Vinculo
       .find({
         oficina,
-        ...(cliente !== undefined ? { cliente } : { veiculo }),
+        ...(cliente !== undefined ? { cliente, vinculoFinal: undefined } : { veiculo }),
       })
       .populate(
         cliente !== undefined ? {
