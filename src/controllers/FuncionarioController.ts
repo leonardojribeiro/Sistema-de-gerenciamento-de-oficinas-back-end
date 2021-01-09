@@ -79,7 +79,7 @@ export default class FuncionarioController {
           });
       }
       return resposta.json({
-        funcionarios,
+        itens: funcionarios,
         total
       })
     }
@@ -131,9 +131,9 @@ export default class FuncionarioController {
     try {
       cpf = replaceNoNumeric(cpf);
       telefone = replaceNoNumeric(telefone);
-      const funcionarios = await funcionarioServices.consultar(oficina, nome, cpf, email, telefone, pular, limite);
+      const itens = await funcionarioServices.consultar(oficina, nome, cpf, email, telefone, pular, limite);
       const total = await funcionarioServices.contarPorConsulta(oficina, nome, cpf, email, telefone);
-      if (!funcionarios) {
+      if (!itens) {
         return resposta
           .status(500)
           .json({
@@ -141,7 +141,7 @@ export default class FuncionarioController {
           });
       }
       return resposta.json({
-        funcionarios,
+         itens,
         total
       })
     }

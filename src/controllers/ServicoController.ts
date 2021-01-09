@@ -66,7 +66,7 @@ export default class ServicoController {
           });
       }
       return resposta.json({
-        servicos,
+        itens: servicos,
         total,
       })
     }
@@ -84,7 +84,7 @@ export default class ServicoController {
       const servicos = await servicoServices.consultar(oficina, descricao, pular, limite);
       const total = await servicoServices.contarPorConsulta(oficina, descricao);
       return resposta.json({
-        servicos,
+        itens: servicos,
         total,
       });
     }

@@ -88,7 +88,7 @@ export default class VeiculoController {
     try {
       const veiculos = await veiculoServices.listarPorIdOficina(oficina);
       return resposta.json({
-        veiculos
+        itens: veiculos
       });
     }
     catch (erro) {

@@ -78,7 +78,7 @@ export default class FornecedorContoller {
           });
       }
       return resposta.json({
-        fornecedores,
+        itens: fornecedores,
         total
       })
     }

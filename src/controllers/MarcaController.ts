@@ -69,7 +69,7 @@ export default class MarcaController {
       const marcas = await marcaServices.listarPorOficina(oficina, pular, limite);
       const total = await marcaServices.contarPorOficina(oficina);
       return resposta.json({
-        marcas,
+        itens: marcas,
         total
       });
     }
@@ -117,7 +117,7 @@ export default class MarcaController {
       const total = await marcaServices.contarPorConsulta(oficina, descricao,);
       return resposta
         .json({
-          marcas,
+          itens: marcas,
           total,
         });
     }

@@ -62,7 +62,7 @@ export default class ModeloController {
       const modelos = await modeloServices.listarPorOficina(oficina, pular, limite);
       const total = await modeloServices.contarPorOficina(oficina);
       return resposta.json({
-        modelos,
+        itens: modelos,
         total
       });
     }
@@ -107,7 +107,7 @@ export default class ModeloController {
     const pular = Number(requisicao.query.pular)
     const limite = Number(requisicao.query.limite);
     try {
-      if (!(marca && !Types.ObjectId.isValid(marca))) {
+      if ((marca && !Types.ObjectId.isValid(marca))) {
         return resposta.status(400).send();
       }
       const modelos = await modeloServices.consultar(oficina, descricao, marca, pular, limite);
@@ -120,7 +120,7 @@ export default class ModeloController {
           });
       }
       return resposta.json({
-        modelos,
+        itens: modelos,
         total,
       });
     }

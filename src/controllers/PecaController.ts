@@ -62,7 +62,7 @@ export default class PecaController {
       const total = await pecaServices.contarPorOficina(oficina);
       const pecas = await pecaServices.listarPorOficina(oficina, pular, limite);
       return resposta.json({
-        pecas,
+        itens: pecas,
         total,
       });
     }
@@ -124,7 +124,7 @@ export default class PecaController {
           });
       }
       return resposta.json({
-        pecas,
+        itens: pecas,
         total
       });
     }

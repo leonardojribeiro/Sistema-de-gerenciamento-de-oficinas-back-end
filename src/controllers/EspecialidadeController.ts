@@ -54,7 +54,7 @@ export default class EspecialidadeController {
       const especialidades = await especialidadeServices.listarPorOficina(oficina, pular, limite);
       const total = await especialidadeServices.contarPorOficina(oficina);
       return resposta.json({
-        especialidades,
+        itens: especialidades,
         total,
       });
     }
@@ -73,7 +73,7 @@ export default class EspecialidadeController {
       const especialidades = await especialidadeServices.consultar(oficina, descricao, pular, limite);
       const total = await especialidadeServices.contarPorConsulta(oficina, descricao);
       return resposta.json({
-        especialidades,
+        itens: especialidades,
         total,
       });
     }

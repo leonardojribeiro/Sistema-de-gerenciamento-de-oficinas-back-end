@@ -78,7 +78,7 @@ export default class ClienteController {
           });
       }
       return resposta.json({
-        clientes,
+        itens: clientes,
         total
       })
     }
@@ -137,7 +137,7 @@ export default class ClienteController {
           });
       }
       return resposta.json({
-        clientes,
+        itens: clientes,
         total
       })
     }
