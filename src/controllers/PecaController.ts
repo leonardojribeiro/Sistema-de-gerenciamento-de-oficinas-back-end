@@ -4,6 +4,7 @@ import servicoValidacao from '../services/servicoValidacao';
 import { IPeca } from "../models/Peca";
 import { Types } from "mongoose";
 import validacao from "../util/validacao";
+import { sendMessageTo } from "../Socket";
 const pecaServices = new PecaServices();
 
 export default class PecaController {
@@ -42,6 +43,7 @@ export default class PecaController {
             mensagem: "Peça não cadastrada."
           });
       }
+      sendMessageTo(oficina, 'pecaIncluido', pecaInserida);
       return resposta
         .status(201)
         .json({

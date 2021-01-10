@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { IFuncionario } from '../models/Funcionario';
 import { IEndereco } from '../models/Endereco';
 import { replaceNoNumeric } from '../util/Replace';
+import { sendMessageTo } from '../Socket';
 const funcionarioServices = new FuncionarioServices();
 
 export default class FuncionarioController {
@@ -53,6 +54,7 @@ export default class FuncionarioController {
             mensagem: "Funcionário não cadastrado."
           });
       }
+      sendMessageTo(oficina, 'funcionarioIncluido', clienteInserido);
       return resposta.status(201)
         .json({
           mensagem: "Funcionário cadastrado com sucesso."

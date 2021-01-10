@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { IModelo } from '../models/Modelo';
 import validacao from '../util/validacao';
 import { Types } from 'mongoose';
+import { sendMessageTo } from '../Socket';
 
 const modeloServices = new ModeloServices();
 
@@ -42,6 +43,7 @@ export default class ModeloController {
             mensagem: "Modelo não cadastrado."
           });
       }
+      sendMessageTo(oficina, 'modeloIncluido', modeloInserido);
       return resposta
         .status(201)
         .json({

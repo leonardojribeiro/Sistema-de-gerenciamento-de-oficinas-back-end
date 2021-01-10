@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { IEndereco } from "../models/Endereco";
 import { IFornecedor } from "../models/Fornecedor";
 import validacao from "../util/validacao";
+import { sendMessageTo } from "../Socket";
 const fornecedorServices = new FornecedorServices();
 
 export default class FornecedorContoller {
@@ -48,6 +49,7 @@ export default class FornecedorContoller {
             mensagem: "Fornecedor não cadastrado."
           });
       }
+      sendMessageTo(oficina, 'fornecedorIncluido', fornecedorInserido);
       return resposta.status(201)
         .json({
           mensagem: "Fornecedor cadastrado com sucesso."

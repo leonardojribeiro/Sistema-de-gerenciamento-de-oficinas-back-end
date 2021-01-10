@@ -2,6 +2,7 @@ import EspecialidadeServices from '../services/EspecialidadeServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IEspecialidade } from '../models/Especialidade';
+import { sendMessageTo } from '../Socket';
 
 const especialidadeServices = new EspecialidadeServices();
 
@@ -35,6 +36,7 @@ export default class EspecialidadeController {
             mensagem: "Especialidade não cadastrada."
           });
       }
+      sendMessageTo(oficina, 'especialidadeIncluido', especialidadeInserida);
       return resposta.status(201)
         .json({
           mensagem: "Especialidade cadastrada com sucesso."

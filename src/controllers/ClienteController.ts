@@ -5,6 +5,7 @@ import { ICliente } from "../models/Cliente";
 import { IEndereco } from "../models/Endereco";
 import validacao from "../util/validacao";
 import { replaceNoNumeric } from "../util/Replace";
+import { sendMessageTo } from "../Socket";
 
 const clienteServices = new ClienteServices();
 
@@ -52,6 +53,7 @@ export default class ClienteController {
             mensagem: "Cliente não cadastrado."
           });
       }
+      sendMessageTo(oficina, 'clienteIncluido', clienteInserido);
       return resposta.status(201)
         .json({
           mensagem: "Cliente cadastrado com sucesso."

@@ -2,6 +2,7 @@ import MarcaServices from '../services/MarcaServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IMarca } from '../models/Marca';
+import { sendMessageTo } from '../Socket';
 const marcaServices = new MarcaServices();
 
 export default class MarcaController {
@@ -49,6 +50,7 @@ export default class MarcaController {
             mensagem: "Marca não cadastrada."
           });
       }
+      sendMessageTo(oficina, 'marcaIncluido', marcaInserida);
       return resposta
         .status(201)
         .json({
