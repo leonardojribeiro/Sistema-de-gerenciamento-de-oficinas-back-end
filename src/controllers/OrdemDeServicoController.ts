@@ -14,7 +14,7 @@ export default class OrdemDeServicoContoller {
     const dataDeInicio = requisicao.body.dataDeInicio as Date;
     const dataDeConclusao = requisicao.body.dataDeConclusao as Date;
     const andamento = requisicao.body.andamento as number;
-    const desconto = requisicao.body.desconto as number; 
+    const desconto = requisicao.body.desconto as number;
     const categoria = requisicao.body.categoria as string;
     const status = requisicao.body.status as string;
     const sintoma = requisicao.body.sintoma as string;
@@ -151,56 +151,15 @@ export default class OrdemDeServicoContoller {
 
   async listarTodas(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string
+    const pular = Number(requisicao.query.pular)
+    const limite = Number(requisicao.query.limite);
     try {
-      const ordemDeServico = await OrdemDeServico
-        .find()
-        .populate({
-          path: "itensDePeca.peca",
-          select: {
-            _id: 0,
-            __v: 0
-          },
-          populate: {
-            path: "marca",
-            select: {
-              _id: 0,
-              uriLogo: 0,
-              __v: 0,
-            },
-          }
-        })
-        .populate({
-          path: "itensDePeca.fornecedor",
-          select: {
-            nomeFantasia: 1,
-          },
-        })
-        .populate({
-          path: "itensDeServico.funcionario",
-          select: {
-            nome: 1,
-          }
-        })
-        .populate({
-          path: "itensDeServico.servico",
-          select: {
-            _id: 0,
-            __v: 0,
-          },
-        })
-        .populate({
-          path: "veiculo",
-          select: {
-            __v: 0
-          }
-        })
-        .select({
-          "itensDeServico._id": 0,
-          "itensDePeca._id": 0,
-          __v: 0,
-        })
-
-      return resposta.json(ordemDeServico);
+      const itens = await ordemDeServicoServices.listarPorOficina(oficina, pular, limite);
+      const total = await ordemDeServicoServices.contarPorOficina(oficina);
+      return resposta.json({
+        itens,
+        total
+      });
     }
     catch (erro) {
       console.log(erro);
@@ -240,6 +199,7 @@ export default class OrdemDeServicoContoller {
       return resposta.status(400).send();
     }
   }
+
   async listarPorVeiculo(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string
     const veiculo = requisicao.query.veiculo as string;
@@ -252,6 +212,28 @@ export default class OrdemDeServicoContoller {
       }
       const ordensDeServico = await ordemDeServicoServices.listarPorVeiculo(oficina, veiculo);
       return resposta.json({ ordensDeServico });
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
+  }
+
+  async consultarOrdemDeServico(requisicao: Request, resposta: Response) {
+    const oficina = requisicao.body.oficina as string
+    const veiculo = requisicao.query.veiculo as string;
+    const pular = Number(requisicao.query.pular);
+    const limite = Number(requisicao.query.limite);
+    try {
+      if (veiculo && !validacao.validarId(veiculo)) {
+        return resposta.status(406)
+          .json({
+            mensagem: ['Veículo inválido']
+          });
+      }
+      const itens = await ordemDeServicoServices.consultar(oficina, {veiculo}, pular, limite);
+      const total = await ordemDeServicoServices.contarPorConsulta(oficina, veiculo);
+      return resposta.json({ itens, total });
     }
     catch (erro) {
       console.log(erro);

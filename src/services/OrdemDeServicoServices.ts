@@ -1,8 +1,16 @@
+import { FilterQuery } from "mongoose";
 import { IItemDePeca } from "../models/ItemDePeca";
 import { IItemDeServico } from "../models/ItemDeServico";
 import OrdemDeServico, { IOrdemDeServico } from "../models/OrdemDeServico"
 import validacao from "../util/validacao";
 import servicoValidacao from "./servicoValidacao";
+
+interface QueryOrdemDeServico {
+  veiculo?: string;
+  dataDeInicio?: Date;
+  dataDeConclusao?: Date;
+  dataDeRegistro?: Date;
+}
 
 export default class OrdemDeServicoServices {
 
@@ -48,6 +56,79 @@ export default class OrdemDeServicoServices {
     return await OrdemDeServico.create(informacoesDaOrdemDeServico);
   }
 
+  async listarPorOficina(oficina: string, skip: number, limit: number) {
+    return await OrdemDeServico
+      .find({
+        oficina,
+      })
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "veiculo",
+        select: {
+          __v: 0
+        }
+      })
+      .select({
+        "itensDeServico._id": 0,
+        "itensDePeca._id": 0,
+        __v: 0,
+      })
+  }
+
+  async contarEmAndamentoPorOficina(oficina: string) {
+    return await OrdemDeServico
+      .countDocuments({
+        oficina,
+        status: '0'
+      })
+  }
+
+  async contarPorOficina(oficina: string) {
+    return await OrdemDeServico
+      .countDocuments({
+        oficina
+      })
+  }
+
+  async consultar(oficina: string, { veiculo, dataDeConclusao, dataDeInicio, dataDeRegistro }: QueryOrdemDeServico, skip: number, limit: number) {
+    let match: FilterQuery<IOrdemDeServico> = { oficina }
+    if (veiculo) {
+      match = { ...match, veiculo };
+    }
+    if (dataDeRegistro) {
+      match = {
+        ...match,
+        dataDeRegistro:{
+          $gte: dataDeRegistro
+        }
+      }
+    }
+    return await OrdemDeServico
+      .find(match)
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "veiculo",
+        select: {
+          __v: 0
+        }
+      })
+      .select({
+        "itensDeServico._id": 0,
+        "itensDePeca._id": 0,
+        __v: 0,
+      })
+  }
+
+  async contarPorConsulta(oficina: string, veiculo: string = "") {
+    let match: any = { oficina }
+    if (veiculo) {
+      match = { ...match, veiculo };
+    }
+    return await OrdemDeServico
+      .countDocuments(match)
+  }
 
   async listarPorVeiculo(oficina: string, veiculo: string) {
     return OrdemDeServico.find({

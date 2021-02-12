@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-
+import OrdemDeServicoServices from "../services/OrdemDeServicoServices";
 const oficinaServicos = require("../services/oficinaServices");
+const ordemDeServicoServices = new OrdemDeServicoServices()
 
 export default class OficinaController {
   async cadastroDeOficinaCandidata(requisicao: Request, resposta: Response) {
@@ -75,7 +76,7 @@ export default class OficinaController {
     }
 
     if (oficinaComMesmoEmail) {
-     // oficinaServicos.apagarLogomarca(uriLogo);//apaga a logomarca
+      // oficinaServicos.apagarLogomarca(uriLogo);//apaga a logomarca
       return resposta.status(406)
         .json({
           mensagem: "O E-mail informado já se encontra cadastrado."
@@ -98,4 +99,20 @@ export default class OficinaController {
       });
   }
 
+  async listarEstatisticas(requisicao: Request, resposta: Response) {
+    const oficina = requisicao.body.oficina;
+    const agoraMenosUmMes = new Date((Date.now() - (24 * 60 * 60 * 1000 * 1200)));
+    agoraMenosUmMes.setUTCHours(0);
+    agoraMenosUmMes.setUTCMinutes(0);
+    agoraMenosUmMes.setUTCSeconds(0);
+    agoraMenosUmMes.setUTCMilliseconds(0);
+    console.log(agoraMenosUmMes)
+
+    const totalOrdensDeServico = await ordemDeServicoServices.consultar(oficina, { dataDeRegistro: agoraMenosUmMes }, 1, 1000);
+    const totalOrdensDeServicoEmAndamento = await ordemDeServicoServices.contarEmAndamentoPorOficina(oficina);
+    return resposta.json({
+      totalOrdensDeServico,
+      totalOrdensDeServicoEmAndamento
+    })
+  }
 }

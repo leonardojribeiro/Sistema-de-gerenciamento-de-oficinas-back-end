@@ -50,7 +50,11 @@ export default class ClienteServices {
   async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Cliente
       .find({
-        oficina
+        oficina,
+
+      })
+      .select({
+        //oficina:1
       })
       .skip(pular)
       .limit(limite);

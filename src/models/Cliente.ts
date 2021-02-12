@@ -37,6 +37,7 @@ const cliente = new mongoose.Schema({
   },
   email: {
     type: String,
+    
   },
   endereco: {
     type: Endereco,

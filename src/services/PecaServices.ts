@@ -64,7 +64,7 @@ export default class ModeloService {
     if (marca) {
       match = {
         descricao: {
-          $regex: `^${descricao}`,
+          $regex: `^${descricao ? descricao : ''}`,
           $options: "i",
         },
         marca,

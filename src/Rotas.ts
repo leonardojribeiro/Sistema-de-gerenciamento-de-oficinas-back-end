@@ -14,6 +14,7 @@ import VeiculoController from "./controllers/VeiculoController";
 import EspecialidadeController from './controllers/EspecialidadeController';
 import OrdemDeServicoContoller from "./controllers/OrdemDeServicoController";
 import validatePagination from "./Midllewares/ValidatePagination";
+import OficinaController from "./controllers/OficinaController";
 
 const modeloController = new ModeloController();
 const pecaController = new PecaController();
@@ -26,7 +27,7 @@ const usuarioController = new UsuarioController();
 const funcionarioController = new FuncionarioController();
 const especialidadeController = new EspecialidadeController();
 const ordemDeServicoController = new OrdemDeServicoContoller();
-//const OficinaController = new OficinaController();
+const oficinaController = new OficinaController();
 const rotas = Router();
 
 rotas.get("/", (req: Request, res: Response) => {
@@ -38,9 +39,13 @@ rotas.get("/", (req: Request, res: Response) => {
 //   multer(multerConfig).single("logomarca"),
 //   oficinaController.cadastroDeOficinaCandidata,
 // );
+
+rotas.get('/oficina', Auth, oficinaController.listarEstatisticas );
+
 rotas.post('/ordemdeservico', Auth, ordemDeServicoController.incluirOrdemDeServico);
-rotas.get('/ordemdeservico', Auth, ordemDeServicoController.listarTodas);
+rotas.get('/ordemdeservico', Auth, validatePagination, ordemDeServicoController.listarTodas);
 rotas.get('/ordemdeservico/id/', Auth, ordemDeServicoController.listarPorId);
+rotas.get('/ordemdeservico/consulta', Auth, validatePagination, ordemDeServicoController.consultarOrdemDeServico);
 rotas.put('/ordemdeservico', Auth, ordemDeServicoController.alterarOrdemDeServico);
 rotas.get('/ordemdeservico/veiculo', Auth, ordemDeServicoController.listarPorVeiculo);
 

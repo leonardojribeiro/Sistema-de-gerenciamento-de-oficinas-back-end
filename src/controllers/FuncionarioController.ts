@@ -143,7 +143,7 @@ export default class FuncionarioController {
           });
       }
       return resposta.json({
-         itens,
+        itens,
         total
       })
     }
