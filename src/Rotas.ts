@@ -82,6 +82,7 @@ rotas.get('/veiculo', Auth, validatePagination, veiculoController.listarTodos);
 rotas.post('/veiculo', Auth, veiculoController.incluirVeiculo);
 rotas.get('/veiculo/id', Auth, veiculoController.listarPorId);
 rotas.put('/veiculo', Auth, veiculoController.alterarVeiculo);
+rotas.get('/veiculo/consulta', Auth, validatePagination, veiculoController.consultarVeiculos)
 rotas.get('/veiculo/consultaVinculo', Auth, veiculoController.consultarVinculos);
 
 // //especialidades

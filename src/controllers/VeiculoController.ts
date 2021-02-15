@@ -6,6 +6,7 @@ import { IVeiculo } from '../models/Veiculo';
 import { ICliente } from '../models/Cliente';
 import { IVinculo } from '../models/Vinculo';
 import getDataAtual from '../util/DataUtil';
+import { Types } from 'mongoose';
 const veiculoServices = new VeiculoServices();
 const vinculoServices = new VinculoServices();
 
@@ -85,10 +86,41 @@ export default class VeiculoController {
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
+    const pular = Number(requisicao.query.pular)
+    const limite = Number(requisicao.query.limite);
     try {
-      const veiculos = await veiculoServices.listarPorIdOficina(oficina);
+      const itens = await veiculoServices.listarPorIdOficina(oficina, pular, limite);
+      const total = await veiculoServices.contarPorIdOficina(oficina);
       return resposta.json({
-        itens: veiculos
+        itens,
+        total,
+      });
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
+  }
+
+  async consultarVeiculos(requisicao: Request, resposta: Response) {
+    const oficina = requisicao.body.oficina as string;
+    const placa = requisicao.query.placa as string;
+    const marca = requisicao.query.marca as string;
+    const modelo = requisicao.query.modelo as string;
+    const pular = Number(requisicao.query.pular)
+    const limite = Number(requisicao.query.limite);
+    try {
+      if ((marca && !Types.ObjectId.isValid(marca))) {
+        return resposta.status(400).send();
+      }
+      if ((modelo && !Types.ObjectId.isValid(modelo))) {
+        return resposta.status(400).send();
+      }
+      const itens = await veiculoServices.consultarPorOficina(oficina, { placa, modelo, marca}, pular, limite);
+      const total = await veiculoServices.contarPorIdOficina(oficina);
+      return resposta.json({
+        itens,
+        total,
       });
     }
     catch (erro) {

@@ -3,9 +3,17 @@ import Veiculo, { IVeiculo } from "../models/Veiculo";
 import servicoValidacao from "./servicoValidacao";
 import { ICliente } from "../models/Cliente";
 import Vinculo from "../models/Vinculo";
+import { FilterQuery } from "mongoose";
+import { marca } from "../models/Marca";
 
 interface IIVeiculo extends IVeiculo {
   cliente: ICliente['_id'];
+}
+
+interface VeiculoQuery {
+  placa?: string,
+  modelo?: string,
+  marca?: string,
 }
 
 export default class VeiculoServices {
@@ -45,11 +53,13 @@ export default class VeiculoServices {
       });
   }
 
-  async listarPorIdOficina(oficina: string) {
+  async listarPorIdOficina(oficina: string, skip: number, limit: number) {
     return await Veiculo
       .find({
         oficina,
       })
+      .skip(skip)
+      .limit(limit)
       .populate({
         path: "modelo",
         select: {
@@ -67,7 +77,54 @@ export default class VeiculoServices {
       .select({
         __v: 0,
       })
+  }
 
+  async contarPorIdOficina(oficina: string) {
+    return await Veiculo
+      .countDocuments({
+        oficina,
+      })
+  }
+
+  async consultarPorOficina(oficina: string, { modelo, placa, marca }: VeiculoQuery, skip: number, limit: number) {
+    let match: FilterQuery<IVeiculo> = { oficina }
+    placa?.length && (match = {
+      placa: {
+        $regex: `${placa ? placa : ''}`,
+        $options: 'i'
+      }
+    });
+    modelo?.length && (match = { ...match, modelo })
+    marca?.length && (match = {
+      ...match,
+      marca: {
+        $ne: undefined
+      }
+    })
+    return await Veiculo
+      .find(match)
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "modelo",
+        select: {
+          _id: 0,
+          __v: 0
+        },
+        populate: {
+          path: "marca",
+          match: marca ? {
+            "marca._id": marca
+          } : undefined,
+          select: {
+            _id: 0,
+            __v: 0
+          },
+        }
+      })
+      .select({
+        __v: 0,
+      })
   }
 
   async listarPorIdVeiculoEIdOficina(informacoesDoVeiculo: IVeiculo) {
