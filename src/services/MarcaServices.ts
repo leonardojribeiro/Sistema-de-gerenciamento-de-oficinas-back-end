@@ -4,23 +4,23 @@ import GoogleStorage from "../util/GoogleStorage";
 import crypto from "crypto";
 import servicoValidacao from "./servicoValidacao";
 
-export default class MarcaServices {
+export default {
   async apagarLogomarca(uriLogomarca: string) {
     await GoogleStorage.apagar(uriLogomarca);
-  }
+  },
 
   validarMarcaASerIncluida(informacoesDaMarca: IMarca) {
     const mensagens: string[] = [];
     !validacao.validarTexto(informacoesDaMarca.descricao) && mensagens.push("Descrição é obrigatório.");
     return mensagens;
-  }
+  },
 
   validarMarcaASerAlterada(informacoesDaMarca: IMarca) {
     const mensagens: string[] = [];
     mensagens.push(...this.validarMarcaASerIncluida(informacoesDaMarca));
     mensagens.push(...servicoValidacao.validarIdDaMarca(informacoesDaMarca._id));
     return mensagens;
-  }
+  },
 
   async fazerUploadDaLogomarca(file: any) {
     try {
@@ -31,12 +31,12 @@ export default class MarcaServices {
     catch (erro) {
       throw erro;
     }
-  }
+  },
 
   async incluirMarca(informacoesDaMarca: IMarca) {
     return await Marca
       .create(informacoesDaMarca);
-  }
+  },
 
   async contarPorDescricaoEIdOficina(informacoesDaMarca: IMarca) {
     return await Marca
@@ -44,7 +44,7 @@ export default class MarcaServices {
         descricao: informacoesDaMarca.descricao,
         idOficina: informacoesDaMarca.oficina,
       });
-  }
+  },
 
   async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Marca
@@ -56,15 +56,14 @@ export default class MarcaServices {
       .select({
         __v: 0,
       });
-  }
+  },
 
   async contarPorOficina(oficina: string,) {
     return await Marca
       .countDocuments({
         oficina,
       })
-  }
-
+  },
 
   async listarPorIdMarcaEIdOficina(oficina: string, _id: string) {
     return await Marca
@@ -76,7 +75,7 @@ export default class MarcaServices {
         __v: 0,
         oficina: 0
       });
-  }
+  },
 
   async consultar(oficina: string, descricao: string, pular: number, limite: number) {
     return await Marca
@@ -92,7 +91,7 @@ export default class MarcaServices {
       .select({
         __v: 0,
       })
-  }
+  },
 
   async contarPorConsulta(oficina: string, descricao: string) {
     return await Marca
@@ -103,7 +102,7 @@ export default class MarcaServices {
         },
         oficina,
       })
-  }
+  },
 
   async alterarMarca(informacoesDaMarca: IMarca) {
     return await Marca
@@ -115,5 +114,5 @@ export default class MarcaServices {
           $set: informacoesDaMarca
         }
       );
-  }
+  },
 }

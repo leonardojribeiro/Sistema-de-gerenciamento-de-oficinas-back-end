@@ -1,4 +1,4 @@
-import FornecedorServices from "../services/FornecedorServices";
+import fornecedorServices from "../services/FornecedorServices";
 import servicoValidacao from "../services/servicoValidacao";
 import { Request, Response } from "express";
 import { IEndereco } from "../models/Endereco";
@@ -6,9 +6,8 @@ import { IFornecedor } from "../models/Fornecedor";
 import validacao from "../util/validacao";
 import { sendMessageTo } from "../Socket";
 import { replaceNoNumeric } from "../util/Replace";
-const fornecedorServices = new FornecedorServices();
 
-export default class FornecedorContoller {
+export default {
   async incluirFornecedor(requisicao: Request, resposta: Response) {
     try {
       const oficina = requisicao.body.oficina;
@@ -60,7 +59,7 @@ export default class FornecedorContoller {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarTodos(requisicao: Request, resposta: Response) {
     try {
@@ -89,7 +88,7 @@ export default class FornecedorContoller {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async consultarFornecedores(requisicao: Request, resposta: Response) {
     try {
@@ -122,7 +121,7 @@ export default class FornecedorContoller {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarPorId(requisicao: Request, resposta: Response) {
     try {
@@ -149,7 +148,7 @@ export default class FornecedorContoller {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async alterarFornecedor(requisicao: Request, resposta: Response) {
     try {

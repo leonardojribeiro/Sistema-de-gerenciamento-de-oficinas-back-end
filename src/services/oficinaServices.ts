@@ -1,7 +1,7 @@
 import Oficina, { IOficina } from "../models/Oficina";
 import validacao from "../util/validacao";
 
-export default class OficinaServices {
+export default {
 
   validar(oficina: IOficina) {
     const mensagens: string[] = [];
@@ -24,25 +24,25 @@ export default class OficinaServices {
     !validacao.validarNumero(oficina.localizacao.coordinates[1]) && mensagens.push("Latitude é obrigatória.");
     !validacao.validarNumero(oficina.localizacao.coordinates[0]) && mensagens.push("Longitude é obrigatória.");
     return mensagens;
-  }
+  },
 
   async listarPorCpfCnpj(cpfCnpj: string) {
     return await Oficina
       .findOne({
         cpfCnpj,
       });
-  }
+  },
 
   async listarPorEmail(email: string) {
     return await Oficina
       .findOne({
         email,
       });
-  }
+  },
 
   async inserir(oficina: IOficina) {
     return await Oficina
       .create(oficina);
-  }
+  },
 
 }

@@ -1,5 +1,5 @@
-import VeiculoServices from '../services/VeiculoServices';
-import VinculoServices from '../services/VinculoServices';
+import veiculoServices from '../services/VeiculoServices';
+import vinculoServices from '../services/VinculoServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Response, Request } from 'express';
 import { IVeiculo } from '../models/Veiculo';
@@ -8,15 +8,12 @@ import { IVinculo } from '../models/Vinculo';
 import getDataAtual from '../util/DataUtil';
 import { Types } from 'mongoose';
 import { replaceNoNumericAndAlphabetic } from '../util/Replace';
-const veiculoServices = new VeiculoServices();
-const vinculoServices = new VinculoServices();
 
 interface InformacoesDoVeiculo extends IVeiculo {
   cliente: ICliente['_id'];
 }
 
-export default class VeiculoController {
-
+export default {
   async incluirVeiculo(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const placa = requisicao.body.placa as string;
@@ -83,7 +80,7 @@ export default class VeiculoController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -101,7 +98,7 @@ export default class VeiculoController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async consultarVeiculos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -128,7 +125,7 @@ export default class VeiculoController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarPorId(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -163,8 +160,7 @@ export default class VeiculoController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
-
+  },
 
   async alterarVeiculo(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -240,7 +236,7 @@ export default class VeiculoController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async consultarVinculos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -263,6 +259,5 @@ export default class VeiculoController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
-
+  },
 }

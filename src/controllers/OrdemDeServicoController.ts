@@ -2,13 +2,10 @@ import { Request, Response } from "express";
 import { IItemDeServico } from "../models/ItemDeServico";
 import { IItemDePeca } from "../models/ItemDePeca";
 import OrdemDeServico, { IOrdemDeServico } from "../models/OrdemDeServico";
-import OrdemDeServicoServices from "../services/OrdemDeServicoServices";
+import ordemDeServicoServices from "../services/OrdemDeServicoServices";
 import validacao from "../util/validacao";
 
-const ordemDeServicoServices = new OrdemDeServicoServices();
-
-export default class OrdemDeServicoContoller {
-
+export default {
   async incluirOrdemDeServico(requisicao: Request, resposta: Response) {
     const dataDeRegistro = requisicao.body.dataDeRegistro as Date;
     const dataDeInicio = requisicao.body.dataDeInicio as Date;
@@ -75,7 +72,7 @@ export default class OrdemDeServicoContoller {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async alterarOrdemDeServico(requisicao: Request, resposta: Response) {
     const _id = requisicao.body._id as string;
@@ -147,7 +144,7 @@ export default class OrdemDeServicoContoller {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarTodas(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string
@@ -165,7 +162,7 @@ export default class OrdemDeServicoContoller {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarPorId(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string
@@ -198,7 +195,7 @@ export default class OrdemDeServicoContoller {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarPorVeiculo(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string
@@ -217,7 +214,7 @@ export default class OrdemDeServicoContoller {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async consultarOrdemDeServico(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string
@@ -239,5 +236,5 @@ export default class OrdemDeServicoContoller {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 }

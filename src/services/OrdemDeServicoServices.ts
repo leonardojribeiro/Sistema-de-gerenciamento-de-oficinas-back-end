@@ -12,7 +12,7 @@ interface QueryOrdemDeServico {
   dataDeRegistro?: Date;
 }
 
-export default class OrdemDeServicoServices {
+export default {
 
   validarItemDeServico(itemDeServico: IItemDeServico) {
     const mensagens: string[] = [];
@@ -24,7 +24,7 @@ export default class OrdemDeServicoServices {
     !validacao.validarNumero(itemDeServico.quantidade) && mensagens.push("Quantidade é obrigatória");
     !validacao.validarNumero(itemDeServico.valorTotal) && mensagens.push("Valor total é obrigatório");
     return mensagens
-  }
+  },
   validarItemDePEca(itemDePeca: IItemDePeca) {
     const mensagens: string[] = [];
     mensagens.push(...servicoValidacao.validarIdDaPeca(itemDePeca.peca));
@@ -35,7 +35,7 @@ export default class OrdemDeServicoServices {
     !validacao.validarNumero(itemDePeca.quantidade) && mensagens.push("Quantidade é obrigatória");
     !validacao.validarNumero(itemDePeca.valorTotal) && mensagens.push("Valor total é obrigatório");
     return mensagens
-  }
+  },
 
   validarOrdemDeServico(ordemDeServico: IOrdemDeServico) {
     const mensagens: string[] = [];
@@ -50,11 +50,11 @@ export default class OrdemDeServicoServices {
       mensagens.push(...this.validarItemDePEca(itemDePeca))
     );
     return mensagens;
-  }
+  },
 
   async incluirOrdemDeServico(informacoesDaOrdemDeServico: IOrdemDeServico) {
     return await OrdemDeServico.create(informacoesDaOrdemDeServico);
-  }
+  },
 
   async listarPorOficina(oficina: string, skip: number, limit: number) {
     return await OrdemDeServico
@@ -74,7 +74,7 @@ export default class OrdemDeServicoServices {
         "itensDePeca._id": 0,
         __v: 0,
       })
-  }
+  },
 
   async contarEmAndamentoPorOficina(oficina: string) {
     return await OrdemDeServico
@@ -82,14 +82,14 @@ export default class OrdemDeServicoServices {
         oficina,
         status: '0'
       })
-  }
+  },
 
   async contarPorOficina(oficina: string) {
     return await OrdemDeServico
       .countDocuments({
         oficina
       })
-  }
+  },
 
   async consultar(oficina: string, { veiculo, dataDeConclusao, dataDeInicio, dataDeRegistro }: QueryOrdemDeServico, skip: number, limit: number) {
     let match: FilterQuery<IOrdemDeServico> = { oficina }
@@ -99,7 +99,7 @@ export default class OrdemDeServicoServices {
     if (dataDeRegistro) {
       match = {
         ...match,
-        dataDeRegistro:{
+        dataDeRegistro: {
           $gte: dataDeRegistro
         }
       }
@@ -119,7 +119,7 @@ export default class OrdemDeServicoServices {
         "itensDePeca._id": 0,
         __v: 0,
       })
-  }
+  },
 
   async contarPorConsulta(oficina: string, veiculo: string = "") {
     let match: any = { oficina }
@@ -128,7 +128,7 @@ export default class OrdemDeServicoServices {
     }
     return await OrdemDeServico
       .countDocuments(match)
-  }
+  },
 
   async listarPorVeiculo(oficina: string, veiculo: string) {
     return OrdemDeServico.find({
@@ -180,5 +180,5 @@ export default class OrdemDeServicoServices {
         "itensDePeca._id": 0,
         __v: 0,
       })
-  }
+  },
 }

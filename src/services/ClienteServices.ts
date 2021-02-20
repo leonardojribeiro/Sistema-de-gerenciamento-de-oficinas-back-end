@@ -10,7 +10,7 @@ interface ClienteQuery {
   telefone?: string;
 }
 
-export default class ClienteServices {
+export default {
   validarClienteASerIncluido(informacoesDoCliente: ICliente) {
     const mensagens: string[] = [];
     !validacao.validarTexto(informacoesDoCliente.nome) && mensagens.push("Nome é obrigatório.");
@@ -25,7 +25,7 @@ export default class ClienteServices {
       !validacao.validarEmail(informacoesDoCliente.email) && mensagens.push("E-mail inválido.");
     mensagens.push(...servicoValidacao.validarEndereco(informacoesDoCliente.endereco));
     return mensagens;
-  }
+  },
 
   validarClienteASerAlterado(informacoesDoCliente: ICliente) {
     const mensagens: string[] = [];
@@ -39,12 +39,12 @@ export default class ClienteServices {
       !validacao.validarEmail(informacoesDoCliente.email) && mensagens.push("E-mail inválido.");
     mensagens.push(...servicoValidacao.validarEndereco(informacoesDoCliente.endereco)); mensagens.push(...servicoValidacao.validarIdDoCliente(informacoesDoCliente._id));
     return mensagens;
-  }
+  },
 
   async incluirCliente(informacoesDoCliente: ICliente) {
     return await Cliente
       .create(informacoesDoCliente);
-  }
+  },
 
   async contarClientesPorCpfEIdOficina(informacoesDoCliente: ICliente) {
     return await Cliente
@@ -52,7 +52,7 @@ export default class ClienteServices {
         cpfCnpj: informacoesDoCliente.cpfCnpj,
         oficina: informacoesDoCliente.oficina,
       });
-  }
+  },
 
   async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Cliente
@@ -65,14 +65,14 @@ export default class ClienteServices {
       })
       .skip(pular)
       .limit(limite);
-  }
+  },
 
   async contarPorOficina(oficina: string) {
     return await Cliente
       .countDocuments({
         oficina
       });
-  }
+  },
 
   async consultar(oficina: string, { nome, cpfCnpj, email, telefone }: ClienteQuery, pular: number, limite: number) {
     return await Cliente
@@ -107,7 +107,7 @@ export default class ClienteServices {
       })
       .skip(pular)
       .limit(limite);
-  }
+  },
 
   async contarPorConsulta(oficina: string, { nome, cpfCnpj, email, telefone }: ClienteQuery) {
     return await Cliente
@@ -140,7 +140,7 @@ export default class ClienteServices {
           },
         ]
       });
-  }
+  },
 
   async listarPorIdClienteEIdOficina(oficina: string, _id: string) {
     return await Cliente
@@ -153,7 +153,7 @@ export default class ClienteServices {
         __v: 0,
 
       });
-  }
+  },
 
   async alterarCliente(informacoesDoCliente: ICliente) {
     return await Cliente
@@ -165,5 +165,5 @@ export default class ClienteServices {
           $set: informacoesDoCliente,
         },
       );
-  }
+  },
 }

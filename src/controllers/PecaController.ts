@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
-import PecaServices from '../services/PecaServices';
+import pecaServices from '../services/PecaServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { IPeca } from "../models/Peca";
 import { Types } from "mongoose";
-import validacao from "../util/validacao";
 import { sendMessageTo } from "../Socket";
-const pecaServices = new PecaServices();
 
-export default class PecaController {
+export default {
 
   async incluirPeca(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -54,7 +52,7 @@ export default class PecaController {
       console.log(erro)
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -72,7 +70,7 @@ export default class PecaController {
       console.log(erro)
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarPecaPorId(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -104,7 +102,7 @@ export default class PecaController {
       console.log(erro)
       return resposta.status(400).send();
     }
-  }
+  },
 
   async consultarPecas(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -134,7 +132,7 @@ export default class PecaController {
       console.log(erro)
       return resposta.status(400).send();
     }
-  }
+  },
 
   async alterarPeca(requisicao: Request, resposta: Response) {
     const _id = requisicao.body._id as string;
@@ -168,5 +166,5 @@ export default class PecaController {
       console.log(erro)
       return resposta.status(400).send();
     }
-  }
+  },
 }

@@ -1,14 +1,11 @@
-import UsuarioServices from "../services/UsuarioServices";
+import usuarioServices from "../services/UsuarioServices";
 import criptografia from "../util/Criptografia";
 import jwt from "jsonwebtoken";
 import { Response, Request } from "express";
 import { IUsuario } from "../models/Usuario";
 import {} from 'mongoose';
 
-const usuarioServices = new UsuarioServices()
-
-export default class UsuarioController {
-
+export default {
   async incluirUsuario(requisicao: Request, resposta: Response) {
     const nomeUsuario = requisicao.body.nomeUsuario
     const senha = requisicao.body.senha;
@@ -56,7 +53,7 @@ export default class UsuarioController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async efetuarLogin(requisicao: Request, resposta: Response) {
     const nomeUsuario = requisicao.body.nomeUsuario;
@@ -114,7 +111,7 @@ export default class UsuarioController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async efetuarLoginPorToken(requisicao: Request, resposta: Response) {
     const idUsuario = requisicao.body.idUsuario as string;
@@ -135,5 +132,5 @@ export default class UsuarioController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 };

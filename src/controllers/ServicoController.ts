@@ -1,11 +1,10 @@
-import ServicoServices from "../services/ServicosServices";
+import servicoServices from "../services/ServicosServices";
 import { Response, Request } from "express";
 import { IServico } from "../models/Servico";
 import servicoValidacao from "../services/servicoValidacao";
 import { sendMessageTo } from "../Socket";
 
-const servicoServices = new ServicoServices();
-export default class ServicoController {
+export default {
   async incluirServico(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
@@ -49,7 +48,7 @@ export default class ServicoController {
       console.log(erro)
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -74,7 +73,8 @@ export default class ServicoController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
+
   async consultarServicos(requisicao: Request, resposta: Response) {
     const pular = Number(requisicao.query.pular);
     const limite = Number(requisicao.query.limite);
@@ -92,7 +92,7 @@ export default class ServicoController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarPorId(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -123,7 +123,7 @@ export default class ServicoController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async alterarServico(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -162,6 +162,5 @@ export default class ServicoController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
-
+  },
 }

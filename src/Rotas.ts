@@ -2,31 +2,20 @@ import { Request, Response, Router } from "express";
 import multer from "multer";
 import multerConfig from "./multer";
 import Auth from "./Midllewares/Auth";
-import FuncionarioController from './controllers/FuncionarioController';
-import UsuarioController from "./controllers/UsuarioController";
-import ModeloController from "./controllers/ModeloController";
-import PecaController from "./controllers/PecaController";
-import MarcaController from "./controllers/MarcaController";
-import ClienteController from "./controllers/ClienteController";
-import ServicoController from "./controllers/ServicoController";
-import FornecedorContoller from "./controllers/FornecedorController";
-import VeiculoController from "./controllers/VeiculoController";
+import funcionarioController from './controllers/FuncionarioController';
+import usuarioController from "./controllers/UsuarioController";
+import modeloController from "./controllers/ModeloController";
+import pecaController from "./controllers/PecaController";
+import marcaController from "./controllers/MarcaController";
+import clienteController from "./controllers/ClienteController";
+import servicoController from "./controllers/ServicoController";
+import fornecedorController from "./controllers/FornecedorController";
+import veiculoController from "./controllers/VeiculoController";
 import especialidadeController from './controllers/EspecialidadeController';
-import OrdemDeServicoContoller from "./controllers/OrdemDeServicoController";
+import ordemDeServicoController from "./controllers/OrdemDeServicoController";
 import validatePagination from "./Midllewares/ValidatePagination";
-import OficinaController from "./controllers/OficinaController";
+import oficinaController from "./controllers/OficinaController";
 
-const modeloController = new ModeloController();
-const pecaController = new PecaController();
-const marcaController = new MarcaController();
-const clienteController = new ClienteController();
-const servicoController = new ServicoController();
-const fornecedorController = new FornecedorContoller();
-const veiculoController = new VeiculoController();
-const usuarioController = new UsuarioController();
-const funcionarioController = new FuncionarioController();
-const ordemDeServicoController = new OrdemDeServicoContoller();
-const oficinaController = new OficinaController();
 const rotas = Router();
 
 rotas.get("/", (req: Request, res: Response) => {
@@ -39,7 +28,7 @@ rotas.get("/", (req: Request, res: Response) => {
 //   oficinaController.cadastroDeOficinaCandidata,
 // );
 
-rotas.get('/oficina', Auth, oficinaController.listarEstatisticas );
+rotas.get('/oficina', Auth, oficinaController.listarEstatisticas);
 
 rotas.post('/ordemdeservico', Auth, ordemDeServicoController.incluirOrdemDeServico);
 rotas.get('/ordemdeservico', Auth, validatePagination, ordemDeServicoController.listarTodas);

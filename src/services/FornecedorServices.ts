@@ -11,7 +11,7 @@ interface FornecedorQuery {
   cpfCnpj?: string;
 }
 
-export default class FornecedorServices {
+export default {
   validarFornecedorASerIncluido(informacoesDoFornecedor: IFornecedor) {
     const mensagens: string[] = [];
     !validacao.validarTexto(informacoesDoFornecedor.nomeFantasia) && mensagens.push("Nome fantasia é obrigatório.");
@@ -25,7 +25,7 @@ export default class FornecedorServices {
       !validacao.validarEmail(informacoesDoFornecedor.email) && mensagens.push("E-mail inválido.");
     mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFornecedor.endereco));
     return mensagens;
-  }
+  },
 
   validarFornecedorASerAlterado(informacoesDoFornecedor: IFornecedor) {
     const mensagens: string[] = [];
@@ -38,7 +38,7 @@ export default class FornecedorServices {
       !validacao.validarEmail(informacoesDoFornecedor.email) && mensagens.push("E-mail inválido.");
     mensagens.push(...servicoValidacao.validarIdDoFornecedor(informacoesDoFornecedor._id));
     return mensagens;
-  }
+  },
 
   async contarFornecedoresPorCpfCnpjEIdOficina(informacoesDoFornecedor: IFornecedor) {
     return await Fornecedor
@@ -46,12 +46,12 @@ export default class FornecedorServices {
         cpfCnpj: informacoesDoFornecedor.cpfCnpj,
         oficina: informacoesDoFornecedor.oficina,
       });
-  }
+  },
 
   async incluirFornecedor(informacoesDoFornecedor: IFornecedor) {
     return await Fornecedor
       .create(informacoesDoFornecedor);
-  }
+  },
 
   async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Fornecedor
@@ -60,14 +60,14 @@ export default class FornecedorServices {
       })
       .skip(pular)
       .limit(limite);
-  }
+  },
 
   async contarPorOficina(oficina: string) {
     return await Fornecedor
       .countDocuments({
         oficina
       });
-  }
+  },
 
   async consultar(oficina: string, { nomeFantasia, cpfCnpj, email, telefone }: FornecedorQuery, pular: number, limite: number) {
     let match: FilterQuery<IFornecedor> = { oficina };
@@ -113,7 +113,7 @@ export default class FornecedorServices {
       .find(match)
       .skip(pular)
       .limit(limite);
-  }
+  },
 
   async contarPorConsulta(oficina: string, { nomeFantasia, cpfCnpj, email, telefone }: FornecedorQuery) {
     return await Fornecedor
@@ -146,7 +146,7 @@ export default class FornecedorServices {
           },
         ]
       });
-  }
+  },
 
   async listarPorIdFornecedorEIdOficina(oficina: string, _id: string) {
     return await Fornecedor
@@ -154,7 +154,7 @@ export default class FornecedorServices {
         oficina,
         _id,
       });
-  }
+  },
 
   async alterarFornecedor(informacoesDoFornecedor: IFornecedor) {
     return await Fornecedor
@@ -166,5 +166,5 @@ export default class FornecedorServices {
           $set: informacoesDoFornecedor
         }
       );
-  }
+  },
 }

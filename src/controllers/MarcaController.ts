@@ -1,11 +1,10 @@
-import MarcaServices from '../services/MarcaServices';
+import marcaServices from '../services/MarcaServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IMarca } from '../models/Marca';
 import { sendMessageTo } from '../Socket';
-const marcaServices = new MarcaServices();
 
-export default class MarcaController {
+export default {
   async incluirMarca(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
@@ -61,13 +60,13 @@ export default class MarcaController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const pular = Number(requisicao.query.pular)
     const limite = Number(requisicao.query.limite);
-    try { 
+    try {
       const marcas = await marcaServices.listarPorOficina(oficina, pular, limite);
       const total = await marcaServices.contarPorOficina(oficina);
       return resposta.json({
@@ -79,7 +78,7 @@ export default class MarcaController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarMarcaPorId(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -107,7 +106,7 @@ export default class MarcaController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async consultarMarcas(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -127,7 +126,7 @@ export default class MarcaController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async alterarMarca(requisicao: Request, resposta: Response) {
     const _id = requisicao.body._id as string;
@@ -177,5 +176,5 @@ export default class MarcaController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 }

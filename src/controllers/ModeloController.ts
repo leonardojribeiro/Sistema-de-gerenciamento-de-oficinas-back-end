@@ -1,14 +1,11 @@
-import ModeloServices from '../services/ModeloServices';
+import modeloServices from '../services/ModeloServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IModelo } from '../models/Modelo';
-import validacao from '../util/validacao';
 import { Types } from 'mongoose';
 import { sendMessageTo } from '../Socket';
 
-const modeloServices = new ModeloServices();
-
-export default class ModeloController {
+export default {
   async incluirModelo(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const descricao = requisicao.body.descricao as string;
@@ -54,7 +51,7 @@ export default class ModeloController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -72,7 +69,7 @@ export default class ModeloController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarModeloPorId(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -100,7 +97,7 @@ export default class ModeloController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async consultarModelos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -130,7 +127,7 @@ export default class ModeloController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async alterarModelo(requisicao: Request, resposta: Response) {
     const _id = requisicao.body._id as string;
@@ -164,5 +161,5 @@ export default class ModeloController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 }

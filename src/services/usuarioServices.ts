@@ -2,7 +2,7 @@ import Usuario, { IUsuario } from "../models/Usuario";
 import validacao from "../util/validacao";
 import mongoose from "mongoose";
 
-export default class UsuarioServices {
+export default {
 
   validarUsuarioASerIncluido(informacoesDoUsuario: IUsuario) {
     const mensagens: string[] = []
@@ -12,14 +12,14 @@ export default class UsuarioServices {
     !validacao.validarNumero(informacoesDoUsuario.perfil) && mensagens.push("Perfil de usuário é obrigatório.");
     !validacao.validarTexto(informacoesDoUsuario.idOficina) && mensagens.push("Id da oficina é obrigatória.");
     return mensagens;
-  }
+  },
 
   validarUsuarioLogin(usuarioLogin: IUsuario) {
     const mensagens: string[] = []
     !validacao.validarTexto(usuarioLogin.nomeUsuario) && mensagens.push("Usuário é obrigatório.");
     !validacao.validarTexto(usuarioLogin.senha) && mensagens.push("Senha é obrigatória.")
     return mensagens;
-  }
+  },
 
   async incluirUsuario(informacoesDoUsuario: IUsuario) {
     return await Usuario
@@ -27,7 +27,7 @@ export default class UsuarioServices {
       .catch(erro => {
         console.log(erro);
       });
-  }
+  },
 
   async contarPorOficinaEUsuario(informacoesDoUsuario: IUsuario) {
     return await Usuario
@@ -35,14 +35,14 @@ export default class UsuarioServices {
         nomeUsuario: informacoesDoUsuario.nomeUsuario,
         idOficina: informacoesDoUsuario.idOficina,
       });
-  }
+  },
 
   async ContarPorUsuario(informacoesDoUsuario: IUsuario) {
     return await Usuario
       .countDocuments({
         nomeUsuario: informacoesDoUsuario.nomeUsuario,
       });
-  }
+  },
 
   async login(informacoesDoUsuario: IUsuario) {
     return await Usuario
@@ -62,7 +62,7 @@ export default class UsuarioServices {
         __v: 0
       })
       .unwind("oficina");
-  }
+  },
 
   async listarPerfilDeUsuarioEIdOficinaPorIdUsuario(id: string) {
     return await Usuario
@@ -76,7 +76,7 @@ export default class UsuarioServices {
       .select({
         perfil: 1,
       });
-  }
+  },
 
   async loginPorIdUsuario(id: string) {
     return await Usuario
@@ -96,6 +96,6 @@ export default class UsuarioServices {
         idOficina: 0
       })
       .unwind("oficina")
-  }
+  },
 
 }

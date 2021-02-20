@@ -2,26 +2,26 @@ import validacao from "../util/validacao";
 import Peca, { IPeca } from "../models/Peca";
 import servicoValidacao from "./servicoValidacao";
 
-export default class ModeloService {
+export default {
 
   validarPecaASerIncluida(informacoesDaPeca: IPeca) {
     const mensagens = [];
     !validacao.validarTexto(informacoesDaPeca.descricao) && mensagens.push("Descrição é obrigatório.");
     mensagens.push(...servicoValidacao.validarIdDaMarca(informacoesDaPeca.marca));
     return mensagens
-  }
+  },
 
   validarPecaASerAlterada(informacoesDaPeca: IPeca) {
     const mensagens: string[] = [];
     mensagens.push(...this.validarPecaASerIncluida(informacoesDaPeca));
     mensagens.push(...servicoValidacao.validarIdDaPeca(informacoesDaPeca._id));
     return mensagens
-  }
+  },
 
   async incluirPeca(informacoesDaPeca: IPeca) {
     return await Peca
       .create(informacoesDaPeca);
-  }
+  },
 
   async contarPorDescricaoDaPecaIdMarcaEIdOficina(informacoesDaPeca: IPeca) {
     return await Peca
@@ -30,14 +30,14 @@ export default class ModeloService {
         marca: informacoesDaPeca.marca,
         oficina: informacoesDaPeca.oficina
       });
-  }
+  },
 
   async contarPorOficina(oficina: string) {
     return await Peca
       .countDocuments({
         oficina
       });
-  }
+  },
 
   async listarPorOficina(oficina: string, skip: number, limit: number,) {
     return await Peca
@@ -49,7 +49,7 @@ export default class ModeloService {
       })
       .limit(limit)
       .skip(skip)
-  }
+  },
 
   async listarPorIdOficinaEIdPeca(oficina: string, _id: string) {
     return await Peca
@@ -57,7 +57,7 @@ export default class ModeloService {
         oficina,
         _id
       });
-  }
+  },
 
   async consultar(oficina: string, descricao: string, marca: string, skip: number, limit: number,) {
     let match;
@@ -94,7 +94,7 @@ export default class ModeloService {
       .select({
         __v: 0,
       })
-  }
+  },
 
   async contarPorConsulta(oficina: string, descricao: string, marca: string) {
     let match;
@@ -119,7 +119,7 @@ export default class ModeloService {
     }
     return await Peca
       .countDocuments(match);
-  }
+  },
 
   async alterarPeca(informacoesDaPeca: IPeca) {
     return await Peca
@@ -131,6 +131,6 @@ export default class ModeloService {
           $set: informacoesDaPeca
         }
       )
-  }
+  },
 
 }

@@ -1,9 +1,9 @@
+import { IOficina } from './../models/Oficina';
 import { Request, Response } from "express";
-import OrdemDeServicoServices from "../services/OrdemDeServicoServices";
-const oficinaServicos = require("../services/oficinaServices");
-const ordemDeServicoServices = new OrdemDeServicoServices()
+import ordemDeServicoServices from "../services/OrdemDeServicoServices";
+import oficinaServices from "../services/oficinaServices";
 
-export default class OficinaController {
+export default {
   async cadastroDeOficinaCandidata(requisicao: Request, resposta: Response) {
     const {
       nomeFantasia,
@@ -34,7 +34,7 @@ export default class OficinaController {
       telefoneCelular,
       email,
       website,
-      //uriLogo,
+      uriLogo: '',
       endereco: {
         logradouro,
         numero,
@@ -49,13 +49,13 @@ export default class OficinaController {
         coordinates: [longitude, latitude],
       },
       statusOficina: "Candidata"
-    }
+    } 
 
     //valida os dados recebidos
-    const mensagens = oficinaServicos.validar(oficina);
+    const mensagens = ''//oficinaServices.validar(oficina);
 
     if (mensagens.length) {
-      //oficinaServicos.apagarLogomarca(uriLogo);
+      //oficinaServices.apagarLogomarca(uriLogo);
       return resposta.status(406)
         .json({
           mensagem: mensagens
@@ -63,12 +63,12 @@ export default class OficinaController {
     }
 
     //verifica se existe uma oficina com o mesmo cpf ou cnpj
-    const oficinaComMesmoCpfCnpj = await oficinaServicos.listarPorCpfCnpj(cpfCnpj);
+    const oficinaComMesmoCpfCnpj = await oficinaServices.listarPorCpfCnpj(cpfCnpj);
     //verifica se existe uma oficina com o mesmo e-mail
-    const oficinaComMesmoEmail = await oficinaServicos.listarPorEmail(email);
+    const oficinaComMesmoEmail = await oficinaServices.listarPorEmail(email);
 
     if (oficinaComMesmoCpfCnpj) {
-      //oficinaServicos.apagarLogomarca(uriLogo);//apaga a logomarca
+      //oficinaServices.apagarLogomarca(uriLogo);//apaga a logomarca
       return resposta.status(406)
         .json({
           mensagem: "O CPF/CNPJ informado já se encontra cadastrado."
@@ -76,17 +76,17 @@ export default class OficinaController {
     }
 
     if (oficinaComMesmoEmail) {
-      // oficinaServicos.apagarLogomarca(uriLogo);//apaga a logomarca
+      // oficinaServices.apagarLogomarca(uriLogo);//apaga a logomarca
       return resposta.status(406)
         .json({
           mensagem: "O E-mail informado já se encontra cadastrado."
         });
     }
 
-    const oficinaInserida = await oficinaServicos.inserir(oficina);
+    const oficinaInserida = ''//await oficinaServices.inserir(oficina);
 
     if (!oficinaInserida) {
-      //oficinaServicos.apagarLogomarca(uriLogo);
+      //oficinaServices.apagarLogomarca(uriLogo);
       return resposta.status(500)
         .json({
           mensagem: "Oficina candidata não cadastrada."
@@ -97,7 +97,7 @@ export default class OficinaController {
       .json({
         mensagem: "Oficina candidata cadastrada com sucesso."
       });
-  }
+  },
 
   async listarEstatisticas(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina;

@@ -5,7 +5,7 @@ import servicoValidacao from "./servicoValidacao";
 import { Types } from "mongoose";
 
 
-export default class FuncionarioServices {
+export default {
   validarIdsEspecialidades(especialidades: string[]) {
     const mensagens: string[] = [];
     if (!especialidades) {
@@ -20,7 +20,7 @@ export default class FuncionarioServices {
       })
     }
     return mensagens;
-  }
+  },
 
   validarFuncionarioASerIncluido(informacoesDoFuncionario: IFuncionario) {
     const mensagens: string[] = [];
@@ -37,7 +37,7 @@ export default class FuncionarioServices {
     mensagens.push(...this.validarIdsEspecialidades(informacoesDoFuncionario.especialidades));
     mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFuncionario.endereco));
     return mensagens;
-  }
+  },
 
   validarClienteASerAlterado(informacoesDoFuncionario: IFuncionario) {
     const mensagens: string[] = [];
@@ -53,7 +53,7 @@ export default class FuncionarioServices {
     mensagens.push(...servicoValidacao.validarEndereco(informacoesDoFuncionario.endereco));
     mensagens.push(...servicoValidacao.validarIdDoFuncionario(informacoesDoFuncionario._id));
     return mensagens;
-  }
+  },
 
   async contarFuncionariosPorCpfEIdOficina(informacoesDoFuncionario: IFuncionario) {
     return await Funcionario
@@ -61,7 +61,7 @@ export default class FuncionarioServices {
         cpf: informacoesDoFuncionario.cpf,
         oficina: informacoesDoFuncionario.oficina,
       })
-  }
+  },
 
   async listarPorOficina(oficina: string, pular: number, limite: number) {
     return await Funcionario
@@ -73,14 +73,14 @@ export default class FuncionarioServices {
       })
       .skip(pular)
       .limit(limite);
-  }
+  },
 
   async contarPorOficina(oficina: string) {
     return await Funcionario
       .countDocuments({
         oficina
       });
-  }
+  },
 
   async consultar(oficina: string, nome: string = "", cpf: string = "", email: string = "", telefone: string = "", pular: number, limite: number) {
     return await Funcionario
@@ -118,7 +118,7 @@ export default class FuncionarioServices {
       })
       .skip(pular)
       .limit(limite);
-  }
+  },
 
   async contarPorConsulta(oficina: string, nome: string = "", cpfCnpj: string = "", email: string = "", telefone: string = "") {
     return await Funcionario
@@ -151,7 +151,7 @@ export default class FuncionarioServices {
           },
         ]
       });
-  }
+  },
 
   async listarPorIdFuncionarioEIdOficina(informacoesDoFuncionario: IFuncionario) {
     return await Funcionario
@@ -172,12 +172,12 @@ export default class FuncionarioServices {
         oficina: 0,
         __v: 0
       });
-  }
+  },
 
   async incluirFuncionario(informacoesDoFuncionario: IFuncionario) {
     return await Funcionario
       .create(informacoesDoFuncionario)
-  }
+  },
 
   async alterarFuncionario(informacoesDoFuncionario: IFuncionario) {
     return await Funcionario
@@ -189,5 +189,5 @@ export default class FuncionarioServices {
           $set: informacoesDoFuncionario
         }
       )
-  }
+  },
 }

@@ -1,4 +1,4 @@
-import ClienteServices from "../services/ClienteServices";
+import clienteServices from "../services/ClienteServices";
 import servicoValidacao from "../services/servicoValidacao";
 import { Response, Request } from "express";
 import { ICliente } from "../models/Cliente";
@@ -6,9 +6,7 @@ import { IEndereco } from "../models/Endereco";
 import { replaceNoNumeric } from "../util/Replace";
 import { sendMessageTo } from "../Socket";
 
-const clienteServices = new ClienteServices();
-
-export default class ClienteController {
+export default {
   async incluirCliente(requisicao: Request, resposta: Response) {
     try {
       const oficina = requisicao.body.oficina as string;
@@ -62,7 +60,7 @@ export default class ClienteController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarTodos(requisicao: Request, resposta: Response) {
     try {
@@ -87,7 +85,7 @@ export default class ClienteController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarPorId(requisicao: Request, resposta: Response) {
     try {
@@ -114,7 +112,7 @@ export default class ClienteController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async consultarClientes(requisicao: Request, resposta: Response) {
     try {
@@ -143,7 +141,7 @@ export default class ClienteController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async alterarCliente(requisicao: Request, resposta: Response) {
     try {

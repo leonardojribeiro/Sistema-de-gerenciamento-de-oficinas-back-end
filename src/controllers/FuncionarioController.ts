@@ -1,13 +1,12 @@
-import FuncionarioServices from '../services/FuncionarioServices';
+import funcionarioServices from '../services/FuncionarioServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IFuncionario } from '../models/Funcionario';
 import { IEndereco } from '../models/Endereco';
 import { replaceNoNumeric } from '../util/Replace';
 import { sendMessageTo } from '../Socket';
-const funcionarioServices = new FuncionarioServices();
 
-export default class FuncionarioController {
+export default {
   async incluirFuncionario(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
     const nome = requisicao.body.nome as string
@@ -64,7 +63,7 @@ export default class FuncionarioController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarTodos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -89,7 +88,7 @@ export default class FuncionarioController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async listarPorId(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -120,7 +119,7 @@ export default class FuncionarioController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async consultarFuncionarios(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
@@ -151,7 +150,7 @@ export default class FuncionarioController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async alterarFuncionario(requisicao: Request, resposta: Response) {
     const _id = requisicao.body._id as string;
@@ -199,6 +198,5 @@ export default class FuncionarioController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
-
+  },
 }
