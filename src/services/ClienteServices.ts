@@ -3,6 +3,13 @@ import validacao from "../util/validacao";
 import Cliente from "../models/Cliente";
 import servicoValidacao from "./servicoValidacao";
 
+interface ClienteQuery {
+  nome?: string;
+  cpfCnpj?: string;
+  email?: string;
+  telefone?: string;
+}
+
 export default class ClienteServices {
   validarClienteASerIncluido(informacoesDoCliente: ICliente) {
     const mensagens: string[] = [];
@@ -67,7 +74,7 @@ export default class ClienteServices {
       });
   }
 
-  async consultar(oficina: string, nome: string = "", cpfCnpj: string = "", email: string = "", telefone: string = "", pular: number, limite: number) {
+  async consultar(oficina: string, { nome, cpfCnpj, email, telefone }: ClienteQuery, pular: number, limite: number) {
     return await Cliente
       .find({
         oficina,
@@ -102,7 +109,7 @@ export default class ClienteServices {
       .limit(limite);
   }
 
-  async contarPorConsulta(oficina: string, nome: string = "", cpfCnpj: string = "", email: string = "", telefone: string = "") {
+  async contarPorConsulta(oficina: string, { nome, cpfCnpj, email, telefone }: ClienteQuery) {
     return await Cliente
       .countDocuments({
         oficina,

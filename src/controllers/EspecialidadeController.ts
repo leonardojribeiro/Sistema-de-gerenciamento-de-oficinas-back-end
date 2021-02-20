@@ -1,16 +1,14 @@
-import EspecialidadeServices from '../services/EspecialidadeServices';
+import especialidadeServices from '../services/EspecialidadeServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IEspecialidade } from '../models/Especialidade';
 import { sendMessageTo } from '../Socket';
 
-const especialidadeServices = new EspecialidadeServices();
-
-export default class EspecialidadeController {
+export default {
   async incluirEspecialidade(requisicao: Request, resposta: Response) {
-    const oficina = requisicao.body.oficina as string;
-    const descricao = requisicao.body.descricao as string;
     try {
+      const oficina = requisicao.body.oficina as string;
+      const descricao = requisicao.body.descricao as string;
       const especialidadeASerInserida = {
         descricao,
         oficina,
@@ -46,13 +44,12 @@ export default class EspecialidadeController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
-
+  },
   async listarTodos(requisicao: Request, resposta: Response) {
-    const pular = Number(requisicao.query.pular);
-    const limite = Number(requisicao.query.limite);
-    const oficina = requisicao.body.oficina as string;
     try {
+      const pular = Number(requisicao.query.pular);
+      const limite = Number(requisicao.query.limite);
+      const oficina = requisicao.body.oficina as string;
       const especialidades = await especialidadeServices.listarPorOficina(oficina, pular, limite);
       const total = await especialidadeServices.contarPorOficina(oficina);
       return resposta.json({
@@ -64,14 +61,14 @@ export default class EspecialidadeController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
+  },
 
   async consultarEspecialidades(requisicao: Request, resposta: Response) {
-    const pular = Number(requisicao.query.pular);
-    const limite = Number(requisicao.query.limite);
-    const oficina = requisicao.body.oficina as string;
-    const descricao = requisicao.query.descricao as string
     try {
+      const pular = Number(requisicao.query.pular);
+      const limite = Number(requisicao.query.limite);
+      const oficina = requisicao.body.oficina as string;
+      const descricao = requisicao.query.descricao as string
       const especialidades = await especialidadeServices.consultar(oficina, descricao, pular, limite);
       const total = await especialidadeServices.contarPorConsulta(oficina, descricao);
       return resposta.json({
@@ -83,12 +80,11 @@ export default class EspecialidadeController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
-
+  },
   async listarEspecialidadePorId(requisicao: Request, resposta: Response) {
-    const oficina = requisicao.body.oficina as string;
-    const _id = requisicao.query._id as string;
     try {
+      const oficina = requisicao.body.oficina as string;
+      const _id = requisicao.query._id as string;
       const mensagens = servicoValidacao.validarIdDaEspecialidade(_id)
       if (mensagens.length) {
         return resposta
@@ -111,12 +107,11 @@ export default class EspecialidadeController {
       console.log(erro);
       return resposta.status(400).send();
     }
-  }
-
+  },
   async alterarEspecialidade(requisicao: Request, resposta: Response) {
-    const _id = requisicao.body._id as string;
-    const descricao = requisicao.body.descricao as string;
     try {
+      const _id = requisicao.body._id as string;
+      const descricao = requisicao.body.descricao as string;
       const especialidadeASerAlterada = {
         _id,
         descricao,
@@ -146,4 +141,4 @@ export default class EspecialidadeController {
       return resposta.status(400).send();
     }
   }
-};
+}

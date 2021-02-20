@@ -1,7 +1,15 @@
+import { FilterQuery } from 'mongoose';
 import { IFornecedor } from "../models/Fornecedor";
 import validacao from "../util/validacao";
 import servicoValidacao from "./servicoValidacao";
 import Fornecedor from '../models/Fornecedor';
+
+interface FornecedorQuery {
+  nomeFantasia?: string;
+  email?: string;
+  telefone?: string;
+  cpfCnpj?: string;
+}
 
 export default class FornecedorServices {
   validarFornecedorASerIncluido(informacoesDoFornecedor: IFornecedor) {
@@ -61,47 +69,58 @@ export default class FornecedorServices {
       });
   }
 
-  async consultar(oficina: string, nome: string = "", cpfCnpj: string = "", email: string = "", telefone: string = "", pular: number, limite: number) {
+  async consultar(oficina: string, { nomeFantasia, cpfCnpj, email, telefone }: FornecedorQuery, pular: number, limite: number) {
+    let match: FilterQuery<IFornecedor> = { oficina };
+    nomeFantasia && (match = {
+      ...match,
+      nomeFantasia: {
+        $regex: `^${nomeFantasia}`,
+        $options: "i",
+      }
+    });
+    email && (match = {
+      ...match,
+      email: {
+        $regex: `^${email}`,
+        $options: "i",
+      }
+    });
+    cpfCnpj && (match = {
+      ...match,
+      cpfCnpj: {
+        $regex: `^${cpfCnpj}`,
+        $options: "i",
+      }
+    });
+    telefone && (match = {
+      ...match,
+      $or: [
+        {
+          telefoneCelular: {
+            $regex: `^${telefone}`,
+            $options: "i",
+          }
+        },
+        {
+          telefoneFixo: {
+            $regex: `^${telefone}`,
+            $options: "i",
+          }
+        },
+      ]
+    });
     return await Fornecedor
-      .find({
-        oficina,
-        nomeFantasia: {
-          $regex: `^${nome}`,
-          $options: "i",
-        },
-        cpfCnpj: {
-          $regex: `^${cpfCnpj}`,
-          $options: "i",
-        },
-        email: {
-          $regex: `^${email}`,
-          $options: "i",
-        },
-        $or: [
-          {
-            telefoneCelular: {
-              $regex: `^${telefone}`,
-              $options: "i",
-            }
-          },
-          {
-            telefoneFixo: {
-              $regex: `^${telefone}`,
-              $options: "i",
-            }
-          },
-        ]
-      })
+      .find(match)
       .skip(pular)
       .limit(limite);
   }
 
-  async contarPorConsulta(oficina: string, nome: string = "", cpfCnpj: string = "", email: string = "", telefone: string = "") {
+  async contarPorConsulta(oficina: string, { nomeFantasia, cpfCnpj, email, telefone }: FornecedorQuery) {
     return await Fornecedor
       .countDocuments({
         oficina,
         nomeFantasia: {
-          $regex: `^${nome}`,
+          $regex: `^${nomeFantasia}`,
           $options: "i",
         },
         cpfCnpj: {

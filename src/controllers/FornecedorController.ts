@@ -5,19 +5,20 @@ import { IEndereco } from "../models/Endereco";
 import { IFornecedor } from "../models/Fornecedor";
 import validacao from "../util/validacao";
 import { sendMessageTo } from "../Socket";
+import { replaceNoNumeric } from "../util/Replace";
 const fornecedorServices = new FornecedorServices();
 
 export default class FornecedorContoller {
   async incluirFornecedor(requisicao: Request, resposta: Response) {
-    const oficina = requisicao.body.oficina;
-    const nomeFantasia = requisicao.body.nomeFantasia as string;
-    const razaoSocial = requisicao.body.razaoSocial as string;
-    const cpfCnpj = requisicao.body.cpfCnpj as string;
-    const telefoneFixo = requisicao.body.telefoneFixo as string;
-    const telefoneCelular = requisicao.body.telefoneCelular as string;
-    const email = requisicao.body.email as string;
-    const endereco = requisicao.body.endereco as IEndereco;
     try {
+      const oficina = requisicao.body.oficina;
+      const nomeFantasia = requisicao.body.nomeFantasia as string;
+      const razaoSocial = requisicao.body.razaoSocial as string;
+      const cpfCnpj = replaceNoNumeric(requisicao.body.cpfCnpj as string);
+      const telefoneFixo = replaceNoNumeric(requisicao.body.telefoneFixo as string);
+      const telefoneCelular = replaceNoNumeric(requisicao.body.telefoneCelular as string);
+      const email = requisicao.body.email as string;
+      const endereco = requisicao.body.endereco as IEndereco;
       const fornecedorASerInserido = {
         nomeFantasia,
         razaoSocial,
@@ -62,10 +63,10 @@ export default class FornecedorContoller {
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
-    const oficina = requisicao.body.oficina as string;
-    const pagina = Number(requisicao.query.pagina);
-    const limite = Number(requisicao.query.limite);
     try {
+      const oficina = requisicao.body.oficina as string;
+      const pagina = Number(requisicao.query.pagina);
+      const limite = Number(requisicao.query.limite);
       if (!validacao.validarPaginacao(pagina, limite)) {
         return resposta.status(400).send();
       }
@@ -90,10 +91,43 @@ export default class FornecedorContoller {
     }
   }
 
-  async listarPorId(requisicao: Request, resposta: Response) {
-    const oficina = requisicao.body.oficina as string;
-    const _id = requisicao.query._id as string;
+  async consultarFornecedores(requisicao: Request, resposta: Response) {
     try {
+      const oficina = requisicao.body.oficina as string;
+      const pagina = Number(requisicao.query.pagina);
+      const limite = Number(requisicao.query.limite);
+      const nomeFantasia = requisicao.query.nomeFantasia as string;
+      const telefone = replaceNoNumeric(requisicao.query.telefone as string);
+      const email = requisicao.query.email as string;
+      const cpfCnpj = replaceNoNumeric(requisicao.query.cpfCnpj as string);
+      if (!validacao.validarPaginacao(pagina, limite)) {
+        return resposta.status(400).send();
+      }
+      const pular = (pagina - 1) * limite;
+      const fornecedores = await fornecedorServices.consultar(oficina, { nomeFantasia, cpfCnpj, email, telefone }, pular, limite);
+      const total = await fornecedorServices.contarPorConsulta(oficina, {});
+      if (!fornecedores) {
+        return resposta
+          .status(500)
+          .json({
+            mensagem: "Erro ao listar fornecedores."
+          });
+      }
+      return resposta.json({
+        itens: fornecedores,
+        total
+      })
+    }
+    catch (erro) {
+      console.log(erro);
+      return resposta.status(400).send();
+    }
+  }
+
+  async listarPorId(requisicao: Request, resposta: Response) {
+    try {
+      const oficina = requisicao.body.oficina as string;
+      const _id = requisicao.query._id as string;
       const mensagens = servicoValidacao.validarIdDoFornecedor(_id)
       if (mensagens.length) {
         return resposta.status(406)
@@ -118,18 +152,16 @@ export default class FornecedorContoller {
   }
 
   async alterarFornecedor(requisicao: Request, resposta: Response) {
-    const _id = requisicao.body._id as string;
-    const cpfCnpj = requisicao.body.cpfCnpj as string;
-    const nomeFantasia = requisicao.body.nomeFantasia as string;
-    const razaoSocial = requisicao.body.razaoSocial as string;
-    const telefoneFixo = requisicao.body.telefoneFixo as string;
-    const telefoneCelular = requisicao.body.telefoneCelular as string;
-    const email = requisicao.body.email as string;
-    const endereco = requisicao.body.endereco as IEndereco;
     try {
+      const _id = requisicao.body._id as string;
+      const nomeFantasia = requisicao.body.nomeFantasia as string;
+      const razaoSocial = requisicao.body.razaoSocial as string;
+      const telefoneFixo = replaceNoNumeric(requisicao.body.telefoneFixo as string);
+      const telefoneCelular = replaceNoNumeric(requisicao.body.telefoneCelular as string);
+      const email = requisicao.body.email as string;
+      const endereco = requisicao.body.endereco as IEndereco;
       const FornecedorASerAlterado = {
         _id,
-        cpfCnpj,
         nomeFantasia,
         razaoSocial,
         telefoneFixo,

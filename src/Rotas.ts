@@ -11,7 +11,7 @@ import ClienteController from "./controllers/ClienteController";
 import ServicoController from "./controllers/ServicoController";
 import FornecedorContoller from "./controllers/FornecedorController";
 import VeiculoController from "./controllers/VeiculoController";
-import EspecialidadeController from './controllers/EspecialidadeController';
+import especialidadeController from './controllers/EspecialidadeController';
 import OrdemDeServicoContoller from "./controllers/OrdemDeServicoController";
 import validatePagination from "./Midllewares/ValidatePagination";
 import OficinaController from "./controllers/OficinaController";
@@ -25,7 +25,6 @@ const fornecedorController = new FornecedorContoller();
 const veiculoController = new VeiculoController();
 const usuarioController = new UsuarioController();
 const funcionarioController = new FuncionarioController();
-const especialidadeController = new EspecialidadeController();
 const ordemDeServicoController = new OrdemDeServicoContoller();
 const oficinaController = new OficinaController();
 const rotas = Router();
@@ -101,6 +100,7 @@ rotas.get('/servico/consulta', Auth, validatePagination, servicoController.consu
 // //fornecedores
 rotas.post('/fornecedor', Auth, fornecedorController.incluirFornecedor)
 rotas.get('/fornecedor', Auth, validatePagination, fornecedorController.listarTodos)
+rotas.get('/fornecedor/consulta', Auth, validatePagination, fornecedorController.consultarFornecedores)
 rotas.get('/fornecedor/id', Auth, fornecedorController.listarPorId)
 rotas.put('/fornecedor', Auth, fornecedorController.alterarFornecedor)
 

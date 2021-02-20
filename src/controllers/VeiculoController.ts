@@ -7,6 +7,7 @@ import { ICliente } from '../models/Cliente';
 import { IVinculo } from '../models/Vinculo';
 import getDataAtual from '../util/DataUtil';
 import { Types } from 'mongoose';
+import { replaceNoNumericAndAlphabetic } from '../util/Replace';
 const veiculoServices = new VeiculoServices();
 const vinculoServices = new VinculoServices();
 
@@ -104,7 +105,7 @@ export default class VeiculoController {
 
   async consultarVeiculos(requisicao: Request, resposta: Response) {
     const oficina = requisicao.body.oficina as string;
-    const placa = requisicao.query.placa as string;
+    const placa = replaceNoNumericAndAlphabetic(requisicao.query.placa as string);
     const marca = requisicao.query.marca as string;
     const modelo = requisicao.query.modelo as string;
     const pular = Number(requisicao.query.pular)
@@ -116,7 +117,7 @@ export default class VeiculoController {
       if ((modelo && !Types.ObjectId.isValid(modelo))) {
         return resposta.status(400).send();
       }
-      const itens = await veiculoServices.consultarPorOficina(oficina, { placa, modelo, marca}, pular, limite);
+      const itens = await veiculoServices.consultarPorOficina(oficina, { placa, modelo, marca }, pular, limite);
       const total = await veiculoServices.contarPorIdOficina(oficina);
       return resposta.json({
         itens,

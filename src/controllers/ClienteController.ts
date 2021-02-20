@@ -3,7 +3,6 @@ import servicoValidacao from "../services/servicoValidacao";
 import { Response, Request } from "express";
 import { ICliente } from "../models/Cliente";
 import { IEndereco } from "../models/Endereco";
-import validacao from "../util/validacao";
 import { replaceNoNumeric } from "../util/Replace";
 import { sendMessageTo } from "../Socket";
 
@@ -11,23 +10,23 @@ const clienteServices = new ClienteServices();
 
 export default class ClienteController {
   async incluirCliente(requisicao: Request, resposta: Response) {
-    const oficina = requisicao.body.oficina as string;
-    const nome = requisicao.body.nome as string;
-    const sexo = requisicao.body.sexo as string;
-    const cpfCnpj = requisicao.body.cpfCnpj as string;
-    const dataNascimento = requisicao.body.dataNascimento as Date;
-    const telefoneFixo = requisicao.body.telefoneFixo as string;
-    const telefoneCelular = requisicao.body.telefoneCelular as string;
-    const email = requisicao.body.email as string;
-    const endereco = requisicao.body.endereco as IEndereco;
     try {
+      const oficina = requisicao.body.oficina as string;
+      const nome = requisicao.body.nome as string;
+      const sexo = requisicao.body.sexo as string;
+      const cpfCnpj = replaceNoNumeric(requisicao.body.cpfCnpj as string);
+      const dataNascimento = requisicao.body.dataNascimento as Date;
+      const telefoneFixo = replaceNoNumeric(requisicao.body.telefoneFixo as string);
+      const telefoneCelular = replaceNoNumeric(requisicao.body.telefoneCelular as string);
+      const email = requisicao.body.email as string;
+      const endereco = requisicao.body.endereco as IEndereco;
       const clienteASerInserido = {
         nome,
         sexo,
-        cpfCnpj: replaceNoNumeric(cpfCnpj),
+        cpfCnpj,
         dataNascimento,
-        telefoneFixo: replaceNoNumeric(telefoneFixo),
-        telefoneCelular: replaceNoNumeric(telefoneCelular),
+        telefoneFixo,
+        telefoneCelular,
         email,
         endereco,
         oficina,
@@ -66,10 +65,10 @@ export default class ClienteController {
   }
 
   async listarTodos(requisicao: Request, resposta: Response) {
-    const oficina = requisicao.body.oficina as string;
-    const pular = Number(requisicao.query.pular);
-    const limite = Number(requisicao.query.limite);
     try {
+      const oficina = requisicao.body.oficina as string;
+      const pular = Number(requisicao.query.pular);
+      const limite = Number(requisicao.query.limite);
       const clientes = await clienteServices.listarPorOficina(oficina, pular, limite);
       const total = await clienteServices.contarPorOficina(oficina);
       if (!clientes) {
@@ -91,10 +90,9 @@ export default class ClienteController {
   }
 
   async listarPorId(requisicao: Request, resposta: Response) {
-    const oficina = requisicao.body.oficina as string;
-    const
-      _id = requisicao.query._id as string;
     try {
+      const oficina = requisicao.body.oficina as string;
+      const _id = requisicao.query._id as string;
       const mensagens = servicoValidacao.validarIdDoCliente(_id);
       if (mensagens.length) {
         return resposta.status(406)
@@ -119,18 +117,16 @@ export default class ClienteController {
   }
 
   async consultarClientes(requisicao: Request, resposta: Response) {
-    const oficina = requisicao.body.oficina as string;
-    const pular = Number(requisicao.query.pular);
-    const limite = Number(requisicao.query.limite);
-    const nome = requisicao.query.nome as string;
-    let cpfCnpj = requisicao.query.cpfCnpj as string | undefined;
-    const email = requisicao.query.email as string;
-    let telefone = requisicao.query.telefone as string | undefined;
     try {
-      cpfCnpj = replaceNoNumeric(cpfCnpj);
-      telefone = replaceNoNumeric(telefone);
-      const clientes = await clienteServices.consultar(oficina, nome, cpfCnpj, email, telefone, pular, limite);
-      const total = await clienteServices.contarPorConsulta(oficina, nome, cpfCnpj, email, telefone);
+      const oficina = requisicao.body.oficina as string;
+      const pular = Number(requisicao.query.pular);
+      const limite = Number(requisicao.query.limite);
+      const nome = requisicao.query.nome as string;
+      const cpfCnpj = replaceNoNumeric(requisicao.query.cpfCnpj as string);
+      const email = requisicao.query.email as string;
+      const telefone = replaceNoNumeric(requisicao.query.telefone as string);
+      const clientes = await clienteServices.consultar(oficina, { nome, cpfCnpj, email, telefone }, pular, limite);
+      const total = await clienteServices.contarPorConsulta(oficina, { nome, cpfCnpj, email, telefone });
       if (!clientes) {
         return resposta
           .status(500)
@@ -150,16 +146,15 @@ export default class ClienteController {
   }
 
   async alterarCliente(requisicao: Request, resposta: Response) {
-    const _id = requisicao.body._id as string;
-    const nome = requisicao.body.nome as string;
-    const sexo = requisicao.body.sexo as string;
-    const dataNascimento = requisicao.body.dataNascimento as Date;
-    const telefoneFixo = requisicao.body.telefoneFixo as string;
-    const telefoneCelular = requisicao.body.telefoneCelular as string;
-    const email = requisicao.body.email as string;
-    const endereco = requisicao.body.endereco as IEndereco;
-    console.log(telefoneFixo, replaceNoNumeric(telefoneFixo))
     try {
+      const _id = requisicao.body._id as string;
+      const nome = requisicao.body.nome as string;
+      const sexo = requisicao.body.sexo as string;
+      const dataNascimento = requisicao.body.dataNascimento as Date;
+      const telefoneFixo = replaceNoNumeric(requisicao.body.telefoneFixo as string);
+      const telefoneCelular = replaceNoNumeric(requisicao.body.telefoneCelular as string);
+      const email = requisicao.body.email as string;
+      const endereco = requisicao.body.endereco as IEndereco;
       const clienteASerAlterado = {
         _id,
         nome,
