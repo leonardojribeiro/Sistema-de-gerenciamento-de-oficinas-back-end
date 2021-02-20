@@ -35,7 +35,6 @@ rotas.get('/ordemdeservico', Auth, validatePagination, ordemDeServicoController.
 rotas.get('/ordemdeservico/id/', Auth, ordemDeServicoController.listarPorId);
 rotas.get('/ordemdeservico/consulta', Auth, validatePagination, ordemDeServicoController.consultarOrdemDeServico);
 rotas.put('/ordemdeservico', Auth, ordemDeServicoController.alterarOrdemDeServico);
-rotas.get('/ordemdeservico/veiculo', Auth, ordemDeServicoController.listarPorVeiculo);
 
 //marcas 
 rotas.post('/marca', multer(multerConfig).single("logomarca"), Auth, marcaController.incluirMarca);
