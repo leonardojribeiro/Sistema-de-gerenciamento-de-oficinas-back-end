@@ -52,6 +52,21 @@ export default {
     return mensagens;
   },
 
+  validarOrdemDeServicoASerAlterada(ordemDeServico: IOrdemDeServico) {
+    const mensagens: string[] = [];
+    mensagens.push(...servicoValidacao.validarIdDaOrdemDeServico(ordemDeServico._id));
+    !validacao.validarTexto(ordemDeServico.sintoma) && mensagens.push("Sintoma é obrigatório");
+    !validacao.validarNumero(ordemDeServico.andamento) && mensagens.push("Andamento é obrigatório");
+    ordemDeServico.itensDeServico.length < 1 && mensagens.push("Pelo menos um serviço é necessário");
+    ordemDeServico.itensDeServico.forEach(itemDeServico =>
+      mensagens.push(...this.validarItemDeServico(itemDeServico))
+    );
+    ordemDeServico.itensDePeca.forEach(itemDePeca =>
+      mensagens.push(...this.validarItemDePEca(itemDePeca))
+    );
+    return mensagens;
+  },
+
   async incluirOrdemDeServico(informacoesDaOrdemDeServico: IOrdemDeServico) {
     return await OrdemDeServico.create(informacoesDaOrdemDeServico);
   },

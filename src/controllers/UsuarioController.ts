@@ -95,7 +95,7 @@ export default {
         },
         process.env.APP_SECRET as string,
         {
-          expiresIn: 432000
+          expiresIn: 10
         }
       )
       usuarioLogado = {

@@ -8,6 +8,12 @@ export default {
       || !validacao.validarId(idOficina) && mensagens.push("Id da oficina inválido.");
     return mensagens;
   },
+  validarIdDaOrdemDeServico(idOficina: string) {
+    const mensagens: string[] = [];
+    !validacao.validarTexto(idOficina) && mensagens.push("Id da ordem de serviço é obrigatório.")
+      || !validacao.validarId(idOficina) && mensagens.push("Id da ordem de serviço inválido.");
+    return mensagens;
+  },
   validarIdDaMarca(idMarca: string) {
     const mensagens: string[] = [];
     !validacao.validarTexto(idMarca) && mensagens.push("Id da marca é obrigatório.")

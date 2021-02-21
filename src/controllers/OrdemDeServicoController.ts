@@ -88,6 +88,7 @@ export default {
       const itensDePeca = requisicao.body.itensDePeca as IItemDePeca[];
       const oficina = requisicao.body.oficina as string;
       const informacoesDaOrdemDeServico = {
+        _id,
         dataDeInicio,
         dataDeConclusao,
         andamento,
@@ -99,7 +100,7 @@ export default {
         itensDePeca,
         oficina,
       } as IOrdemDeServico;
-      const mensagens = ordemDeServicoServices.validarOrdemDeServico(informacoesDaOrdemDeServico);
+      const mensagens = ordemDeServicoServices.validarOrdemDeServicoASerAlterada(informacoesDaOrdemDeServico);
       if (mensagens.length) {
         return resposta.status(406)
           .json({
