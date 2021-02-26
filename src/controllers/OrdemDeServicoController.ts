@@ -199,13 +199,17 @@ export default {
       const veiculo = requisicao.query.veiculo as string;
       const pular = Number(requisicao.query.pular);
       const limite = Number(requisicao.query.limite);
+      let status = requisicao.query.status as string | undefined;
       if (veiculo && !validacao.validarId(veiculo)) {
         return resposta.status(406)
           .json({
             mensagem: ['Veículo inválido']
           });
       }
-      const itens = await ordemDeServicoServices.consultar(oficina, { veiculo }, pular, limite);
+      if(!['0','1'].includes(status)){
+        status = undefined
+      }
+      const itens = await ordemDeServicoServices.consultar(oficina, { veiculo, status }, pular, limite);
       const total = await ordemDeServicoServices.contarPorConsulta(oficina, veiculo);
       return resposta.json({ itens, total });
     }

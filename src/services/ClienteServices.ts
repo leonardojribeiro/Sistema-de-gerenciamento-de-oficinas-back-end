@@ -1,3 +1,4 @@
+import { FilterQuery } from 'mongoose';
 import { ICliente } from "../models/Cliente";
 import validacao from "../util/validacao";
 import Cliente from "../models/Cliente";
@@ -75,71 +76,93 @@ export default {
   },
 
   async consultar(oficina: string, { nome, cpfCnpj, email, telefone }: ClienteQuery, pular: number, limite: number) {
+    let match: FilterQuery<ICliente> = { oficina };
+    nome && (match = {
+      ...match,
+      nome: {
+        $regex: `^${nome}`,
+        $options: "i",
+      }
+    });
+    email && (match = {
+      ...match,
+      email: {
+        $regex: `^${email}`,
+        $options: "i",
+      }
+    });
+    cpfCnpj && (match = {
+      ...match,
+      cpfCnpj: {
+        $regex: `^${cpfCnpj}`,
+        $options: "i",
+      }
+    });
+    telefone && (match = {
+      ...match,
+      $or: [
+        {
+          telefoneCelular: {
+            $regex: `^${telefone}`,
+            $options: "i",
+          }
+        },
+        {
+          telefoneFixo: {
+            $regex: `^${telefone}`,
+            $options: "i",
+          }
+        },
+      ]
+    });
     return await Cliente
-      .find({
-        oficina,
-        nome: {
-          $regex: `^${nome}`,
-          $options: "i",
-        },
-        cpfCnpj: {
-          $regex: `^${cpfCnpj}`,
-          $options: "i",
-        },
-        email: {
-          $regex: `^${email}`,
-          $options: "i",
-        },
-        $or: [
-          {
-            telefoneCelular: {
-              $regex: `^${telefone}`,
-              $options: "i",
-            }
-          },
-          {
-            telefoneFixo: {
-              $regex: `^${telefone}`,
-              $options: "i",
-            }
-          },
-        ]
-      })
+      .find(match)
       .skip(pular)
       .limit(limite);
   },
 
   async contarPorConsulta(oficina: string, { nome, cpfCnpj, email, telefone }: ClienteQuery) {
+    let match: FilterQuery<ICliente> = { oficina };
+    nome && (match = {
+      ...match,
+      nome: {
+        $regex: `^${nome}`,
+        $options: "i",
+      }
+    });
+    email && (match = {
+      ...match,
+      email: {
+        $regex: `^${email}`,
+        $options: "i",
+      }
+    });
+    cpfCnpj && (match = {
+      ...match,
+      cpfCnpj: {
+        $regex: `^${cpfCnpj}`,
+        $options: "i",
+      }
+    });
+    telefone && (match = {
+      ...match,
+      $or: [
+        {
+          telefoneCelular: {
+            $regex: `^${telefone}`,
+            $options: "i",
+          }
+        },
+        {
+          telefoneFixo: {
+            $regex: `^${telefone}`,
+            $options: "i",
+          }
+        },
+      ]
+    });
     return await Cliente
-      .countDocuments({
-        oficina,
-        nome: {
-          $regex: `^${nome}`,
-          $options: "i",
-        },
-        cpfCnpj: {
-          $regex: `^${cpfCnpj}`,
-          $options: "i",
-        },
-        email: {
-          $regex: `^${email}`,
-          $options: "i",
-        },
-        $or: [
-          {
-            telefoneCelular: {
-              $regex: `^${telefone}`,
-              $options: "i",
-            }
-          },
-          {
-            telefoneFixo: {
-              $regex: `^${telefone}`,
-              $options: "i",
-            }
-          },
-        ]
-      });
+      .countDocuments(match);
   },
 
   async listarPorIdClienteEIdOficina(oficina: string, _id: string) {

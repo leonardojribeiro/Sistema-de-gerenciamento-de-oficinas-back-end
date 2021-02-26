@@ -10,6 +10,7 @@ interface QueryOrdemDeServico {
   dataDeInicio?: Date;
   dataDeConclusao?: Date;
   dataDeRegistro?: Date;
+  status?: string;
 }
 
 export default {
@@ -106,7 +107,7 @@ export default {
       })
   },
 
-  async consultar(oficina: string, { veiculo, dataDeConclusao, dataDeInicio, dataDeRegistro }: QueryOrdemDeServico, skip: number, limit: number) {
+  async consultar(oficina: string, { veiculo, dataDeConclusao, dataDeInicio, dataDeRegistro,status }: QueryOrdemDeServico, skip: number, limit: number) {
     let match: FilterQuery<IOrdemDeServico> = { oficina }
     if (veiculo) {
       match = { ...match, veiculo };
@@ -117,6 +118,12 @@ export default {
         dataDeRegistro: {
           $gte: dataDeRegistro
         }
+      }
+    }
+    if(status){
+      match = {
+        ...match,
+        status,
       }
     }
     return await OrdemDeServico
