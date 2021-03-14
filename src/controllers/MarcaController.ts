@@ -30,7 +30,7 @@ export default {
           });
       }
       let uriLogo = '';
-      if (requisicao.file) {
+      if (requisicao.file && process.env.STORAGE_TYPE === "googleStorage") {
         uriLogo = await marcaServices.fazerUploadDaLogomarca(requisicao.file)
         if (!uriLogo.length) {
           return resposta
@@ -146,7 +146,7 @@ export default {
           });
       }
       let uriLogoNova = '';
-      if (requisicao.file) {
+      if (requisicao.file && process.env.STORAGE_TYPE === "googleStorage") {
         uriLogoNova = await marcaServices.fazerUploadDaLogomarca(requisicao.file)
         if (!uriLogoNova.length) {
           return resposta
@@ -165,7 +165,9 @@ export default {
             mensagem: "Marca não editada."
           });
       }
-      await marcaServices.apagarLogomarca(uriLogo);
+      if (process.env.STORAGE_TYPE === "googleStorage") {
+        await marcaServices.apagarLogomarca(uriLogo);
+      }
       return resposta
         .status(201)
         .json({

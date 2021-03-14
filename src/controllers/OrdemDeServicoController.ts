@@ -206,7 +206,7 @@ export default {
             mensagem: ['Veículo inválido']
           });
       }
-      if(!['0','1'].includes(status)){
+      if (status && !['0', '1'].includes(status)) {
         status = undefined
       }
       const itens = await ordemDeServicoServices.consultar(oficina, { veiculo, status }, pular, limite);
