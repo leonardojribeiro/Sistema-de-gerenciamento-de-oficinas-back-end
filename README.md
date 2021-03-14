@@ -60,7 +60,7 @@ são elas:
 
 >MONGO_URL = mongodb://127.0.0.1:27017/goauto 
 
-Uma string de conexão com o MongoDB. Você pode criar uma conexão a partir de uma conta gratuíta no [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+Uma string de conexão com o MongoDB. Você pode criar uma conexão a partir de uma conta gratuita no [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
 
 >APP_SECRET = 0123456789abcdef0123456789abcdef
 
