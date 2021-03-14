@@ -9,16 +9,20 @@ const storage = Boolean(process.env.DESENVOLVIMENTO)
     projectId: process.env.GCLOUD_STORAGE_PROJECT_ID as string,
   })
 
-const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET as string);
+const bucket = process.env.GCLOUD_STORAGE_BUCKET
+? storage.bucket(process.env.GCLOUD_STORAGE_BUCKET as string)
+: null;
 
 export default {
   async salvar(nome: string, buffer: Buffer) {
-    const arquivo = bucket.file(nome);
-    return await arquivo
-      .save(buffer);
+    if(bucket){
+      const arquivo = bucket.file(nome);
+      return await arquivo
+        .save(buffer);
+    }
   },
   async apagar(nome: string) {
-    if (nome) {
+    if (bucket && nome) {
       const arquivo = bucket.file(nome);
       return await arquivo.delete();
     }

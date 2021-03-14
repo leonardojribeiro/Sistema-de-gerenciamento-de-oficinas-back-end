@@ -12,7 +12,8 @@ const storageTypes = {
       cb(null, path.resolve(__dirname, "..", "images", "uploads"));
     },
     filename: (req, file, cb) => {
-      cb(null, `${crypto.randomBytes(16).toString("hex")}.${file.mimetype.split("/")[1]}`);
+      file.filename = `${crypto.randomBytes(16).toString("hex")}.${file.mimetype.split("/")[1]}`;
+      cb(null, file.filename);
     }
   }),
   googleStorage: multer.memoryStorage()
