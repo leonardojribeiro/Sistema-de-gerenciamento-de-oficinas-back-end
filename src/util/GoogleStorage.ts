@@ -10,12 +10,12 @@ const storage = Boolean(process.env.DESENVOLVIMENTO)
   })
 
 const bucket = process.env.GCLOUD_STORAGE_BUCKET
-? storage.bucket(process.env.GCLOUD_STORAGE_BUCKET as string)
-: null;
+  ? storage.bucket(process.env.GCLOUD_STORAGE_BUCKET as string)
+  : null;
 
 export default {
   async salvar(nome: string, buffer: Buffer) {
-    if(bucket){
+    if (bucket) {
       const arquivo = bucket.file(nome);
       return await arquivo
         .save(buffer);
@@ -23,9 +23,13 @@ export default {
   },
   async apagar(nome: string) {
     if (bucket && nome) {
-      const arquivo = bucket.file(nome);
-      return await arquivo.delete();
+      try {
+        const arquivo = bucket.file(nome);
+        return await arquivo.delete();
+      }
+      catch (e) {
+        console.log(e)
+      }
     }
-    return null;
   }
 }
