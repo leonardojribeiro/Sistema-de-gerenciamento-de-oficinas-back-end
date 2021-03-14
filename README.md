@@ -58,15 +58,15 @@ no terminal integrado do Visual Studio Code. <br/>
 O arquivo .env fornece algumas variáveis que são fundamentais para o funcionamento do servidor, bem como a conexão com o banco de dados e o armazenamento de imagens.
 são elas:
 
->MONGO_URL = mongodb://127.0.0.1:27017/goauto 
+>MONGO_URL
 
 Uma string de conexão com o MongoDB. Você pode criar uma conexão a partir de uma conta gratuita no [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
 
->APP_SECRET = 0123456789abcdef0123456789abcdef
+>APP_SECRET
 
 Uma palavra secreta de 32 caracteres utilizada na criptografia.
 
->APP_SECRET_IV = abcdef0123456
+>APP_SECRET_IV
 
 Outra palavra secreta de 16 caracteres também utilizada na criptografia.
 
@@ -74,21 +74,25 @@ Outra palavra secreta de 16 caracteres também utilizada na criptografia.
 
 Define o tipo de armazenamento de imagens. Valores possíveis: "local" e "googleStorage" sem aspas.
 
->GCLOUD_STORAGE_BUCKET = 
+>GCLOUD_STORAGE_BUCKET
 
 Nome do bucket do Google Storage. (caso o STORAGE_TYPE seja local, pode ficar em branco)
 
->GCLOUD_STORAGE_PROJECT_ID = 
+>GCLOUD_STORAGE_PROJECT_ID
 
 Id do projeto em que o bucket está instanciado. (caso o STORAGE_TYPE seja local, pode ficar em branco)
 
->GCLOUD_STORAGE_KEY_FILE_NAME = 
+>GCLOUD_STORAGE_KEY_FILE_NAME
 
 Caminho absoluto até o arquivo chave do Google Storage. (caso o STORAGE_TYPE seja local, pode ficar em branco)
 
->DESENVOLVIMENTO = true
+>DESENVOLVIMENTO
 
 Caso o Google Storage esteja sendo utilizado em modo de desenvolvimento.
+
+>JWT_DURATION 
+
+O tempo de duração do token JWT.
 
 O arquivo .envExample já possui essas variáveis definidas para a utilização mas é conveniente alterá-las, é necessário alterar seu nome para ".env".
 
