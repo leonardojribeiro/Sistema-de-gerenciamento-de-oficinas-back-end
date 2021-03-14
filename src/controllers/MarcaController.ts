@@ -1,8 +1,11 @@
+import path from 'path';
 import marcaServices from '../services/MarcaServices';
 import servicoValidacao from '../services/servicoValidacao';
 import { Request, Response } from 'express';
 import { IMarca } from '../models/Marca';
 import { sendMessageTo } from '../Socket';
+import fs from "fs";
+import { promisify } from 'util'
 
 export default {
   async incluirMarca(requisicao: Request, resposta: Response) {
@@ -30,14 +33,20 @@ export default {
           });
       }
       let uriLogo = '';
-      if (requisicao.file && process.env.STORAGE_TYPE === "googleStorage") {
-        uriLogo = await marcaServices.fazerUploadDaLogomarca(requisicao.file)
-        if (!uriLogo.length) {
-          return resposta
-            .status(500)
-            .json({
-              mensagem: "Marca não cadastrada."
-            });
+      if (requisicao.file) {
+        if (process.env.STORAGE_TYPE === "googleStorage") {
+          uriLogo = await marcaServices.fazerUploadDaLogomarca(requisicao.file)
+          if (!uriLogo.length) {
+            return resposta
+              .status(500)
+              .json({
+                mensagem: "Marca não cadastrada."
+              });
+          }
+        }
+        else {
+          console.log(requisicao.file.filename)
+          uriLogo = requisicao.file.filename;
         }
       }
       marcaASerInserida.uriLogo = uriLogo;
@@ -146,14 +155,19 @@ export default {
           });
       }
       let uriLogoNova = '';
-      if (requisicao.file && process.env.STORAGE_TYPE === "googleStorage") {
-        uriLogoNova = await marcaServices.fazerUploadDaLogomarca(requisicao.file)
-        if (!uriLogoNova.length) {
-          return resposta
-            .status(500)
-            .json({
-              mensagem: "Marca não alterada."
-            });
+      if (requisicao.file) {
+        if (process.env.STORAGE_TYPE === "googleStorage") {
+          uriLogoNova = await marcaServices.fazerUploadDaLogomarca(requisicao.file)
+          if (!uriLogoNova.length) {
+            return resposta
+              .status(500)
+              .json({
+                mensagem: "Marca não alterada."
+              });
+          }
+        }
+        else {
+          uriLogoNova = requisicao.file.filename;
         }
       }
       marcaASerAleterada.uriLogo = uriLogoNova;
@@ -167,6 +181,11 @@ export default {
       }
       if (process.env.STORAGE_TYPE === "googleStorage") {
         await marcaServices.apagarLogomarca(uriLogo);
+      }
+      else {
+        promisify(fs.unlink)(
+          path.resolve(__dirname, "..", "..", "images", "uploads", uriLogo)
+        )
       }
       return resposta
         .status(201)
