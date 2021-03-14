@@ -72,7 +72,7 @@ Outra palavra secreta de 16 caracteres também utilizada na criptografia.
 
 >STORAGE_TYPE = local
 
-Define o tipo de armazenamento de imagens. Valores possíveis: "local" e "GoogleStorage" sem aspas.
+Define o tipo de armazenamento de imagens. Valores possíveis: "local" e "googleStorage" sem aspas.
 
 >GCLOUD_STORAGE_BUCKET = 
 
