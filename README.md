@@ -5,6 +5,7 @@ Tabela de conteúdos
 <!--ts-->
    * [Sobre](#Sobre)
    * [Status](#Status)
+   * [Requerimentos](#Requerimentos)
    * [Scripts disponíveis](#Scripts-disponíveis)
       * [Executar em modo de desenvolvimento](#yarn-dev)
       * [Compilar para o modo de produção](#yarn-build)
