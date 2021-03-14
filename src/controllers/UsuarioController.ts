@@ -95,7 +95,7 @@ export default {
         },
         process.env.APP_SECRET as string,
         {
-          expiresIn: 2000
+          expiresIn: Number(process.env.JWT_DURATION)
         }
       )
       usuarioLogado = {
