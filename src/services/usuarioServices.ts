@@ -46,22 +46,13 @@ export default {
 
   async login(informacoesDoUsuario: IUsuario) {
     return await Usuario
-      .aggregate()
-      .lookup({
-        from: "oficinas",
-        localField: "idOficina",
-        foreignField: "_id",
-        as: "oficina",
-      })
-      .match({
+      .findOne({
         nomeUsuario: informacoesDoUsuario.nomeUsuario,
         senha: informacoesDoUsuario.senha
       })
-      .project({
-        senha: 0,
-        __v: 0
+      .populate({
+        path: "idOficina"
       })
-      .unwind("oficina");
   },
 
   async listarPerfilDeUsuarioEIdOficinaPorIdUsuario(id: string) {

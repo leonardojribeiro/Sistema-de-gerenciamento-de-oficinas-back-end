@@ -1,5 +1,6 @@
 import Oficina, { IOficina } from "../models/Oficina";
 import validacao from "../util/validacao";
+import servicoValidacao from "./servicoValidacao";
 
 export default {
 
@@ -14,13 +15,7 @@ export default {
       || !validacao.validarTelefone(oficina.telefoneCelular) && mensagens.push("Telefone celular inválido.");
     !validacao.validarTexto(oficina.email) && mensagens.push("E-mail é obrigatório.");
     !validacao.validarTexto(oficina.email) && !validacao.validarEmail(oficina.email) && mensagens.push("E-mail inválido.");
-    !validacao.validarTexto(oficina.endereco.logradouro) && mensagens.push("Logradouro é obrigatório.");
-    !validacao.validarTexto(oficina.endereco.numero) && mensagens.push("Número é obrigatório.");
-    !validacao.validarTexto(oficina.endereco.bairro) && mensagens.push("Endereço é obrigatório.");
-    !validacao.validarTexto(oficina.endereco.cep) && mensagens.push("CEP é obrigatório.")
-      || !validacao.validarCep(oficina.endereco.cep) && mensagens.push("CEP inválido.");
-    !validacao.validarTexto(oficina.endereco.cidade) && mensagens.push("Cidade é obrigatória.");
-    !validacao.validarTexto(oficina.endereco.estado) && mensagens.push("Estado é obrigatório");
+    mensagens.push(...servicoValidacao.validarEndereco(oficina.endereco));
     !validacao.validarNumero(oficina.localizacao.coordinates[1]) && mensagens.push("Latitude é obrigatória.");
     !validacao.validarNumero(oficina.localizacao.coordinates[0]) && mensagens.push("Longitude é obrigatória.");
     return mensagens;

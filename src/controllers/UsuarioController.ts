@@ -3,7 +3,7 @@ import criptografia from "../util/Criptografia";
 import jwt from "jsonwebtoken";
 import { Response, Request } from "express";
 import { IUsuario } from "../models/Usuario";
-import {} from 'mongoose';
+import { } from 'mongoose';
 
 export default {
   async incluirUsuario(requisicao: Request, resposta: Response) {
@@ -72,8 +72,9 @@ export default {
           });
       }
       usuarioLogin.senha = criptografia.criptografar(senha);
-      let usuarioLogado = await usuarioServices.login(usuarioLogin);
-      if (!usuarioLogado || !usuarioLogado[0]) {
+      let usuarioLogado: any = await usuarioServices.login(usuarioLogin);
+      console.log(usuarioLogado)
+      if (!usuarioLogado) {
         const usuarioExistente = await usuarioServices.ContarPorUsuario(usuarioLogin);
         if (usuarioExistente) {
           return resposta.status(401).json({
@@ -81,12 +82,19 @@ export default {
           });
         }
         return resposta
-          .status(401)
-          .json({
-            mensagem: "Esse usuário não existe."
-          });
+        .status(401)
+        .json({
+          mensagem: "Esse usuário não existe."
+        });
       }
-      const { _id, perfil, idOficina } = usuarioLogado[0];
+      else {
+        usuarioLogado = {
+          ...usuarioLogado?._doc,
+          oficina: usuarioLogado?.idOficina,
+          idOficina: usuarioLogado?.idOficina._id,
+        }
+      }
+      const { _id, perfil, idOficina } = usuarioLogado;
       const token = jwt.sign(
         {
           _id,
@@ -99,7 +107,7 @@ export default {
         }
       )
       usuarioLogado = {
-        ...usuarioLogado[0],
+        ...usuarioLogado,
         token,
       }
       return resposta

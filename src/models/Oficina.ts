@@ -1,9 +1,7 @@
-import { Document } from "mongoose";
 import { IEndereco } from "./Endereco";
-
-const mongoose = require("mongoose");
-const Endereco = require("./Endereco");
-const Ponto = require("./Ponto");
+import mongoose, { Document } from "mongoose";
+import Endereco from "./Endereco";
+import Ponto from "./Ponto";
 
 export interface IOficina extends Document{
   nomeFantasia: string;
@@ -19,7 +17,7 @@ export interface IOficina extends Document{
   statusOficina: string;
 }
 
-const oficina = mongoose.Schema({
+const oficina = new mongoose.Schema({
   nomeFantasia: {
     type: String,
     required: true,
@@ -51,7 +49,6 @@ const oficina = mongoose.Schema({
   localizacao: {
     type: Ponto,
     index: '2dsphere',
-    required: true,
   },
   statusOficina: {
     type: String,

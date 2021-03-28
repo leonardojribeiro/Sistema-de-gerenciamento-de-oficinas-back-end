@@ -22,11 +22,11 @@ rotas.get("/", (req: Request, res: Response) => {
   res.send("<a href='https://front-end-dot-universal-valve-275012.nn.r.appspot.com/'>Ir para a página principal</a>")
 });
 
-// rotas.post(
-//   "/oficina/cadastroOficinaCandidata",
-//   multer(multerConfig).single("logomarca"),
-//   oficinaController.cadastroDeOficinaCandidata,
-// );
+rotas.post(
+  "/oficina/cadastroOficinaCandidata",
+  multer(multerConfig).single("logomarca"),
+  oficinaController.cadastroDeOficinaCandidata,
+);
 
 rotas.get('/oficina', Auth, oficinaController.listarEstatisticas);
 
